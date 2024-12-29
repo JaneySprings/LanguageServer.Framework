@@ -17,11 +17,11 @@ public record struct DocumentUri(Uri Uri)
             var filePath = Uri.UnescapeDataString(Uri.AbsolutePath);
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
             {
-                if (filePath.StartsWith("/"))
+                if (filePath.StartsWith('/'))
                 {
                     filePath = filePath.TrimStart('/');
                 }
-                filePath = filePath.Replace("/", "\\");
+                filePath = filePath.Replace('/', '\\');
             }
 
             return filePath;
