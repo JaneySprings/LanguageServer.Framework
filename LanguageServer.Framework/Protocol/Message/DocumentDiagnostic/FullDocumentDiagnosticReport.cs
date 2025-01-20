@@ -27,6 +27,6 @@ public class FullDocumentDiagnosticReport
     /**
      * The actual diagnostics.
      */
-    [JsonPropertyName("diagnostics")]
+    [JsonPropertyName("items")]
     public List<Diagnostic> Diagnostics { get; set; } = null!;
 }
