@@ -23,8 +23,8 @@ public abstract class CodeActionHandlerBase : IJsonHandler
         server.AddRequestHandler("codeAction/resolve", async (message, token) =>
         {
             var request = message.Params!.Deserialize<CodeAction>(server.JsonSerializerOptions)!;
-            await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(request, server.JsonSerializerOptions);
+            var r = await Resolve(request, token);
+            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
         });
     }
 
