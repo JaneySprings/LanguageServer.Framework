@@ -101,7 +101,7 @@ public class LanguageServer
     {
         var request = ServerRequestManager.MakeRequest(method, @param);
         Writer.WriteRequest(request);
-        return await ServerRequestManager.WaitResponse(request.Id, token);
+        return await ServerRequestManager.WaitResponse(request.Id, token).ConfigureAwait(false);
     }
 
     public Task SendRequestNoWait(string method, JsonDocument? @param)

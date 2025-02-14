@@ -7,8 +7,6 @@ namespace EmmyLua.LanguageServer.Framework.Server.Handler;
 
 public abstract class ExecuteCommandHandlerBase : IJsonHandler
 {
-    protected abstract Task<ExecuteCommandResponse> Handle(ExecuteCommandParams request, CancellationToken token);
-
     public void RegisterHandler(LanguageServer server)
     {
         server.AddRequestHandler("workspace/executeCommand", async (message, token) =>
@@ -25,4 +23,6 @@ public abstract class ExecuteCommandHandlerBase : IJsonHandler
     public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
+
+    protected abstract Task<ExecuteCommandResponse> Handle(ExecuteCommandParams request, CancellationToken token);
 }
