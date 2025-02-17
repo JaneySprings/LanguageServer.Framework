@@ -32,7 +32,7 @@ public class LanguageServer : LSPCommunicationBase
         AddHandler(new InitializeHandler(this));
     }
 
-    public static LanguageServer Create(Stream input, Stream output) => new(input, output);
+    public static LanguageServer From(Stream input, Stream output) => new(input, output);
 
     public delegate Task InitializeEvent(InitializeParams request, ServerInfo serverInfo);
 

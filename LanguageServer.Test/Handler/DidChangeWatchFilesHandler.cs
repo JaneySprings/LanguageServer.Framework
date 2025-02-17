@@ -20,21 +20,21 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
     {
     }
 
-    public override void RegisterDynamicCapability(Server.LanguageServer server, ClientCapabilities clientCapabilities)
+    public override void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
         var dynamicRegistration = new DidChangeWatchedFilesRegistrationOptions()
         {
             Watchers =
             [
-                new ()
+                new()
                 {
                     GlobalPattern = "**/*.lua",
                     Kind = WatchKind.Create | WatchKind.Change | WatchKind.Delete
                 }
             ]
         };
-        
-        server.Client.DynamicRegisterCapability(new RegistrationParams()
+
+        (server as Server.LanguageServer)!.Client.DynamicRegisterCapability(new RegistrationParams()
         {
             Registrations =
             [
