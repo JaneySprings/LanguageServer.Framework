@@ -16,34 +16,34 @@ public abstract class SemanticTokensHandlerBase : IJsonHandler
     protected abstract Task<SemanticTokens?> Handle(SemanticTokensRangeParams semanticTokensRangeParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/semanticTokens/full", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/semanticTokens/full", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/semanticTokens/full/delta", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/semanticTokens/full/delta", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensDeltaParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensDeltaParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/semanticTokens/range", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/semanticTokens/range", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensRangeParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensRangeParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

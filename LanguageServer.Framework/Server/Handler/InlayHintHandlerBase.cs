@@ -11,26 +11,26 @@ public abstract class InlayHintHandlerBase : IJsonHandler
 
     protected abstract Task<InlayHint> Resolve(InlayHint request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
+        lSPCommunication.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHintParams>(server.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHintParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
-        server.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
+        lSPCommunication.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHint>(server.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHint>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

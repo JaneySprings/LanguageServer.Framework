@@ -9,20 +9,20 @@ public abstract class SignatureHelpHandlerBase : IJsonHandler
 {
     protected abstract Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/signatureHelp", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/signatureHelp", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SignatureHelpParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SignatureHelpParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

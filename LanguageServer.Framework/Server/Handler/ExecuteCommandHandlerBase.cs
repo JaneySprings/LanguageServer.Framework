@@ -7,20 +7,20 @@ namespace EmmyLua.LanguageServer.Framework.Server.Handler;
 
 public abstract class ExecuteCommandHandlerBase : IJsonHandler
 {
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("workspace/executeCommand", async (message, token) =>
+        lSPCommunication.AddRequestHandler("workspace/executeCommand", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<ExecuteCommandParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<ExecuteCommandParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 

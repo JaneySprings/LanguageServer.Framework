@@ -9,11 +9,11 @@ public abstract class WorkspaceFolderHandlerBase : IJsonHandler
 {
     protected abstract Task Handle(DidChangeWorkspaceFoldersParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddNotificationHandler("workspace/didChangeWorkspaceFolders", (message, token) =>
+        lSPCommunication.AddNotificationHandler("workspace/didChangeWorkspaceFolders", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(lSPCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }
@@ -21,7 +21,7 @@ public abstract class WorkspaceFolderHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

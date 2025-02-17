@@ -11,27 +11,27 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 
     protected abstract Task<CodeAction> Resolve(CodeAction request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/codeAction", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/codeAction", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeActionParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeActionParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("codeAction/resolve", async (message, token) =>
+        lSPCommunication.AddRequestHandler("codeAction/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeAction>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeAction>(lSPCommunication.JsonSerializerOptions)!;
             await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(request, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(request, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

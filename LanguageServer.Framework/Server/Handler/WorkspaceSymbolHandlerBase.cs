@@ -11,27 +11,27 @@ public abstract class WorkspaceSymbolHandlerBase : IJsonHandler
 
     protected abstract Task<WorkspaceSymbol> Resolve(WorkspaceSymbol request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("workspace/symbol", async (message, token) =>
+        lSPCommunication.AddRequestHandler("workspace/symbol", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceSymbolParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<WorkspaceSymbolParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("workspaceSymbol/resolve", async (message, token) =>
+        lSPCommunication.AddRequestHandler("workspaceSymbol/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceSymbol>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<WorkspaceSymbol>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

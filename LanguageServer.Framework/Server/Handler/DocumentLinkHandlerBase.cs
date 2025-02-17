@@ -11,27 +11,27 @@ public abstract class DocumentLinkHandlerBase : IJsonHandler
 
     protected abstract Task<DocumentLink> Resolve(DocumentLink request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/documentLink", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/documentLink", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLinkParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLinkParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("documentLink/resolve", async (message, token) =>
+        lSPCommunication.AddRequestHandler("documentLink/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLink>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLink>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

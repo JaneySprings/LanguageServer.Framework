@@ -11,27 +11,27 @@ public abstract class CodeLensHandlerBase : IJsonHandler
 
     protected abstract Task<CodeLens> Resolve(CodeLens request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/codeLens", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/codeLens", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLensParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLensParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("codeLens/resolve", async (message, token) =>
+        lSPCommunication.AddRequestHandler("codeLens/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLens>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLens>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

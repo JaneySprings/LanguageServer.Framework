@@ -19,34 +19,34 @@ public abstract class DocumentFormattingHandlerBase : IJsonHandler
     protected abstract Task<DocumentFormattingResponse?> Handle(DocumentOnTypeFormattingParams request,
         CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/formatting", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/formatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentFormattingParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentFormattingParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/rangeFormatting", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/rangeFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentRangeFormattingParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentRangeFormattingParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/rangesFormatting", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/rangesFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentRangesFormattingParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentRangesFormattingParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/onTypeFormatting", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/onTypeFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentOnTypeFormattingParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentOnTypeFormattingParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
@@ -54,7 +54,7 @@ public abstract class DocumentFormattingHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

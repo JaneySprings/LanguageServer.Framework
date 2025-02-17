@@ -9,20 +9,20 @@ public abstract class DocumentHighlightHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentHighlightResponse> Handle(DocumentHighlightParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/documentHighlight", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/documentHighlight", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentHighlightParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentHighlightParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

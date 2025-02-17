@@ -10,20 +10,20 @@ public abstract class DeclarationHandlerBase : IJsonHandler
     protected abstract Task<DeclarationResponse?>
         Handle(DeclarationParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/declaration", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/declaration", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DeclarationParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DeclarationParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -12,27 +12,27 @@ public abstract class RenameHandlerBase : IJsonHandler
 
     protected abstract Task<PrepareRenameResponse> Handle(PrepareRenameParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/rename", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/rename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<PrepareRenameParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<PrepareRenameParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

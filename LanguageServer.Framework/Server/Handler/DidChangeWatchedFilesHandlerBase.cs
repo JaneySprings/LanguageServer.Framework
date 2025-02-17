@@ -11,11 +11,11 @@ public abstract class DidChangeWatchedFilesHandlerBase : IJsonHandler
 {
     protected abstract Task Handle(DidChangeWatchedFilesParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddNotificationHandler("workspace/didChangeWatchedFiles", (message, token) =>
+        lSPCommunication.AddNotificationHandler("workspace/didChangeWatchedFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeWatchedFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidChangeWatchedFilesParams>(lSPCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }
@@ -23,7 +23,7 @@ public abstract class DidChangeWatchedFilesHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -11,27 +11,27 @@ public abstract class CompletionHandlerBase : IJsonHandler
 
     protected abstract Task<CompletionItem> Resolve(CompletionItem item, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase server)
+    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
     {
-        server.AddRequestHandler("textDocument/completion", async (message, token) =>
+        lSPCommunication.AddRequestHandler("textDocument/completion", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CompletionParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CompletionParams>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("completionItem/resolve", async (message, token) =>
+        lSPCommunication.AddRequestHandler("completionItem/resolve", async (message, token) =>
         {
-            var item = message.Params!.Deserialize<CompletionItem>(server.JsonSerializerOptions)!;
+            var item = message.Params!.Deserialize<CompletionItem>(lSPCommunication.JsonSerializerOptions)!;
             var r = await Resolve(item, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
     {
     }
 }
