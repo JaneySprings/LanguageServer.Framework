@@ -11,7 +11,7 @@ public abstract class InlayHintHandlerBase : IJsonHandler
 
     protected abstract Task<InlayHint> Resolve(InlayHint request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
         {
@@ -30,7 +30,7 @@ public abstract class InlayHintHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

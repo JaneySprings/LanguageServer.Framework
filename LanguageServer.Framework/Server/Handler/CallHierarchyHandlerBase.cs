@@ -16,7 +16,7 @@ public abstract class CallHierarchyHandlerBase : IJsonHandler
     protected abstract Task<CallHierarchyOutgoingCallsResponse> CallHierarchyOutgoingCalls(
         CallHierarchyOutgoingCallsParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/prepareCallHierarchy", async (message, token) =>
         {
@@ -43,7 +43,7 @@ public abstract class CallHierarchyHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

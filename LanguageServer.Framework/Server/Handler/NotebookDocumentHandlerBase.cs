@@ -15,7 +15,7 @@ public abstract class NotebookDocumentHandlerBase : IJsonHandler
 
     protected abstract Task Handle(DidSaveNotebookDocumentParams request, CancellationToken cancellationToken);
 
-    public virtual void RegisterHandler(LanguageServer server)
+    public virtual void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddNotificationHandler("notebookDocument/didClose", (message, token) =>
         {
@@ -45,7 +45,7 @@ public abstract class NotebookDocumentHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

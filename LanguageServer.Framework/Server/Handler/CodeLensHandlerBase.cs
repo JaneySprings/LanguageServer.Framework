@@ -11,7 +11,7 @@ public abstract class CodeLensHandlerBase : IJsonHandler
 
     protected abstract Task<CodeLens> Resolve(CodeLens request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/codeLens", async (message, token) =>
         {
@@ -31,7 +31,7 @@ public abstract class CodeLensHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

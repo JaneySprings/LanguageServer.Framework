@@ -11,7 +11,7 @@ public abstract class WorkspaceSymbolHandlerBase : IJsonHandler
 
     protected abstract Task<WorkspaceSymbol> Resolve(WorkspaceSymbol request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("workspace/symbol", async (message, token) =>
         {
@@ -31,7 +31,7 @@ public abstract class WorkspaceSymbolHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

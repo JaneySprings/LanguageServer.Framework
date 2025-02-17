@@ -10,7 +10,7 @@ public abstract class LinkedEditingRangeHandlerBase : IJsonHandler
     protected abstract Task<LinkedEditingRanges?> Handle(LinkedEditingRangeParams request,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/linkedEditingRange", async (message, token) =>
         {
@@ -23,7 +23,7 @@ public abstract class LinkedEditingRangeHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -10,7 +10,7 @@ public abstract class InlineValueHandlerBase : IJsonHandler
     protected abstract Task<InlineValueResponse> Handle(InlineValueParams inlineValueParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/inlineValue", async (message, token) =>
         {
@@ -23,7 +23,7 @@ public abstract class InlineValueHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

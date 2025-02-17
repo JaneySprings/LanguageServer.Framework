@@ -9,7 +9,7 @@ public abstract class DocumentDiagnosticHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentDiagnosticReport> Handle(DocumentDiagnosticParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/diagnostic", async (message, token) =>
         {
@@ -21,7 +21,7 @@ public abstract class DocumentDiagnosticHandlerBase : IJsonHandler
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

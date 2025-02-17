@@ -10,7 +10,7 @@ public abstract class DefinitionHandlerBase : IJsonHandler
     protected abstract Task<DefinitionResponse?>
         Handle(DefinitionParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/definition", async (message, token) =>
         {
@@ -23,7 +23,7 @@ public abstract class DefinitionHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

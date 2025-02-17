@@ -12,7 +12,7 @@ public abstract class RenameHandlerBase : IJsonHandler
 
     protected abstract Task<PrepareRenameResponse> Handle(PrepareRenameParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/rename", async (message, token) =>
         {
@@ -32,7 +32,7 @@ public abstract class RenameHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

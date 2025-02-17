@@ -16,7 +16,7 @@ public abstract class SemanticTokensHandlerBase : IJsonHandler
     protected abstract Task<SemanticTokens?> Handle(SemanticTokensRangeParams semanticTokensRangeParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/semanticTokens/full", async (message, token) =>
         {
@@ -43,7 +43,7 @@ public abstract class SemanticTokensHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

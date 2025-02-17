@@ -9,7 +9,7 @@ public abstract class SignatureHelpHandlerBase : IJsonHandler
 {
     protected abstract Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/signatureHelp", async (message, token) =>
         {
@@ -22,7 +22,7 @@ public abstract class SignatureHelpHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

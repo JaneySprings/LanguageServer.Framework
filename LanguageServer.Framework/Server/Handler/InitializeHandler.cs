@@ -38,7 +38,7 @@ internal class InitializeHandler(LanguageServer server) : IJsonHandler
         return Task.CompletedTask;
     }
 
-    public void RegisterHandler(LanguageServer server2)
+    public void RegisterHandler(LSPCommunicationBase server2)
     {
         server2.AddRequestHandler("initialize", async (message, cancelToken) =>
         {
@@ -57,7 +57,7 @@ internal class InitializeHandler(LanguageServer server) : IJsonHandler
     {
     }
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

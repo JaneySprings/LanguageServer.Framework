@@ -10,7 +10,7 @@ public abstract class DeclarationHandlerBase : IJsonHandler
     protected abstract Task<DeclarationResponse?>
         Handle(DeclarationParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/declaration", async (message, token) =>
         {
@@ -23,7 +23,7 @@ public abstract class DeclarationHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

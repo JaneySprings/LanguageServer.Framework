@@ -9,7 +9,7 @@ public abstract class FoldingRangeHandlerBase : IJsonHandler
 {
     protected abstract Task<FoldingRangeResponse> Handle(FoldingRangeParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/foldingRange", async (message, token) =>
         {
@@ -22,7 +22,7 @@ public abstract class FoldingRangeHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -11,7 +11,7 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 
     protected abstract Task<CodeAction> Resolve(CodeAction request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/codeAction", async (message, token) =>
         {
@@ -31,7 +31,7 @@ public abstract class CodeActionHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

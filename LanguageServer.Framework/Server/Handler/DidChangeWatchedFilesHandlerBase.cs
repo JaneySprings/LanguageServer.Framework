@@ -11,7 +11,7 @@ public abstract class DidChangeWatchedFilesHandlerBase : IJsonHandler
 {
     protected abstract Task Handle(DidChangeWatchedFilesParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddNotificationHandler("workspace/didChangeWatchedFiles", (message, token) =>
         {
@@ -23,7 +23,7 @@ public abstract class DidChangeWatchedFilesHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

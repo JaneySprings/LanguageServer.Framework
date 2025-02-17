@@ -18,7 +18,7 @@ public abstract class TextDocumentHandlerBase : IJsonHandler
 
     protected abstract Task<List<TextEdit>?> HandleRequest(WillSaveTextDocumentParams request, CancellationToken token);
 
-    public virtual void RegisterHandler(LanguageServer server)
+    public virtual void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddNotificationHandler("textDocument/didOpen",
             (notificationMessage, token) =>
@@ -56,7 +56,7 @@ public abstract class TextDocumentHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -10,7 +10,7 @@ public abstract class SelectionRangeHandlerBase : IJsonHandler
     protected abstract Task<SelectionRangeResponse?>
         Handle(SelectionRangeParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase server)
     {
         server.AddRequestHandler("textDocument/selectionRange", async (message, token) =>
         {
@@ -22,7 +22,7 @@ public abstract class SelectionRangeHandlerBase : IJsonHandler
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LSPCommunicationBase server, ClientCapabilities clientCapabilities)
     {
     }
 }
