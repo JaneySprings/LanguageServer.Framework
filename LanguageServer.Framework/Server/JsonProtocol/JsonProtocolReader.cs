@@ -11,10 +11,10 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
 
     private byte[] SmallBuffer { get; } = new byte[1024];
 
-    public async Task<Message> ReadAsync()
+    public async Task<Message> ReadAsync(CancellationToken token = default)
     {
         // Read the header part
-        var (totalLength, contentStart) = await ReadOneHeaderAsync();
+        var (totalLength, contentStart) = await ReadOneHeaderAsync(token);
         var readContentLength = _currentValidLength - contentStart;
         if (readContentLength > totalLength)
         {
@@ -47,9 +47,9 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         }
     }
 
-    private async Task ReadHeaderToBufferAsync()
+    private async Task ReadHeaderToBufferAsync(CancellationToken token)
     {
-        var read = await inputStream.ReadAsync(SmallBuffer.AsMemory(_currentValidLength));
+        var read = await inputStream.ReadAsync(SmallBuffer.AsMemory(_currentValidLength), token);
         if (read == 0) throw new InvalidOperationException("Stream closed before all data could be read.");
         _currentValidLength += read;
     }
@@ -90,7 +90,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         return false;
     }
 
-    private async Task<(int, int)> ReadOneHeaderAsync()
+    private async Task<(int, int)> ReadOneHeaderAsync(CancellationToken token)
     {
         var totalLength = 0;
         var contentStart = 0;
@@ -102,7 +102,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
                 break;
             }
 
-            await ReadHeaderToBufferAsync();
+            await ReadHeaderToBufferAsync(token);
         }
 
         return (totalLength, contentStart);
