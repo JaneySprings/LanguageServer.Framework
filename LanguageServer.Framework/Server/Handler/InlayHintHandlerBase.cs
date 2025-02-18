@@ -11,19 +11,19 @@ public abstract class InlayHintHandlerBase : IJsonHandler
 
     protected abstract Task<InlayHint> Resolve(InlayHint request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHintParams>(server.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHintParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        server.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHint>(server.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHint>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

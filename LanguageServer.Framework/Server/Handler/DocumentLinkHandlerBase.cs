@@ -11,20 +11,20 @@ public abstract class DocumentLinkHandlerBase : IJsonHandler
 
     protected abstract Task<DocumentLink> Resolve(DocumentLink request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/documentLink", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/documentLink", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLinkParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLinkParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("documentLink/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("documentLink/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLink>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLink>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

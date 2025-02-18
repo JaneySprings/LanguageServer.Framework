@@ -12,20 +12,20 @@ public abstract class RenameHandlerBase : IJsonHandler
 
     protected abstract Task<PrepareRenameResponse> Handle(PrepareRenameParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/rename", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/rename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<PrepareRenameParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<PrepareRenameParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

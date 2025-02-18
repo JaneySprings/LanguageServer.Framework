@@ -11,20 +11,20 @@ public abstract class WorkspaceSymbolHandlerBase : IJsonHandler
 
     protected abstract Task<WorkspaceSymbol> Resolve(WorkspaceSymbol request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("workspace/symbol", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/symbol", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceSymbolParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<WorkspaceSymbolParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("workspaceSymbol/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspaceSymbol/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceSymbol>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<WorkspaceSymbol>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

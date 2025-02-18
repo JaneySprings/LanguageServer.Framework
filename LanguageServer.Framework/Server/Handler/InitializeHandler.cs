@@ -38,17 +38,17 @@ internal class InitializeHandler(LanguageServer server) : IJsonHandler
         return Task.CompletedTask;
     }
 
-    public void RegisterHandler(LanguageServer server2)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server2.AddRequestHandler("initialize", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("initialize", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InitializeParams>(server2.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InitializeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, server2.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        server2.AddNotificationHandler("initialized", (message, cancelToken) =>
+        lspCommunication.AddNotificationHandler("initialized", (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InitializedParams>(server2.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InitializedParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, cancelToken);
         });
     }

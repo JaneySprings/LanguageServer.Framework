@@ -11,20 +11,20 @@ public abstract class CodeLensHandlerBase : IJsonHandler
 
     protected abstract Task<CodeLens> Resolve(CodeLens request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/codeLens", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/codeLens", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLensParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLensParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("codeLens/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("codeLens/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLens>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLens>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

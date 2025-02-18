@@ -10,13 +10,13 @@ public abstract class InlineValueHandlerBase : IJsonHandler
     protected abstract Task<InlineValueResponse> Handle(InlineValueParams inlineValueParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/inlineValue", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/inlineValue", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<InlineValueParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<InlineValueParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

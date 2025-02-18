@@ -23,7 +23,7 @@ public class ServerRequestManager
         if (id.StringValue is null)
         {
             var intId = id.IntValue;
-            if (_intRequestTokens.TryRemove(intId, out var tcs))
+            if (_intRequestTokens.TryGetValue(intId, out var tcs))
             {
                 tcs.SetResult(response);
             }
@@ -37,9 +37,15 @@ public class ServerRequestManager
             var intId = id.IntValue;
             if (_intRequestTokens.TryGetValue(intId, out var tcs))
             {
-                await using (token.Register(() => tcs.TrySetCanceled()))
+                await using (token.Register(() =>
+                             {
+                                 tcs.TrySetCanceled();
+                                 _intRequestTokens.TryRemove(intId, out _);
+                             }).ConfigureAwait(false))
                 {
-                    return await tcs.Task;
+                    var result = await tcs.Task.ConfigureAwait(false);
+                    _intRequestTokens.TryRemove(intId, out _);
+                    return result;
                 }
             }
         }

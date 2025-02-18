@@ -9,13 +9,13 @@ public abstract class DocumentSymbolHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentSymbolResponse> Handle(DocumentSymbolParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/documentSymbol", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/documentSymbol", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentSymbolParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentSymbolParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

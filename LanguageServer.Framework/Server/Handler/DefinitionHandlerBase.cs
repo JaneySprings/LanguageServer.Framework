@@ -10,13 +10,13 @@ public abstract class DefinitionHandlerBase : IJsonHandler
     protected abstract Task<DefinitionResponse?>
         Handle(DefinitionParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/definition", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/definition", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DefinitionParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DefinitionParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

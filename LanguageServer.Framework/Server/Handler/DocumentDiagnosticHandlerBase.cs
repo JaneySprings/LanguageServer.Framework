@@ -9,13 +9,13 @@ public abstract class DocumentDiagnosticHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentDiagnosticReport> Handle(DocumentDiagnosticParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/diagnostic", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/diagnostic", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentDiagnosticParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

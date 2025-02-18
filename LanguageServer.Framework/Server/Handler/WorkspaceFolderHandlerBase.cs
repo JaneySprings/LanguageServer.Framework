@@ -9,11 +9,11 @@ public abstract class WorkspaceFolderHandlerBase : IJsonHandler
 {
     protected abstract Task Handle(DidChangeWorkspaceFoldersParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddNotificationHandler("workspace/didChangeWorkspaceFolders", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didChangeWorkspaceFolders", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }

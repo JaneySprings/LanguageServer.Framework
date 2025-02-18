@@ -10,13 +10,13 @@ public abstract class WorkspaceDiagnosticHandlerBase : IJsonHandler
     protected abstract Task<WorkspaceDiagnosticReport> Handle(WorkspaceDiagnosticParams request,
         CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("workspace/diagnostic", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/diagnostic", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceDiagnosticParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<WorkspaceDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

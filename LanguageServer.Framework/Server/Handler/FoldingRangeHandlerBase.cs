@@ -9,13 +9,13 @@ public abstract class FoldingRangeHandlerBase : IJsonHandler
 {
     protected abstract Task<FoldingRangeResponse> Handle(FoldingRangeParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/foldingRange", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/foldingRange", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<FoldingRangeParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<FoldingRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

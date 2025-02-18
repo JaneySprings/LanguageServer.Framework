@@ -20,44 +20,44 @@ public abstract class WorkspaceFilesHandlerBase : IJsonHandler
 
     protected abstract Task DidDeleteFiles(DeleteFilesParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("workspace/willCreateFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willCreateFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CreateFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CreateFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillCreateFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddNotificationHandler("workspace/didCreateFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didCreateFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<CreateFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CreateFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidCreateFiles(request, token);
         });
 
-        server.AddRequestHandler("workspace/willRenameFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willRenameFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillRenameFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddNotificationHandler("workspace/didRenameFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didRenameFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidRenameFiles(request, token);
         });
 
-        server.AddRequestHandler("workspace/willDeleteFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willDeleteFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DeleteFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DeleteFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillDeleteFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddNotificationHandler("workspace/didDeleteFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didDeleteFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DeleteFilesParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DeleteFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidDeleteFiles(request, token);
         });
     }

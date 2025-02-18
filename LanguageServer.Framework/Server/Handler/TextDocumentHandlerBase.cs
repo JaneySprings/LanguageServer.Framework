@@ -18,38 +18,38 @@ public abstract class TextDocumentHandlerBase : IJsonHandler
 
     protected abstract Task<List<TextEdit>?> HandleRequest(WillSaveTextDocumentParams request, CancellationToken token);
 
-    public virtual void RegisterHandler(LanguageServer server)
+    public virtual void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddNotificationHandler("textDocument/didOpen",
+        lspCommunication.AddNotificationHandler("textDocument/didOpen",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidOpenTextDocumentParams>(server.JsonSerializerOptions)!;
+                var request = notificationMessage.Params!.Deserialize<DidOpenTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
                 return Handle(request, token);
             });
-        server.AddNotificationHandler("textDocument/didChange",
+        lspCommunication.AddNotificationHandler("textDocument/didChange",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidChangeTextDocumentParams>(server.JsonSerializerOptions)!;
+                var request = notificationMessage.Params!.Deserialize<DidChangeTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
                 return Handle(request, token);
             });
-        server.AddNotificationHandler("textDocument/didClose",
+        lspCommunication.AddNotificationHandler("textDocument/didClose",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidCloseTextDocumentParams>(server.JsonSerializerOptions)!;
+                var request = notificationMessage.Params!.Deserialize<DidCloseTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
                 return Handle(request, token);
             });
-        server.AddNotificationHandler("textDocument/willSave",
+        lspCommunication.AddNotificationHandler("textDocument/willSave",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<WillSaveTextDocumentParams>(server.JsonSerializerOptions)!;
+                var request = notificationMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
                 return Handle(request, token);
             });
-        server.AddRequestHandler("textDocument/willSaveWaitUntil",
+        lspCommunication.AddRequestHandler("textDocument/willSaveWaitUntil",
             async (requestMessage, token) =>
             {
-                var request = requestMessage.Params!.Deserialize<WillSaveTextDocumentParams>(server.JsonSerializerOptions)!;
+                var request = requestMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
                 var r = await HandleRequest(request, token);
-                return r == null ? null : JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+                return r == null ? null : JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
             });
     }
 

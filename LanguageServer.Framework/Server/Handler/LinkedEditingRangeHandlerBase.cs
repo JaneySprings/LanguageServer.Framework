@@ -10,13 +10,13 @@ public abstract class LinkedEditingRangeHandlerBase : IJsonHandler
     protected abstract Task<LinkedEditingRanges?> Handle(LinkedEditingRangeParams request,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/linkedEditingRange", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/linkedEditingRange", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<LinkedEditingRangeParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<LinkedEditingRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

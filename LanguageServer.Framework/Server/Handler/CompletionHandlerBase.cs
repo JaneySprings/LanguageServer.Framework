@@ -11,20 +11,20 @@ public abstract class CompletionHandlerBase : IJsonHandler
 
     protected abstract Task<CompletionItem> Resolve(CompletionItem item, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/completion", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/completion", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CompletionParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CompletionParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("completionItem/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("completionItem/resolve", async (message, token) =>
         {
-            var item = message.Params!.Deserialize<CompletionItem>(server.JsonSerializerOptions)!;
+            var item = message.Params!.Deserialize<CompletionItem>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(item, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

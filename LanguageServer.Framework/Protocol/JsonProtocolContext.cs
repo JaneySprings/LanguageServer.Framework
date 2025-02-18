@@ -309,4 +309,4 @@ namespace EmmyLua.LanguageServer.Framework.Protocol;
 [JsonSerializable(typeof(List<ConfigurationItem>))]
 [JsonSerializable(typeof(List<LSPAny>))]
 // ReSharper disable once ClassNeverInstantiated.Global
-internal partial class JsonProtocolContext: JsonSerializerContext;
+public partial class JsonProtocolContext: JsonSerializerContext;

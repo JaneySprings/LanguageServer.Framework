@@ -11,20 +11,20 @@ public abstract class DocumentColorHandlerBase : IJsonHandler
 
     protected abstract Task<ColorPresentationResponse> Resolve(ColorPresentationParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/documentColor", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/documentColor", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentColorParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentColorParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/colorPresentation", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/colorPresentation", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<ColorPresentationParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<ColorPresentationParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

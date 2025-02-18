@@ -10,13 +10,13 @@ public abstract class SelectionRangeHandlerBase : IJsonHandler
     protected abstract Task<SelectionRangeResponse?>
         Handle(SelectionRangeParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/selectionRange", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/selectionRange", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SelectionRangeParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SelectionRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

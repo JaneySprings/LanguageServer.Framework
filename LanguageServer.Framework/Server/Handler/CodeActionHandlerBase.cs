@@ -11,20 +11,20 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 
     protected abstract Task<CodeAction> Resolve(CodeAction request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/codeAction", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/codeAction", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeActionParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeActionParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("codeAction/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("codeAction/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeAction>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeAction>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

@@ -9,13 +9,13 @@ public abstract class DocumentHighlightHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentHighlightResponse> Handle(DocumentHighlightParams request, CancellationToken token);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/documentHighlight", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/documentHighlight", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentHighlightParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentHighlightParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

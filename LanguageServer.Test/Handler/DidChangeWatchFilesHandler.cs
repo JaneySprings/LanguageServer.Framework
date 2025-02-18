@@ -26,14 +26,14 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
         {
             Watchers =
             [
-                new ()
+                new()
                 {
                     GlobalPattern = "**/*.lua",
                     Kind = WatchKind.Create | WatchKind.Change | WatchKind.Delete
                 }
             ]
         };
-        
+
         server.Client.DynamicRegisterCapability(new RegistrationParams()
         {
             Registrations =

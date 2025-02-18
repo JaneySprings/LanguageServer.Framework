@@ -10,13 +10,13 @@ public abstract class ReferenceHandlerBase : IJsonHandler
     protected abstract Task<ReferenceResponse?>
         Handle(ReferenceParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/references", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/references", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<ReferenceParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<ReferenceParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 

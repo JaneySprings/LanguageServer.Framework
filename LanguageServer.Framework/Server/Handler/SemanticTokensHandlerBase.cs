@@ -16,27 +16,27 @@ public abstract class SemanticTokensHandlerBase : IJsonHandler
     protected abstract Task<SemanticTokens?> Handle(SemanticTokensRangeParams semanticTokensRangeParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LanguageServer server)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        server.AddRequestHandler("textDocument/semanticTokens/full", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/semanticTokens/full", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/semanticTokens/full/delta", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/semanticTokens/full/delta", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensDeltaParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensDeltaParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        server.AddRequestHandler("textDocument/semanticTokens/range", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/semanticTokens/range", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensRangeParams>(server.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<SemanticTokensRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
