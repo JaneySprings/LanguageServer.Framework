@@ -10,20 +10,20 @@ public abstract class ReferenceHandlerBase : IJsonHandler
     protected abstract Task<ReferenceResponse?>
         Handle(ReferenceParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/references", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/references", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<ReferenceParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<ReferenceParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

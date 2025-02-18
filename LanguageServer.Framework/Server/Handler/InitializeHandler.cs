@@ -38,17 +38,17 @@ internal class InitializeHandler(LanguageServer server) : IJsonHandler
         return Task.CompletedTask;
     }
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("initialize", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("initialize", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InitializeParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InitializeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        lSPCommunication.AddNotificationHandler("initialized", (message, cancelToken) =>
+        lspCommunication.AddNotificationHandler("initialized", (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InitializedParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InitializedParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, cancelToken);
         });
     }
@@ -57,7 +57,7 @@ internal class InitializeHandler(LanguageServer server) : IJsonHandler
     {
     }
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

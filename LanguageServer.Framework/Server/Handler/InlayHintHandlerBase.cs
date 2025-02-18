@@ -11,26 +11,26 @@ public abstract class InlayHintHandlerBase : IJsonHandler
 
     protected abstract Task<InlayHint> Resolve(InlayHint request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("textDocument/inlayHint", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHintParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHintParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        lSPCommunication.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
+        lspCommunication.AddRequestHandler("inlayHint/resolve", async (message, cancelToken) =>
         {
-            var request = message.Params?.Deserialize<InlayHint>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params?.Deserialize<InlayHint>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, cancelToken);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

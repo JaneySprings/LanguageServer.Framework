@@ -11,27 +11,27 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 
     protected abstract Task<CodeAction> Resolve(CodeAction request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/codeAction", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/codeAction", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeActionParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeActionParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddRequestHandler("codeAction/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("codeAction/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeAction>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeAction>(lspCommunication.JsonSerializerOptions)!;
             await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(request, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(request, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

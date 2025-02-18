@@ -11,27 +11,27 @@ public abstract class CodeLensHandlerBase : IJsonHandler
 
     protected abstract Task<CodeLens> Resolve(CodeLens request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/codeLens", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/codeLens", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLensParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLensParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddRequestHandler("codeLens/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("codeLens/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeLens>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CodeLens>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

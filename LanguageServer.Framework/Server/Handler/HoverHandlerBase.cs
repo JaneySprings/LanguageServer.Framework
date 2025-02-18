@@ -9,20 +9,20 @@ public abstract class HoverHandlerBase : IJsonHandler
 {
     protected abstract Task<HoverResponse?> Handle(HoverParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/hover", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/hover", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<HoverParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<HoverParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

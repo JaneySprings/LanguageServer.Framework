@@ -15,29 +15,29 @@ public abstract class NotebookDocumentHandlerBase : IJsonHandler
 
     protected abstract Task Handle(DidSaveNotebookDocumentParams request, CancellationToken cancellationToken);
 
-    public virtual void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public virtual void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddNotificationHandler("notebookDocument/didClose", (message, token) =>
+        lspCommunication.AddNotificationHandler("notebookDocument/didClose", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidCloseNotebookDocumentParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidCloseNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
-        lSPCommunication.AddNotificationHandler("notebookDocument/didOpen", (message, token) =>
+        lspCommunication.AddNotificationHandler("notebookDocument/didOpen", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidOpenNotebookDocumentParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidOpenNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
-        lSPCommunication.AddNotificationHandler("notebookDocument/didChange", (message, token) =>
+        lspCommunication.AddNotificationHandler("notebookDocument/didChange", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeNotebookDocumentParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidChangeNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
-        lSPCommunication.AddNotificationHandler("notebookDocument/didSave", (message, token) =>
+        lspCommunication.AddNotificationHandler("notebookDocument/didSave", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidSaveNotebookDocumentParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DidSaveNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }
@@ -45,7 +45,7 @@ public abstract class NotebookDocumentHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

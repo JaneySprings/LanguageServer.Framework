@@ -20,7 +20,7 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
     {
     }
 
-    public override void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public override void RegisterDynamicCapability(Server.LanguageServer server, ClientCapabilities clientCapabilities)
     {
         var dynamicRegistration = new DidChangeWatchedFilesRegistrationOptions()
         {
@@ -34,7 +34,7 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
             ]
         };
 
-        (lSPCommunication as Server.LanguageServer)!.Client.DynamicRegisterCapability(new RegistrationParams()
+        (server as Server.LanguageServer)!.Client.DynamicRegisterCapability(new RegistrationParams()
         {
             Registrations =
             [

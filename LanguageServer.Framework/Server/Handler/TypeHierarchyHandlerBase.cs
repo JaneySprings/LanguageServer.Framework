@@ -16,32 +16,32 @@ public abstract class TypeHierarchyHandlerBase : IJsonHandler
     protected abstract Task<TypeHierarchyResponse?> Handle(TypeHierarchySubtypesParams typeHierarchySubtypesParams,
         CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/prepareTypeHierarchy", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/prepareTypeHierarchy", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchyPrepareParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<TypeHierarchyPrepareParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        lSPCommunication.AddRequestHandler("typeHierarchy/supertypes", async (message, token) =>
+        lspCommunication.AddRequestHandler("typeHierarchy/supertypes", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchySupertypesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<TypeHierarchySupertypesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
-        lSPCommunication.AddRequestHandler("typeHierarchy/subtypes", async (message, token) =>
+        lspCommunication.AddRequestHandler("typeHierarchy/subtypes", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchySubtypesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<TypeHierarchySubtypesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

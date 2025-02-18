@@ -10,20 +10,20 @@ public abstract class InlineCompletionHandlerBase : IJsonHandler
     protected abstract Task<InlineCompletionResponse> Handle(InlineCompletionParams request,
         CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-         lSPCommunication.AddRequestHandler("textDocument/inlineCompletion", async (message, token) =>
+         lspCommunication.AddRequestHandler("textDocument/inlineCompletion", async (message, token) =>
          {
-             var request = message.Params!.Deserialize<InlineCompletionParams>(lSPCommunication.JsonSerializerOptions)!;
+             var request = message.Params!.Deserialize<InlineCompletionParams>(lspCommunication.JsonSerializerOptions)!;
              var r = await Handle(request, token);
-             return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
          });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

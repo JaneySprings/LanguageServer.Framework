@@ -11,27 +11,27 @@ public abstract class DocumentLinkHandlerBase : IJsonHandler
 
     protected abstract Task<DocumentLink> Resolve(DocumentLink request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/documentLink", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/documentLink", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLinkParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLinkParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddRequestHandler("documentLink/resolve", async (message, token) =>
+        lspCommunication.AddRequestHandler("documentLink/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentLink>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DocumentLink>(lspCommunication.JsonSerializerOptions)!;
             var r = await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

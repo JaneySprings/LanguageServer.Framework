@@ -20,44 +20,44 @@ public abstract class WorkspaceFilesHandlerBase : IJsonHandler
 
     protected abstract Task DidDeleteFiles(DeleteFilesParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("workspace/willCreateFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willCreateFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CreateFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CreateFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillCreateFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddNotificationHandler("workspace/didCreateFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didCreateFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<CreateFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<CreateFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidCreateFiles(request, token);
         });
 
-        lSPCommunication.AddRequestHandler("workspace/willRenameFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willRenameFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillRenameFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddNotificationHandler("workspace/didRenameFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didRenameFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidRenameFiles(request, token);
         });
 
-        lSPCommunication.AddRequestHandler("workspace/willDeleteFiles", async (message, token) =>
+        lspCommunication.AddRequestHandler("workspace/willDeleteFiles", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DeleteFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DeleteFilesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await WillDeleteFiles(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddNotificationHandler("workspace/didDeleteFiles", (message, token) =>
+        lspCommunication.AddNotificationHandler("workspace/didDeleteFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DeleteFilesParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<DeleteFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return DidDeleteFiles(request, token);
         });
     }
@@ -65,7 +65,7 @@ public abstract class WorkspaceFilesHandlerBase : IJsonHandler
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

@@ -10,20 +10,20 @@ public abstract class ImplementationHandlerBase : IJsonHandler
     protected abstract Task<ImplementationResponse?>
         Handle(ImplementationParams request, CancellationToken cancellationToken);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/implementation", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/implementation", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<ImplementationParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<ImplementationParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }

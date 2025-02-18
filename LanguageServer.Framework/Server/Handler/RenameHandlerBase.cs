@@ -12,27 +12,27 @@ public abstract class RenameHandlerBase : IJsonHandler
 
     protected abstract Task<PrepareRenameResponse> Handle(PrepareRenameParams request, CancellationToken token);
 
-    public void RegisterHandler(LSPCommunicationBase lSPCommunication)
+    public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-        lSPCommunication.AddRequestHandler("textDocument/rename", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/rename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<RenameParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<RenameParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
-        lSPCommunication.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
+        lspCommunication.AddRequestHandler("textDocument/prepareRename", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<PrepareRenameParams>(lSPCommunication.JsonSerializerOptions)!;
+            var request = message.Params!.Deserialize<PrepareRenameParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
-            return JsonSerializer.SerializeToDocument(r, lSPCommunication.JsonSerializerOptions);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities);
 
-    public virtual void RegisterDynamicCapability(LSPCommunicationBase lSPCommunication, ClientCapabilities clientCapabilities)
+    public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {
     }
 }
