@@ -34,7 +34,7 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
             ]
         };
 
-        (server as Server.LanguageServer)!.Client.DynamicRegisterCapability(new RegistrationParams()
+        server.Client.DynamicRegisterCapability(new RegistrationParams()
         {
             Registrations =
             [
