@@ -44,7 +44,7 @@ public class MessageConverter : JsonConverter<Message>
             ResponseError? error = null;
             if (root.TryGetProperty("error", out var errorElement))
             {
-                error = JsonSerializer.Deserialize<ResponseError>(errorElement.GetRawText());
+                error = JsonSerializer.Deserialize<ResponseError>(errorElement.GetRawText(),options);
             }
 
             if (id.ValueKind == JsonValueKind.Number)
