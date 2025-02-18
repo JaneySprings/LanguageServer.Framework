@@ -22,9 +22,9 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 
         lspCommunication.AddRequestHandler("codeAction/resolve", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CodeAction>(lspCommunication.JsonSerializerOptions)!;
-            await Resolve(request, token);
-            return JsonSerializer.SerializeToDocument(request, lspCommunication.JsonSerializerOptions);
+            var request = message.Params!.Deserialize<CodeAction>(server.JsonSerializerOptions)!;
+            var r = await Resolve(request, token);
+            return JsonSerializer.SerializeToDocument(r, server.JsonSerializerOptions);
         });
     }
 
