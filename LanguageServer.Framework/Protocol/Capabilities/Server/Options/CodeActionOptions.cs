@@ -39,6 +39,15 @@ public class CodeActionOptions : WorkDoneProgressOptions
      */
     [JsonPropertyName("documentation")]
     public List<CodeActionKindDocumentation> Documentation { get; set; } = [];
+
+    /**
+	 * The server provides support to resolve additional
+	 * information for a code action.
+	 *
+	 * @since 3.16.0
+	 */
+    [JsonPropertyName("resolveProvider")]
+    public bool ResolveProvider { get; set; }
 }
 
 /**
