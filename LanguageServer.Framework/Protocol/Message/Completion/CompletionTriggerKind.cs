@@ -29,12 +29,10 @@ public readonly record struct CompletionTriggerKind(int Value)
 
 public class CompletionTriggerKindJsonConverter : JsonConverter<CompletionTriggerKind>
 {
-    public override CompletionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CompletionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return new CompletionTriggerKind(reader.GetInt32());
     }

@@ -21,14 +21,15 @@ public readonly record struct DocumentDiagnosticReportKind(string Value)
      * A report indicating that the last
      * returned report is still accurate.
      */
-    public static DocumentDiagnosticReportKind Unchanged  = new("unchanged");
+    public static DocumentDiagnosticReportKind Unchanged = new("unchanged");
 
     public string Value { get; init; } = Value;
 }
 
 public class DocumentDiagnosticReportKindJsonConverter : JsonConverter<DocumentDiagnosticReportKind>
 {
-    public override DocumentDiagnosticReportKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentDiagnosticReportKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return new DocumentDiagnosticReportKind(reader.GetString() ?? string.Empty);
     }

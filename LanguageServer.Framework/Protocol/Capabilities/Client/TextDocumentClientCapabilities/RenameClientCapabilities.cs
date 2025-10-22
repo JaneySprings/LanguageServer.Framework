@@ -40,5 +40,3 @@ public class RenameClientCapabilities
     [JsonPropertyName("honorsChangeAnnotations")]
     public bool? HonorsChangeAnnotations { get; init; }
 }
-
-

@@ -13,22 +13,22 @@ public class CodeLensHandler : CodeLensHandlerBase
     {
         Console.Error.WriteLine("CodeLens");
         return Task.FromResult(new CodeLensResponse([
-            new CodeLens()
+            new CodeLens
             {
-                Range = new DocumentRange()
+                Range = new DocumentRange
                 {
-                    Start = new Position()
+                    Start = new Position
                     {
                         Line = 0,
                         Character = 0
                     },
-                    End = new Position()
+                    End = new Position
                     {
                         Line = 0,
                         Character = 0
                     }
                 },
-                Command = new Command()
+                Command = new Command
                 {
                     Title = "CodeLens",
                     Name = "CodeLens",
@@ -44,9 +44,10 @@ public class CodeLensHandler : CodeLensHandlerBase
         return Task.FromResult(request);
     }
 
-    public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+    public override void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.CodeLensProvider = new CodeLensOptions()
+        serverCapabilities.CodeLensProvider = new CodeLensOptions
         {
             ResolveProvider = true
         };

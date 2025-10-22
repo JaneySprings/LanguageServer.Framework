@@ -6,8 +6,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.ExecuteCommand;
 
 public class ExecuteCommandParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The identifier of the actual command handler.

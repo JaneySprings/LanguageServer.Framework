@@ -57,7 +57,8 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextEdit;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.Union;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.WorkDoneProgress;
-using FileSystemWatcher = EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch.FileSystemWatcher;
+using FileSystemWatcher =
+    EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch.FileSystemWatcher;
 using FoldingRangeKind = EmmyLua.LanguageServer.Framework.Protocol.Message.FoldingRange.FoldingRangeKind;
 
 
@@ -321,4 +322,4 @@ namespace EmmyLua.LanguageServer.Framework.Protocol;
 [JsonSerializable(typeof(List<ConfigurationItem>))]
 [JsonSerializable(typeof(List<LSPAny>))]
 // ReSharper disable once ClassNeverInstantiated.Global
-public partial class JsonProtocolContext: JsonSerializerContext;
+public partial class JsonProtocolContext : JsonSerializerContext;

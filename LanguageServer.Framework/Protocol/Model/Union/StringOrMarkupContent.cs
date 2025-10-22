@@ -21,19 +21,23 @@ public class StringOrMarkupContent
         MarkupContentValue = value;
     }
 
-    public static implicit operator StringOrMarkupContent(string item1) => new(item1);
+    public static implicit operator StringOrMarkupContent(string item1)
+    {
+        return new StringOrMarkupContent(item1);
+    }
 
-    public static implicit operator StringOrMarkupContent(MarkupContent item2) => new(item2);
+    public static implicit operator StringOrMarkupContent(MarkupContent item2)
+    {
+        return new StringOrMarkupContent(item2);
+    }
 }
 
 public class StringOrMarkupContentConverter : JsonConverter<StringOrMarkupContent>
 {
-    public override StringOrMarkupContent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override StringOrMarkupContent Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            return new StringOrMarkupContent(reader.GetString()!);
-        }
+        if (reader.TokenType == JsonTokenType.String) return new StringOrMarkupContent(reader.GetString()!);
 
         return new StringOrMarkupContent(JsonSerializer.Deserialize<MarkupContent>(ref reader, options)!);
     }
@@ -41,12 +45,8 @@ public class StringOrMarkupContentConverter : JsonConverter<StringOrMarkupConten
     public override void Write(Utf8JsonWriter writer, StringOrMarkupContent value, JsonSerializerOptions options)
     {
         if (value.StringValue != null)
-        {
             writer.WriteStringValue(value.StringValue);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.MarkupContentValue, options);
-        }
     }
 }

@@ -41,7 +41,8 @@ public class NotebookSelectorOptions
      * value is provided, it matches against the
      * notebook type. '*' matches every notebook.
      */
-    [JsonPropertyName("notebookType"), JsonConverter(typeof(StringOrJsonConverter<NotebookDocumentFilter>))]
+    [JsonPropertyName("notebookType")]
+    [JsonConverter(typeof(StringOrJsonConverter<NotebookDocumentFilter>))]
     public StringOr<NotebookDocumentFilter>? NotebookType { get; init; }
 
     /**
@@ -85,6 +86,5 @@ public class NotebookDocumentFilter
  */
 public class CellSelectorOptions
 {
-    [JsonPropertyName("language")]
-    public string Language { get; init; } = null!;
+    [JsonPropertyName("language")] public string Language { get; init; } = null!;
 }

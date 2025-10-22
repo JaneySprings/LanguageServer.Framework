@@ -76,10 +76,8 @@ public class WorkDoneProgressReporter : IDisposable
     public void Dispose()
     {
         if (!_disposed && _started)
-        {
             // Fire and forget
             _ = End();
-        }
     }
 
     /// <summary>

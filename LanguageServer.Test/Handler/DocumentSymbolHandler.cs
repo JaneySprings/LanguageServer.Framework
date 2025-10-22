@@ -14,16 +14,16 @@ public class DocumentSymbolHandler : DocumentSymbolHandlerBase
     {
         Console.Error.WriteLine("DocumentSymbol");
         return Task.FromResult(new DocumentSymbolResponse([
-            new DocumentSymbol()
+            new DocumentSymbol
             {
                 Name = "DocumentSymbol",
                 Kind = SymbolKind.Class,
-                Range = new()
+                Range = new DocumentRange
                 {
                     Start = new Position(0, 0),
                     End = new Position(0, 1)
                 },
-                SelectionRange = new()
+                SelectionRange = new DocumentRange
                 {
                     Start = new Position(0, 0),
                     End = new Position(0, 1)

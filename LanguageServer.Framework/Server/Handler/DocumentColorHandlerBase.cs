@@ -9,7 +9,8 @@ public abstract class DocumentColorHandlerBase : IJsonHandler
 {
     protected abstract Task<DocumentColorResponse> Handle(DocumentColorParams request, CancellationToken token);
 
-    protected abstract Task<ColorPresentationResponse> Resolve(ColorPresentationParams request, CancellationToken token);
+    protected abstract Task<ColorPresentationResponse>
+        Resolve(ColorPresentationParams request, CancellationToken token);
 
     public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {

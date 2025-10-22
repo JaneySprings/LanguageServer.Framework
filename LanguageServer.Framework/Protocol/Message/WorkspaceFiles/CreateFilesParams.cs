@@ -11,7 +11,6 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceFiles;
  */
 public class CreateFilesParams
 {
-
     /**
      * An array of all files/folders created in this operation.
      */

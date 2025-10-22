@@ -13,7 +13,8 @@ public abstract class WorkspaceFolderHandlerBase : IJsonHandler
     {
         lspCommunication.AddNotificationHandler("workspace/didChangeWorkspaceFolders", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidChangeWorkspaceFoldersParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }

@@ -24,9 +24,15 @@ public class BooleanOr<T>
         BoolValue = value;
     }
 
-    public static implicit operator BooleanOr<T>(T value) => new(value);
+    public static implicit operator BooleanOr<T>(T value)
+    {
+        return new BooleanOr<T>(value);
+    }
 
-    public static implicit operator BooleanOr<T>(bool value) => new(value);
+    public static implicit operator BooleanOr<T>(bool value)
+    {
+        return new BooleanOr<T>(value);
+    }
 }
 
 public class BooleanOrConverter<T> : JsonConverter<BooleanOr<T>>
@@ -44,12 +50,8 @@ public class BooleanOrConverter<T> : JsonConverter<BooleanOr<T>>
     public override void Write(Utf8JsonWriter writer, BooleanOr<T> value, JsonSerializerOptions options)
     {
         if (value.IsValue)
-        {
             JsonSerializer.Serialize(writer, value.Value, options);
-        }
         else
-        {
             writer.WriteBooleanValue(value.BoolValue);
-        }
     }
 }

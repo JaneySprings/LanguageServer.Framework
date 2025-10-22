@@ -22,10 +22,23 @@ public record struct DocumentRange(Position Start, Position End)
     {
     }
 
-    public static DocumentRange From(Position start, Position end) => new DocumentRange(start, end);
-    public static DocumentRange From((Position start, Position end) tuple) => new DocumentRange(tuple.start, tuple.end);
+    public static DocumentRange From(Position start, Position end)
+    {
+        return new DocumentRange(start, end);
+    }
 
-    public static implicit operator DocumentRange((Position start, Position end) tuple) => From(tuple);
+    public static DocumentRange From((Position start, Position end) tuple)
+    {
+        return new DocumentRange(tuple.start, tuple.end);
+    }
 
-    public static implicit operator (Position start, Position end)(DocumentRange range) => (range.Start, range.End);
+    public static implicit operator DocumentRange((Position start, Position end) tuple)
+    {
+        return From(tuple);
+    }
+
+    public static implicit operator (Position start, Position end)(DocumentRange range)
+    {
+        return (range.Start, range.End);
+    }
 }

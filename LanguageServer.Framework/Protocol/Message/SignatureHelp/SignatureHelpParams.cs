@@ -6,8 +6,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.SignatureHelp;
 
 public class SignatureHelpParams : TextDocumentPositionParams, IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The signature help context. This is only available if the client

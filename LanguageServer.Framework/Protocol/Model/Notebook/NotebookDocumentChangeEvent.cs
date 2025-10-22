@@ -26,7 +26,6 @@ public class NotebookDocumentChangeEvent
 
 public class NotebookDocumentChangeEventCell
 {
-
     /**
      * Changes to the cell structure to add or
      * remove cells.
@@ -71,9 +70,7 @@ public class NotebookDocumentChangeEventCellStruct
 
 public class NotebookDocumentChangeEventCellTextContent
 {
-    [JsonPropertyName("document")]
-    public VersionedTextDocumentIdentifier Document { get; set; } = null!;
+    [JsonPropertyName("document")] public VersionedTextDocumentIdentifier Document { get; set; } = null!;
 
-    [JsonPropertyName("changes")]
-    public List<TextDocumentContentChangeEvent> Changes { get; set; } = null!;
+    [JsonPropertyName("changes")] public List<TextDocumentContentChangeEvent> Changes { get; set; } = null!;
 }

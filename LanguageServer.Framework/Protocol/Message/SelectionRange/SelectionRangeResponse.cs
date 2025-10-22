@@ -12,7 +12,8 @@ public class SelectionRangeResponse(List<SelectionRange> ranges)
 
 public class SelectionRangeResponseJsonConverter : JsonConverter<SelectionRangeResponse>
 {
-    public override SelectionRangeResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override SelectionRangeResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }

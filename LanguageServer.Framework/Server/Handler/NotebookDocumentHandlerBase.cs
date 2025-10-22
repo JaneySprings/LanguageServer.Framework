@@ -19,25 +19,29 @@ public abstract class NotebookDocumentHandlerBase : IJsonHandler
     {
         lspCommunication.AddNotificationHandler("notebookDocument/didClose", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidCloseNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidCloseNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
         lspCommunication.AddNotificationHandler("notebookDocument/didOpen", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidOpenNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidOpenNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
         lspCommunication.AddNotificationHandler("notebookDocument/didChange", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidChangeNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
 
         lspCommunication.AddNotificationHandler("notebookDocument/didSave", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidSaveNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidSaveNotebookDocumentParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }

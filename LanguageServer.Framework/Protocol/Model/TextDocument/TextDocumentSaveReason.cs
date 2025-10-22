@@ -10,28 +10,27 @@ public readonly record struct TextDocumentSaveReason(int Value)
      * Manually triggered, e.g. by the user pressing save, by starting
      * debugging, or by an API call.
      */
-    public static readonly TextDocumentSaveReason Manual = new TextDocumentSaveReason(1);
+    public static readonly TextDocumentSaveReason Manual = new(1);
+
     /**
      * Automatic after a delay.
      */
-    public static readonly TextDocumentSaveReason AfterDelay = new TextDocumentSaveReason(2);
+    public static readonly TextDocumentSaveReason AfterDelay = new(2);
 
     /**
      * When the editor lost focus.
      */
-    public static readonly TextDocumentSaveReason FocusOut = new TextDocumentSaveReason(3);
+    public static readonly TextDocumentSaveReason FocusOut = new(3);
 
     public int Value { get; } = Value;
 }
 
 public class TextDocumentSaveReasonConverter : JsonConverter<TextDocumentSaveReason>
 {
-    public override TextDocumentSaveReason Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TextDocumentSaveReason Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return new TextDocumentSaveReason(reader.GetInt32());
     }

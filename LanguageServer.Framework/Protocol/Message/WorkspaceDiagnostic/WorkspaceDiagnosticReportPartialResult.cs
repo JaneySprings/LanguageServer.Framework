@@ -9,6 +9,5 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceDiagnostic;
  */
 public class WorkspaceDiagnosticReportPartialResult
 {
-    [JsonPropertyName("items")]
-    public List<WorkspaceDocumentDiagnosticReport> Items { get; set; } = null!;
+    [JsonPropertyName("items")] public List<WorkspaceDocumentDiagnosticReport> Items { get; set; } = null!;
 }

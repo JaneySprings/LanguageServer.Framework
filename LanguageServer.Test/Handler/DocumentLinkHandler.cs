@@ -11,26 +11,26 @@ public class DocumentLinkHandler : DocumentLinkHandlerBase
 {
     protected override Task<DocumentLinkResponse> Handle(DocumentLinkParams request, CancellationToken token)
     {
-         Console.Error.WriteLine("DocumentLink");
-         return  Task.FromResult(new DocumentLinkResponse([
-             new DocumentLink()
-             {
-                 Range = new DocumentRange()
-                 {
-                     Start = new Position()
-                     {
-                         Line = 0,
-                         Character = 0
-                     },
-                     End = new Position()
-                     {
-                         Line = 0,
-                         Character = 1
-                     }
-                 },
-                 Target = "https://www.google.com"
-             }
-         ]));
+        Console.Error.WriteLine("DocumentLink");
+        return Task.FromResult(new DocumentLinkResponse([
+            new DocumentLink
+            {
+                Range = new DocumentRange
+                {
+                    Start = new Position
+                    {
+                        Line = 0,
+                        Character = 0
+                    },
+                    End = new Position
+                    {
+                        Line = 0,
+                        Character = 1
+                    }
+                },
+                Target = "https://www.google.com"
+            }
+        ]));
     }
 
     protected override Task<DocumentLink> Resolve(DocumentLink request, CancellationToken token)
@@ -39,9 +39,10 @@ public class DocumentLinkHandler : DocumentLinkHandlerBase
         return Task.FromResult(request);
     }
 
-    public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+    public override void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.DocumentLinkProvider = new DocumentLinkOptions()
+        serverCapabilities.DocumentLinkProvider = new DocumentLinkOptions
         {
             ResolveProvider = true
         };

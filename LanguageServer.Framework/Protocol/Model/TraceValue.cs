@@ -7,9 +7,9 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Model;
 public readonly record struct TraceValue(string Value)
 {
     public static readonly TraceValue Off = new("off");
-    
+
     public static readonly TraceValue Messages = new("messages");
-    
+
     public static readonly TraceValue Verbose = new("verbose");
 
     public string Value { get; } = Value;

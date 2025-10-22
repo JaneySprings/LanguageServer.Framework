@@ -28,7 +28,8 @@ public class CodeActionResponse
 
 public class CodeActionResponseJsonConverter : JsonConverter<CodeActionResponse>
 {
-    public override CodeActionResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CodeActionResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }
@@ -38,7 +39,6 @@ public class CodeActionResponseJsonConverter : JsonConverter<CodeActionResponse>
         JsonSerializer.Serialize(writer, value.CommandOrCodeActions, options);
     }
 }
-
 
 [JsonConverter(typeof(CommandOrCodeActionJsonConverter))]
 public class CommandOrCodeAction
@@ -60,7 +60,8 @@ public class CommandOrCodeAction
 
 public class CommandOrCodeActionJsonConverter : JsonConverter<CommandOrCodeAction>
 {
-    public override CommandOrCodeAction Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CommandOrCodeAction Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }
@@ -68,12 +69,8 @@ public class CommandOrCodeActionJsonConverter : JsonConverter<CommandOrCodeActio
     public override void Write(Utf8JsonWriter writer, CommandOrCodeAction value, JsonSerializerOptions options)
     {
         if (value.Command != null)
-        {
             JsonSerializer.Serialize(writer, value.Command, options);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.CodeAction, options);
-        }
     }
 }

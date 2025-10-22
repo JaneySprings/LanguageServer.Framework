@@ -38,10 +38,7 @@ public class SymbolKindJsonConverter : JsonConverter<SymbolKind>
 {
     public override SymbolKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return (SymbolKind)reader.GetInt32();
     }

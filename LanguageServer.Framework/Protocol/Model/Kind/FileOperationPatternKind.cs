@@ -15,7 +15,8 @@ public readonly record struct FileOperationPatternKind(string Value)
 
 public class FileOperationPatternKindConverter : JsonConverter<FileOperationPatternKind>
 {
-    public override FileOperationPatternKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override FileOperationPatternKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return new FileOperationPatternKind(reader.GetString()!);
     }

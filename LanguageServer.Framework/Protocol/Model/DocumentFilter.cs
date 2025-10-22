@@ -10,13 +10,13 @@ public record struct DocumentFilter(string Language, string? Scheme, string? Pat
      */
     [JsonPropertyName("language")]
     public string Language { get; } = Language;
-    
+
     /**
      * A Uri [scheme](#Uri.scheme), like `file` or `untitled`.
      */
     [JsonPropertyName("scheme")]
     public string? Scheme { get; } = Scheme;
-    
+
     /**
      * A glob pattern, like `*.{ts,js}`.
      *

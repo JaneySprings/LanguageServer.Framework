@@ -12,12 +12,12 @@ public abstract class InlineCompletionHandlerBase : IJsonHandler
 
     public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {
-         lspCommunication.AddRequestHandler("textDocument/inlineCompletion", async (message, token) =>
-         {
-             var request = message.Params!.Deserialize<InlineCompletionParams>(lspCommunication.JsonSerializerOptions)!;
-             var r = await Handle(request, token);
-             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
-         });
+        lspCommunication.AddRequestHandler("textDocument/inlineCompletion", async (message, token) =>
+        {
+            var request = message.Params!.Deserialize<InlineCompletionParams>(lspCommunication.JsonSerializerOptions)!;
+            var r = await Handle(request, token);
+            return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
+        });
     }
 
     public abstract void RegisterCapability(ServerCapabilities serverCapabilities,

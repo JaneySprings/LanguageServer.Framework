@@ -43,7 +43,8 @@ public class InitializeParams
      *
      * @deprecated in favour of rootUri.
      */
-    [JsonPropertyName("rootPath"), Obsolete("Use `rootUri` instead.")]
+    [JsonPropertyName("rootPath")]
+    [Obsolete("Use `rootUri` instead.")]
     public string? RootPath { get; set; }
 
     /**
@@ -64,7 +65,7 @@ public class InitializeParams
      * The capabilities provided by the client (editor or tool)
      */
     [JsonPropertyName("capabilities")]
-    public ClientCapabilities Capabilities { get; set; } = new ClientCapabilities();
+    public ClientCapabilities Capabilities { get; set; } = new();
 
     /**
      * The initial trace setting. If omitted trace is disabled ('off').

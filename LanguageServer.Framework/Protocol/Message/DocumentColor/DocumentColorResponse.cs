@@ -12,7 +12,8 @@ public class DocumentColorResponse(List<ColorInformation> colorInformationList)
 
 public class DocumentColorResponseJsonConverter : JsonConverter<DocumentColorResponse>
 {
-    public override DocumentColorResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentColorResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }

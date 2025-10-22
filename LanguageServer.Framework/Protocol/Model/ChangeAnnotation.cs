@@ -15,20 +15,19 @@ public record ChangeAnnotation(string Label, bool? NeedsConfirmation, string Des
      */
     [JsonPropertyName("label")]
     public string Label { get; } = Label;
-    
+
     /**
      * A flag which indicates that user confirmation is needed before applying the change.
      */
     [JsonPropertyName("needsConfirmation")]
     public bool? NeedsConfirmation { get; } = NeedsConfirmation;
-    
+
     /**
      * A human-readable string which explains the change.
      */
     [JsonPropertyName("description")]
     public string Description { get; } = Description;
 }
-
 
 /**
  * An identifier referring to a change annotation managed by a workspace
@@ -44,7 +43,8 @@ public readonly record struct ChangeAnnotationIdentifier(string Value)
 
 public class ChangeAnnotationIdentifierConverter : JsonConverter<ChangeAnnotationIdentifier>
 {
-    public override ChangeAnnotationIdentifier Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ChangeAnnotationIdentifier Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return new ChangeAnnotationIdentifier(reader.GetString()!);
     }

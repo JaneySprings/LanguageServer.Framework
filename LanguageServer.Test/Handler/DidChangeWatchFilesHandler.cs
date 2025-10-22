@@ -4,6 +4,8 @@ using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.Registration;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
+using FileSystemWatcher =
+    EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch.FileSystemWatcher;
 
 namespace EmmyLua.LanguageServer.Framework.Handler;
 
@@ -22,11 +24,11 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
 
     public override void RegisterDynamicCapability(Server.LanguageServer server, ClientCapabilities clientCapabilities)
     {
-        var dynamicRegistration = new DidChangeWatchedFilesRegistrationOptions()
+        var dynamicRegistration = new DidChangeWatchedFilesRegistrationOptions
         {
             Watchers =
             [
-                new()
+                new FileSystemWatcher
                 {
                     GlobalPattern = "**/*.lua",
                     Kind = WatchKind.Create | WatchKind.Change | WatchKind.Delete
@@ -34,11 +36,11 @@ public class DidChangeWatchFilesHandler : DidChangeWatchedFilesHandlerBase
             ]
         };
 
-        server.Client.DynamicRegisterCapability(new RegistrationParams()
+        server.Client.DynamicRegisterCapability(new RegistrationParams
         {
             Registrations =
             [
-                new Registration()
+                new Registration
                 {
                     Id = Guid.NewGuid().ToString(),
                     Method = "workspace/didChangeWatchedFiles",

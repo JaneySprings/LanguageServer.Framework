@@ -31,7 +31,8 @@ public class DocumentDiagnosticReport
 
 public class DocumentDiagnosticReportJsonConverter : JsonConverter<DocumentDiagnosticReport>
 {
-    public override DocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
@@ -39,16 +40,10 @@ public class DocumentDiagnosticReportJsonConverter : JsonConverter<DocumentDiagn
     public override void Write(Utf8JsonWriter writer, DocumentDiagnosticReport value, JsonSerializerOptions options)
     {
         if (value.Report is RelatedFullDocumentDiagnosticReport fullDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, fullDocumentDiagnosticReport, options);
-        }
         else if (value.Report is RelatedUnchangedDocumentDiagnosticReport unchangedDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, unchangedDocumentDiagnosticReport, options);
-        }
         else
-        {
             throw new InvalidOperationException();
-        }
     }
 }

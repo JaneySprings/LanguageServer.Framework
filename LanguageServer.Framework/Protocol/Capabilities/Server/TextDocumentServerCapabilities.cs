@@ -24,5 +24,3 @@ public class TextDocumentServerCapabilities
     [JsonPropertyName("diagnostic")]
     public DiagnosticPullModel? Diagnostic { get; set; }
 }
-
-

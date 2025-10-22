@@ -12,7 +12,8 @@ public class DocumentLinkResponse(List<DocumentLink> documentLinks)
 
 public class DocumentLinkResponseJsonConverter : JsonConverter<DocumentLinkResponse>
 {
-    public override DocumentLinkResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentLinkResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }

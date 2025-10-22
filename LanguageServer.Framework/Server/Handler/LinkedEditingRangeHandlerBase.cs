@@ -14,7 +14,8 @@ public abstract class LinkedEditingRangeHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("textDocument/linkedEditingRange", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<LinkedEditingRangeParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<LinkedEditingRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

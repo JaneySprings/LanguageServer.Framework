@@ -12,7 +12,8 @@ public class DocumentHighlightResponse(List<DocumentHighlight> highlights)
 
 public class DocumentHighlightResponseJsonConverter : JsonConverter<DocumentHighlightResponse>
 {
-    public override DocumentHighlightResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentHighlightResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }

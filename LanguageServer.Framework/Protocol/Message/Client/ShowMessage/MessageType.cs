@@ -38,10 +38,7 @@ public class MessageTypeJsonConverter : JsonConverter<MessageType>
 {
     public override MessageType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return new MessageType(reader.GetInt32());
     }

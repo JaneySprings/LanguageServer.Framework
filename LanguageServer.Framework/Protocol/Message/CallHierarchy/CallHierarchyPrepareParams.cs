@@ -6,6 +6,5 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.CallHierarchy;
 
 public class CallHierarchyPrepareParams : TextDocumentPositionParams, IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 }

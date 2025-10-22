@@ -5,7 +5,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Model.File;
 /**
  * Options to create a file.
  */
-[method:JsonConstructor]
+[method: JsonConstructor]
 public readonly record struct CreateFileOptions(bool? Overwrite, bool? IgnoreIfExists)
 {
     /**
@@ -24,7 +24,7 @@ public readonly record struct CreateFileOptions(bool? Overwrite, bool? IgnoreIfE
 /**
  * Create file operation
  */
-[method:JsonConstructor]
+[method: JsonConstructor]
 public record CreateFile(DocumentUri Uri, CreateFileOptions? Options, ChangeAnnotationIdentifier? AnnotationId)
 {
     /**
@@ -32,6 +32,7 @@ public record CreateFile(DocumentUri Uri, CreateFileOptions? Options, ChangeAnno
      */
     [JsonPropertyName("kind")]
     public string Kind { get; } = "create";
+
     /**
      * The resource to create.
      */

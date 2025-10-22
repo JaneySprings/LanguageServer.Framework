@@ -65,6 +65,3 @@ public class SymbolTagSupportClientCapabilities
     [JsonPropertyName("valueSet")]
     public List<SymbolTag>? ValueSet { get; init; }
 }
-
-
-

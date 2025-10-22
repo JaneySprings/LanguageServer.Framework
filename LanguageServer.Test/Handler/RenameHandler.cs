@@ -17,7 +17,7 @@ public class RenameHandler : RenameHandlerBase
         var changes = new Dictionary<DocumentUri, List<TextEdit>>();
         changes[request.TextDocument.Uri] =
         [
-            new TextEdit()
+            new TextEdit
             {
                 Range = new DocumentRange(request.Position,
                     request.Position with { Character = request.Position.Character + 1 }),

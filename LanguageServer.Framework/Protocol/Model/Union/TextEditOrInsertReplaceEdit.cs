@@ -24,7 +24,8 @@ public class TextEditOrInsertReplaceEdit
 
 public class TextEditOrInsertReplaceEditConverter : JsonConverter<TextEditOrInsertReplaceEdit>
 {
-    public override TextEditOrInsertReplaceEdit Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TextEditOrInsertReplaceEdit Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var root = jsonDocument.RootElement;
@@ -41,12 +42,8 @@ public class TextEditOrInsertReplaceEditConverter : JsonConverter<TextEditOrInse
     public override void Write(Utf8JsonWriter writer, TextEditOrInsertReplaceEdit value, JsonSerializerOptions options)
     {
         if (value.TextEdit != null)
-        {
             JsonSerializer.Serialize(writer, value.TextEdit, options);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.InsertReplaceEdit, options);
-        }
     }
 }

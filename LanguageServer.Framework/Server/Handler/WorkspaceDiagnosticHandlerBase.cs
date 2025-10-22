@@ -14,7 +14,8 @@ public abstract class WorkspaceDiagnosticHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("workspace/diagnostic", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<WorkspaceDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<WorkspaceDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

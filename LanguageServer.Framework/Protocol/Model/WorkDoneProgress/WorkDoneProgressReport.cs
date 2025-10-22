@@ -9,13 +9,13 @@ public record WorkDoneProgressReport() : WorkDoneProgress("report")
      */
     [JsonPropertyName("cancellable")]
     public bool? Cancellable { get; init; }
-    
+
     /**
      * Message to be displayed in the progress UI.
      */
     [JsonPropertyName("message")]
     public string? Message { get; init; }
-    
+
     /**
      * Optional progress percentage to display. Value should be in range [0, 100].
      */

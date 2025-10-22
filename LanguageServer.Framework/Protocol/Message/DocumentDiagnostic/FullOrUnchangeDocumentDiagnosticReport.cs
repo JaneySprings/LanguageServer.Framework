@@ -31,24 +31,20 @@ public class FullOrUnchangeDocumentDiagnosticReport
 
 public class FullOrUnchangeDocumentDiagnosticReportJsonConverter : JsonConverter<FullOrUnchangeDocumentDiagnosticReport>
 {
-    public override FullOrUnchangeDocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override FullOrUnchangeDocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, FullOrUnchangeDocumentDiagnosticReport value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, FullOrUnchangeDocumentDiagnosticReport value,
+        JsonSerializerOptions options)
     {
         if (value.Report is FullDocumentDiagnosticReport fullDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, fullDocumentDiagnosticReport, options);
-        }
         else if (value.Report is UnchangedDocumentDiagnosticReport unchangedDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, unchangedDocumentDiagnosticReport, options);
-        }
         else
-        {
             throw new InvalidOperationException();
-        }
     }
 }

@@ -20,6 +20,7 @@ public class WorkspaceFoldersServerCapabilities
      * side. The ID can be used to unregister for these events
      * using the `client/unregisterCapability` request.
      */
-    [JsonPropertyName("changeNotifications"), JsonConverter(typeof(BooleanOrConverter<string>))]
+    [JsonPropertyName("changeNotifications")]
+    [JsonConverter(typeof(BooleanOrConverter<string>))]
     public BooleanOr<string>? ChangeNotifications { get; set; }
 }

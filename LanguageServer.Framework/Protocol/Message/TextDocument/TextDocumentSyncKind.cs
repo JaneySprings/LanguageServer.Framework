@@ -17,7 +17,8 @@ public readonly record struct TextDocumentSyncKind(int Value)
 
 public class TextDocumentSyncKindConverter : JsonConverter<TextDocumentSyncKind>
 {
-    public override TextDocumentSyncKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TextDocumentSyncKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return reader.GetInt32() switch
         {

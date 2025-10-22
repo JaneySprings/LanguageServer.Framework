@@ -7,8 +7,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentFormatting;
 
 public class DocumentRangeFormattingParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The document to format.
@@ -31,8 +30,7 @@ public class DocumentRangeFormattingParams : IWorkDoneProgressParams
 
 public class DocumentRangesFormattingParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The document to format.

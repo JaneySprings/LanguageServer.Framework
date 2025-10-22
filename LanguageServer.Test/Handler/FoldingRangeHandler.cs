@@ -12,7 +12,7 @@ public class FoldingRangeHandler : FoldingRangeHandlerBase
     {
         Console.Error.WriteLine("FoldingRangeHandler.Handle");
         return Task.FromResult(new FoldingRangeResponse([
-            new FoldingRange()
+            new FoldingRange
             {
                 StartLine = 1,
                 StartCharacter = 0,
@@ -24,7 +24,8 @@ public class FoldingRangeHandler : FoldingRangeHandlerBase
         ]));
     }
 
-    public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+    public override void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities)
     {
         serverCapabilities.FoldingRangeProvider = new FoldingRangeOptions();
     }

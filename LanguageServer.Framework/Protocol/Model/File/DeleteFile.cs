@@ -13,7 +13,7 @@ public readonly record struct DeleteFileOptions(bool? Recursive, bool? IgnoreIfN
      */
     [JsonPropertyName("recursive")]
     public bool? Recursive { get; } = Recursive;
-    
+
     /**
      * Ignore if file does not exist.
      */
@@ -32,7 +32,7 @@ public record DeleteFile(DocumentUri Uri, DeleteFileOptions? Options, ChangeAnno
      */
     [JsonPropertyName("kind")]
     public string Kind { get; } = "delete";
-    
+
     /**
      * The resource to delete.
      */

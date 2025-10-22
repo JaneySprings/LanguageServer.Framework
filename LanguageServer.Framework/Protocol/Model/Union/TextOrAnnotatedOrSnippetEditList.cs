@@ -28,17 +28,27 @@ public class TextOrAnnotatedOrSnippetEditList
         SnippetTextEditList = snippetTextEditList;
     }
 
-    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<TextEdit.TextEdit> item1) => new(item1);
+    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<TextEdit.TextEdit> item1)
+    {
+        return new TextOrAnnotatedOrSnippetEditList(item1);
+    }
 
-    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<AnnotatedTextEdit> item2) => new(item2);
+    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<AnnotatedTextEdit> item2)
+    {
+        return new TextOrAnnotatedOrSnippetEditList(item2);
+    }
 
-    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<SnippetTextEdit> item3) => new(item3);
+    public static implicit operator TextOrAnnotatedOrSnippetEditList(List<SnippetTextEdit> item3)
+    {
+        return new TextOrAnnotatedOrSnippetEditList(item3);
+    }
 }
 
 public class TextOrAnnotatedOrSnippetEditListConverter : JsonConverter<TextOrAnnotatedOrSnippetEditList>
 {
     // TODO: this is a error implementation, need to fix it
-    public override TextOrAnnotatedOrSnippetEditList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TextOrAnnotatedOrSnippetEditList Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.StartArray)
         {
@@ -56,19 +66,14 @@ public class TextOrAnnotatedOrSnippetEditListConverter : JsonConverter<TextOrAnn
         return new TextOrAnnotatedOrSnippetEditList(snippetTextEditList!);
     }
 
-    public override void Write(Utf8JsonWriter writer, TextOrAnnotatedOrSnippetEditList value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, TextOrAnnotatedOrSnippetEditList value,
+        JsonSerializerOptions options)
     {
         if (value.TextEditList != null)
-        {
             JsonSerializer.Serialize(writer, value.TextEditList, options);
-        }
         else if (value.AnnotatedTextEditList != null)
-        {
             JsonSerializer.Serialize(writer, value.AnnotatedTextEditList, options);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.SnippetTextEditList, options);
-        }
     }
 }

@@ -13,16 +13,16 @@ public class SelectionRangeHandler : SelectionRangeHandlerBase
     {
         Console.Error.WriteLine("SelectionRange");
         return Task.FromResult(new SelectionRangeResponse([
-            new SelectionRange()
+            new SelectionRange
             {
-                Range = new()
+                Range = new DocumentRange
                 {
                     Start = new Position(0, 0),
                     End = new Position(0, 0)
                 },
-                Parent = new SelectionRange()
+                Parent = new SelectionRange
                 {
-                    Range = new()
+                    Range = new DocumentRange
                     {
                         Start = new Position(0, 0),
                         End = new Position(0, 0)

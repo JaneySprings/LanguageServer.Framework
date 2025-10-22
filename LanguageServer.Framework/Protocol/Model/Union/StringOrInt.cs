@@ -20,19 +20,22 @@ public class StringOrInt
         IntValue = value;
     }
 
-    public static implicit operator StringOrInt(string item1) => new(item1);
+    public static implicit operator StringOrInt(string item1)
+    {
+        return new StringOrInt(item1);
+    }
 
-    public static implicit operator StringOrInt(int item2) => new(item2);
+    public static implicit operator StringOrInt(int item2)
+    {
+        return new StringOrInt(item2);
+    }
 }
 
 public class StringOrIntConverter : JsonConverter<StringOrInt>
 {
     public override StringOrInt Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.Number)
-        {
-            return new StringOrInt(reader.GetInt32());
-        }
+        if (reader.TokenType == JsonTokenType.Number) return new StringOrInt(reader.GetInt32());
 
         return new StringOrInt(reader.GetString()!);
     }
@@ -40,12 +43,8 @@ public class StringOrIntConverter : JsonConverter<StringOrInt>
     public override void Write(Utf8JsonWriter writer, StringOrInt value, JsonSerializerOptions options)
     {
         if (value.StringValue != null)
-        {
             writer.WriteStringValue(value.StringValue);
-        }
         else
-        {
             writer.WriteNumberValue(value.IntValue);
-        }
     }
 }

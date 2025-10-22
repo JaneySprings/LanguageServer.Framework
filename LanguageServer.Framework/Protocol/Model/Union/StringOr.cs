@@ -19,19 +19,22 @@ public class StringOr<T>
         Value = value;
     }
 
-    public static implicit operator StringOr<T>(string value) => new(value);
+    public static implicit operator StringOr<T>(string value)
+    {
+        return new StringOr<T>(value);
+    }
 
-    public static implicit operator StringOr<T>(T value) => new(value);
+    public static implicit operator StringOr<T>(T value)
+    {
+        return new StringOr<T>(value);
+    }
 }
 
 public class StringOrJsonConverter<T> : JsonConverter<StringOr<T>>
 {
     public override StringOr<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            return new StringOr<T>(reader.GetString());
-        }
+        if (reader.TokenType == JsonTokenType.String) return new StringOr<T>(reader.GetString());
 
         return new StringOr<T>(JsonSerializer.Deserialize<T>(ref reader, options)!);
     }
@@ -39,12 +42,8 @@ public class StringOrJsonConverter<T> : JsonConverter<StringOr<T>>
     public override void Write(Utf8JsonWriter writer, StringOr<T> value, JsonSerializerOptions options)
     {
         if (value.String != null)
-        {
             writer.WriteStringValue(value.String);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.Value, options);
-        }
     }
 }

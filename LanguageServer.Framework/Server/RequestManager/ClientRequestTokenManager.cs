@@ -27,30 +27,20 @@ public class ClientRequestTokenManager
     public void ClearToken(StringOrInt id)
     {
         if (id.StringValue is null)
-        {
             _intRequestTokens.TryRemove(id.IntValue, out _);
-        }
         else
-        {
             _stringRequestTokens.TryRemove(id.StringValue, out _);
-        }
     }
 
     public void CancelToken(StringOrInt id)
     {
         if (id.StringValue is null)
         {
-            if (_intRequestTokens.TryRemove(id.IntValue, out var token))
-            {
-                token.Cancel();
-            }
+            if (_intRequestTokens.TryRemove(id.IntValue, out var token)) token.Cancel();
         }
         else
         {
-            if (_stringRequestTokens.TryRemove(id.StringValue, out var token))
-            {
-                token.Cancel();
-            }
+            if (_stringRequestTokens.TryRemove(id.StringValue, out var token)) token.Cancel();
         }
     }
 }

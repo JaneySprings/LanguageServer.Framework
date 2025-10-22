@@ -7,8 +7,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.SelectionRange;
 
 public class SelectionRangeParams : IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }

@@ -20,19 +20,22 @@ public abstract class TypeHierarchyHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("textDocument/prepareTypeHierarchy", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchyPrepareParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<TypeHierarchyPrepareParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
         lspCommunication.AddRequestHandler("typeHierarchy/supertypes", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchySupertypesParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<TypeHierarchySupertypesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
         lspCommunication.AddRequestHandler("typeHierarchy/subtypes", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<TypeHierarchySubtypesParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<TypeHierarchySubtypesParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

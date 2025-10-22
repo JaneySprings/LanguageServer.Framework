@@ -70,10 +70,25 @@ public class ClientProxy(LanguageServer server)
         return LogMessage(new LogMessageParams { Type = type, Message = message });
     }
 
-    public Task LogError(string message) => LogMessage(MessageType.Error, message);
-    public Task LogWarning(string message) => LogMessage(MessageType.Warning, message);
-    public Task LogInfo(string message) => LogMessage(MessageType.Info, message);
-    public Task LogDebug(string message) => LogMessage(MessageType.Debug, message);
+    public Task LogError(string message)
+    {
+        return LogMessage(MessageType.Error, message);
+    }
+
+    public Task LogWarning(string message)
+    {
+        return LogMessage(MessageType.Warning, message);
+    }
+
+    public Task LogInfo(string message)
+    {
+        return LogMessage(MessageType.Info, message);
+    }
+
+    public Task LogDebug(string message)
+    {
+        return LogMessage(MessageType.Debug, message);
+    }
 
     public Task TelemetryEvent(object? data)
     {
@@ -121,7 +136,8 @@ public class ClientProxy(LanguageServer server)
     /// <summary>
     /// Create a work done progress token and request the client to show progress UI.
     /// </summary>
-    public async Task<StringOrInt> CreateWorkDoneProgress(StringOrInt token, CancellationToken cancellationToken = default)
+    public async Task<StringOrInt> CreateWorkDoneProgress(StringOrInt token,
+        CancellationToken cancellationToken = default)
     {
         var @params = new WorkDoneProgressCreateParams { Token = token };
         var document = JsonSerializer.SerializeToDocument(@params, server.JsonSerializerOptions);

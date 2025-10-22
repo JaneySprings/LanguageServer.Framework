@@ -11,7 +11,8 @@ public class FoldingRangeResponse(List<FoldingRange> foldingRanges)
 
 public class FoldingRangeResponseJsonConverter : JsonConverter<FoldingRangeResponse>
 {
-    public override FoldingRangeResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override FoldingRangeResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

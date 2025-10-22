@@ -12,8 +12,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.InlayHint;
  */
 public class InlayHintParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The document to provide inlay hints for.

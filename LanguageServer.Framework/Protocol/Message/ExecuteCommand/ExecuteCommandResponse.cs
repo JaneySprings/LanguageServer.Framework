@@ -12,7 +12,8 @@ public class ExecuteCommandResponse(LSPAny? result)
 
 public class ExecuteCommandResponseJsonConverter : JsonConverter<ExecuteCommandResponse>
 {
-    public override ExecuteCommandResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ExecuteCommandResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var result = JsonSerializer.Deserialize<LSPAny>(ref reader, options);
         return new ExecuteCommandResponse(result);

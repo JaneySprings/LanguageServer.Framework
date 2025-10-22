@@ -6,12 +6,10 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.Reference;
 
 public class ReferenceParams : TextDocumentPositionParams, IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }
 
-    [JsonPropertyName("context")]
-    public ReferenceContext? Context { get; set; }
+    [JsonPropertyName("context")] public ReferenceContext? Context { get; set; }
 }

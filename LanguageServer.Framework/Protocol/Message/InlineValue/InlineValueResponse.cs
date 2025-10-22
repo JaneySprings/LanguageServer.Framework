@@ -11,7 +11,8 @@ public class InlineValueResponse(List<InlineValue> inlineValues)
 
 public class InlineValueResponseJsonConverter : JsonConverter<InlineValueResponse>
 {
-    public override InlineValueResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override InlineValueResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

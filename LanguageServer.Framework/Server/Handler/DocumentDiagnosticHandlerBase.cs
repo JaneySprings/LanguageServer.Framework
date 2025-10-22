@@ -13,13 +13,15 @@ public abstract class DocumentDiagnosticHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("textDocument/diagnostic", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DocumentDiagnosticParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
     }
 
-    public abstract void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities);
+    public abstract void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities);
 
     public virtual void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities)
     {

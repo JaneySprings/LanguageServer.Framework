@@ -29,7 +29,8 @@ public record struct CodeActionTriggerKind(int Value)
 
 public class CodeActionTriggerKindJsonConverter : JsonConverter<CodeActionTriggerKind>
 {
-    public override CodeActionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CodeActionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return reader.GetInt32() switch
         {

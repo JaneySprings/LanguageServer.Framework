@@ -98,8 +98,7 @@ public class SemanticTokensClientCapabilitiesRequests
      * The client will send the `textDocument/semanticTokens/full` request if
      * the server provides a corresponding server capability.
      */
-    [JsonPropertyName("full"), JsonConverter(typeof(BooleanOrConverter<SemanticTokensCapabilitiesFull>))]
+    [JsonPropertyName("full")]
+    [JsonConverter(typeof(BooleanOrConverter<SemanticTokensCapabilitiesFull>))]
     public BooleanOr<SemanticTokensCapabilitiesFull>? Full { get; init; }
 }
-
-

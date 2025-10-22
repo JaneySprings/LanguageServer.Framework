@@ -3,7 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch;
 
-[Flags, JsonConverter(typeof(WatchKindConverter))]
+[Flags]
+[JsonConverter(typeof(WatchKindConverter))]
 public enum WatchKind
 {
     /**
@@ -26,10 +27,7 @@ public class WatchKindConverter : JsonConverter<WatchKind>
 {
     public override WatchKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return (WatchKind)reader.GetInt32();
     }

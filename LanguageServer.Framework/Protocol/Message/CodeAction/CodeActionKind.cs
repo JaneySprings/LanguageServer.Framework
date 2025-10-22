@@ -107,10 +107,7 @@ public class CodeActionKindJsonConverter : JsonConverter<CodeActionKind>
 {
     public override CodeActionKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.String)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.String) throw new JsonException();
 
         return new CodeActionKind(reader.GetString() ?? string.Empty);
     }

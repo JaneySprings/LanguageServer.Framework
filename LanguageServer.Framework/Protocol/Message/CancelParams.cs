@@ -5,6 +5,5 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message;
 
 public class CancelParams
 {
-    [JsonPropertyName("id")]
-    public StringOrInt Id { get; } = 0;
+    [JsonPropertyName("id")] public StringOrInt Id { get; } = 0;
 }

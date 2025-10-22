@@ -13,7 +13,8 @@ public abstract class DidChangeConfigurationHandlerBase : IJsonHandler
     {
         lspCommunication.AddNotificationHandler("workspace/didChangeConfiguration", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeConfigurationParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidChangeConfigurationParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }

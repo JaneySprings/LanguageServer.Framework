@@ -23,31 +23,41 @@ public abstract class TextDocumentHandlerBase : IJsonHandler
         lspCommunication.AddNotificationHandler("textDocument/didOpen",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidOpenTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+                var request =
+                    notificationMessage.Params!.Deserialize<DidOpenTextDocumentParams>(lspCommunication
+                        .JsonSerializerOptions)!;
                 return Handle(request, token);
             });
         lspCommunication.AddNotificationHandler("textDocument/didChange",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidChangeTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+                var request =
+                    notificationMessage.Params!.Deserialize<DidChangeTextDocumentParams>(lspCommunication
+                        .JsonSerializerOptions)!;
                 return Handle(request, token);
             });
         lspCommunication.AddNotificationHandler("textDocument/didClose",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<DidCloseTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+                var request =
+                    notificationMessage.Params!.Deserialize<DidCloseTextDocumentParams>(lspCommunication
+                        .JsonSerializerOptions)!;
                 return Handle(request, token);
             });
         lspCommunication.AddNotificationHandler("textDocument/willSave",
             (notificationMessage, token) =>
             {
-                var request = notificationMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+                var request =
+                    notificationMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication
+                        .JsonSerializerOptions)!;
                 return Handle(request, token);
             });
         lspCommunication.AddRequestHandler("textDocument/willSaveWaitUntil",
             async (requestMessage, token) =>
             {
-                var request = requestMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication.JsonSerializerOptions)!;
+                var request =
+                    requestMessage.Params!.Deserialize<WillSaveTextDocumentParams>(lspCommunication
+                        .JsonSerializerOptions)!;
                 var r = await HandleRequest(request, token);
                 return r == null ? null : JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
             });

@@ -16,15 +16,15 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Model;
 [method: JsonConstructor]
 public record struct StringValue(string Kind, string Value)
 {
-     /**
-     * The kind of string value.
-     */
-     [JsonPropertyName("kind")]
-     public string Kind { get; } = Kind;
-     
-     /**
-     * The snippet string.
-     */
-     [JsonPropertyName("value")]
-     public string Value { get; } = Value;
+    /**
+    * The kind of string value.
+    */
+    [JsonPropertyName("kind")]
+    public string Kind { get; } = Kind;
+
+    /**
+    * The snippet string.
+    */
+    [JsonPropertyName("value")]
+    public string Value { get; } = Value;
 }

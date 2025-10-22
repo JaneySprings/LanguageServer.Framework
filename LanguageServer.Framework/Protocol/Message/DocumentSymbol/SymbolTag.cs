@@ -15,10 +15,7 @@ public class SymbolTagJsonConverter : JsonConverter<SymbolTag>
 {
     public override SymbolTag Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return new SymbolTag(reader.GetInt32());
     }

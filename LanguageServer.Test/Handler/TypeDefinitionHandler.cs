@@ -14,7 +14,7 @@ public class TypeDefinitionHandler : TypeDefinitionHandlerBase
     {
         Console.Error.WriteLine("TypeDefinitionHandler.Handle");
         return Task.FromResult(new TypeDefinitionResponse(new Location(request.TextDocument.Uri,
-            new DocumentRange() { Start = new Position(0, 0), End = new Position(0, 1) }
+            new DocumentRange { Start = new Position(0, 0), End = new Position(0, 1) }
         )))!;
     }
 

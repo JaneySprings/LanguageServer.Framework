@@ -54,14 +54,21 @@ public class ParameterInformationLabel
         Result2 = result2;
     }
 
-    public static implicit operator ParameterInformationLabel(string result1) => new(result1);
+    public static implicit operator ParameterInformationLabel(string result1)
+    {
+        return new ParameterInformationLabel(result1);
+    }
 
-    public static implicit operator ParameterInformationLabel((uint, uint) result2) => new(result2);
+    public static implicit operator ParameterInformationLabel((uint, uint) result2)
+    {
+        return new ParameterInformationLabel(result2);
+    }
 }
 
 public class ParameterInformationLabelJsonConverter : JsonConverter<ParameterInformationLabel>
 {
-    public override ParameterInformationLabel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ParameterInformationLabel Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.StartArray)
         {

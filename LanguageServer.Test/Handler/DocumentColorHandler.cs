@@ -15,7 +15,7 @@ public class DocumentColorHandler : DocumentColorHandlerBase
 
         var colorInformationList = new List<ColorInformation>
         {
-            new ColorInformation
+            new()
             {
                 Range = new DocumentRange
                 {

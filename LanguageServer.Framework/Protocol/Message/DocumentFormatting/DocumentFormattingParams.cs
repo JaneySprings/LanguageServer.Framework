@@ -6,8 +6,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentFormatting;
 
 public class DocumentFormattingParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The document to format.

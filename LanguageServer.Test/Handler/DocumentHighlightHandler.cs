@@ -13,9 +13,9 @@ public class DocumentHighlightHandler : DocumentHighlightHandlerBase
     {
         Console.Error.WriteLine("DocumentHighlight");
         return Task.FromResult(new DocumentHighlightResponse([
-            new DocumentHighlight()
+            new DocumentHighlight
             {
-                Range = new ()
+                Range = new DocumentRange
                 {
                     Start = request.Position,
                     End = request.Position with { Character = request.Position.Character + 1 }

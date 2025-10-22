@@ -15,7 +15,8 @@ public abstract class DidChangeWatchedFilesHandlerBase : IJsonHandler
     {
         lspCommunication.AddNotificationHandler("workspace/didChangeWatchedFiles", (message, token) =>
         {
-            var request = message.Params!.Deserialize<DidChangeWatchedFilesParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DidChangeWatchedFilesParams>(lspCommunication.JsonSerializerOptions)!;
             return Handle(request, token);
         });
     }

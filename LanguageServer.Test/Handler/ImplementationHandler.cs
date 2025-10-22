@@ -14,7 +14,7 @@ public class ImplementationHandler : ImplementationHandlerBase
     {
         Console.Error.WriteLine("ImplementationHandler.Handle");
         return Task.FromResult(new ImplementationResponse(new Location(request.TextDocument.Uri,
-            new DocumentRange() { Start = new Position(0, 0), End = new Position(0, 1) }
+            new DocumentRange { Start = new Position(0, 0), End = new Position(0, 1) }
         )))!;
     }
 

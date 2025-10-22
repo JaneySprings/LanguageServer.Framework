@@ -12,7 +12,7 @@ public class DefinitionHandler : DefinitionHandlerBase
     {
         Console.Error.WriteLine("DefinitionHandler.Handle");
         return Task.FromResult(new DefinitionResponse(new Location(request.TextDocument.Uri,
-            new DocumentRange() { Start = new Position(0, 0), End = new Position(0, 1) }
+            new DocumentRange { Start = new Position(0, 0), End = new Position(0, 1) }
         )))!;
     }
 

@@ -15,12 +15,10 @@ public record struct DocumentUri(Uri Uri)
         get
         {
             var filePath = Uri.UnescapeDataString(Uri.AbsolutePath);
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform
+                    .Windows))
             {
-                if (filePath.StartsWith('/'))
-                {
-                    filePath = filePath.TrimStart('/');
-                }
+                if (filePath.StartsWith('/')) filePath = filePath.TrimStart('/');
                 filePath = filePath.Replace('/', '\\');
             }
 
@@ -28,9 +26,15 @@ public record struct DocumentUri(Uri Uri)
         }
     }
 
-    public static implicit operator DocumentUri(Uri uri) => new DocumentUri(uri);
+    public static implicit operator DocumentUri(Uri uri)
+    {
+        return new DocumentUri(uri);
+    }
 
-    public static implicit operator DocumentUri(string uri) => new DocumentUri(new Uri(uri));
+    public static implicit operator DocumentUri(string uri)
+    {
+        return new DocumentUri(new Uri(uri));
+    }
 }
 
 public class DocumentUriConverter : JsonConverter<DocumentUri>
@@ -51,7 +55,8 @@ public class DocumentUriConverter : JsonConverter<DocumentUri>
         writer.WritePropertyName(value.Uri.ToString());
     }
 
-    public override DocumentUri ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DocumentUri ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var uri = reader.GetString() ?? string.Empty;
         return new DocumentUri(new Uri(uri));

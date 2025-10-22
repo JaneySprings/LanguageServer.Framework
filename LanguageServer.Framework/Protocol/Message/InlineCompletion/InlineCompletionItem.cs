@@ -16,7 +16,8 @@ public record InlineCompletionItem
      * The text to replace the range with. Must be set.
      * Is used both for the preview and the accept operation.
      */
-    [JsonPropertyName("insertText"), JsonConverter(typeof(StringOrJsonConverter<StringValue>))]
+    [JsonPropertyName("insertText")]
+    [JsonConverter(typeof(StringOrJsonConverter<StringValue>))]
     public StringOr<StringValue> InsertText { get; set; } = null!;
 
     /**

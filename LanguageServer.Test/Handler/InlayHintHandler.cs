@@ -3,6 +3,7 @@ using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server.Options;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.InlayHint;
 using EmmyLua.LanguageServer.Framework.Protocol.Model;
+using EmmyLua.LanguageServer.Framework.Protocol.Model.Union;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 
 namespace EmmyLua.LanguageServer.Framework.Handler;
@@ -12,15 +13,15 @@ public class InlayHintHandler : InlayHintHandlerBase
     protected override Task<InlayHintResponse?> Handle(InlayHintParams request, CancellationToken cancellationToken)
     {
         return Task.FromResult(new InlayHintResponse([
-            new InlayHint()
+            new InlayHint
             {
-                Position = new(0, 2),
+                Position = new Position(0, 2),
                 PaddingRight = true,
-                Label = new([
-                    new InlayHintLabelPart()
+                Label = new StringOr<List<InlayHintLabelPart>>([
+                    new InlayHintLabelPart
                     {
                         Value = "hello world",
-                        Location = new Location(request.TextDocument.Uri, new())
+                        Location = new Location(request.TextDocument.Uri, new DocumentRange())
                     }
                 ])
             }
@@ -35,7 +36,7 @@ public class InlayHintHandler : InlayHintHandlerBase
     public override void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.InlayHintProvider = new InlayHintsOptions()
+        serverCapabilities.InlayHintProvider = new InlayHintsOptions
         {
             ResolveProvider = true
         };

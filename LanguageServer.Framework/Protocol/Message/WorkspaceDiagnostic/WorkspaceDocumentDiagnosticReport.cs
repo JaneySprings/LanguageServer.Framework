@@ -36,24 +36,20 @@ public class WorkspaceDocumentDiagnosticReport
 
 public class WorkspaceDocumentDiagnosticReportJsonConverter : JsonConverter<WorkspaceDocumentDiagnosticReport>
 {
-    public override WorkspaceDocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override WorkspaceDocumentDiagnosticReport Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, WorkspaceDocumentDiagnosticReport value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, WorkspaceDocumentDiagnosticReport value,
+        JsonSerializerOptions options)
     {
         if (value.Report is WorkspaceFullDocumentDiagnosticReport fullDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, fullDocumentDiagnosticReport, options);
-        }
         else if (value.Report is WorkspaceUnchangedDocumentDiagnosticReport unchangedDocumentDiagnosticReport)
-        {
             JsonSerializer.Serialize(writer, unchangedDocumentDiagnosticReport, options);
-        }
         else
-        {
             throw new InvalidOperationException();
-        }
     }
 }

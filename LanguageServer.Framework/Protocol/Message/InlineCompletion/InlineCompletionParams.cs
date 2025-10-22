@@ -11,8 +11,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.InlineCompletion;
  */
 public class InlineCompletionParams : TextDocumentPositionParams, IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * Additional information about the context in which inline completions

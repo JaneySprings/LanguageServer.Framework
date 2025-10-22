@@ -6,8 +6,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.Completion;
 
 public class CompletionParams : TextDocumentPositionParams, IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }

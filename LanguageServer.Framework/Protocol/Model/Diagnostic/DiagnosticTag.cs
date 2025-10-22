@@ -13,14 +13,14 @@ public record struct DiagnosticTag(int Value)
      * instead of having an error squiggle.
      */
     public static readonly DiagnosticTag Unnecessary = new(1);
-    
+
     /**
      * Deprecated or obsolete code.
      *
      * Clients are allowed to rendered diagnostics with this tag strike through.
      */
     public static readonly DiagnosticTag Deprecated = new(2);
-    
+
     public int Value { get; } = Value;
 }
 
@@ -28,10 +28,7 @@ public class DiagnosticTagJsonConverter : JsonConverter<DiagnosticTag>
 {
     public override DiagnosticTag Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return new DiagnosticTag(reader.GetInt32());
     }

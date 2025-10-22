@@ -29,7 +29,7 @@ public class SemanticTokensHandler : SemanticTokensHandlerBase
         semanticTokenBuilder.Push(new Position(1, 0), 3, SemanticTokenTypes.Comment,
             SemanticTokenModifiers.Documentation);
 
-        return Task.FromResult(new SemanticTokens()
+        return Task.FromResult(new SemanticTokens
         {
             Data = semanticTokenBuilder.Build()
         })!;
@@ -48,7 +48,7 @@ public class SemanticTokensHandler : SemanticTokensHandlerBase
         semanticTokenBuilder.Push(new Position(0, 2), 2, SemanticTokenTypes.Comment,
             SemanticTokenModifiers.Documentation);
 
-        return Task.FromResult(new SemanticTokens()
+        return Task.FromResult(new SemanticTokens
         {
             Data = semanticTokenBuilder.Build()
         })!;
@@ -57,15 +57,15 @@ public class SemanticTokensHandler : SemanticTokensHandlerBase
     public override void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.SemanticTokensProvider = new SemanticTokensOptions()
+        serverCapabilities.SemanticTokensProvider = new SemanticTokensOptions
         {
-            Legend = new SemanticTokensLegend()
+            Legend = new SemanticTokensLegend
             {
                 TokenTypes = TokenTypes,
-                TokenModifiers = TokenModifiers,
+                TokenModifiers = TokenModifiers
             },
             Full = true,
-            Range = true,
+            Range = true
         };
     }
 }

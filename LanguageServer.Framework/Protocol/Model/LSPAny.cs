@@ -9,9 +9,20 @@ public class LSPAny(object? anyOther)
 {
     public object? Value { get; } = anyOther;
 
-    public static implicit operator LSPAny(string value) => new LSPAny(value);
-    public static implicit operator LSPAny(int value) => new LSPAny(value);
-    public static implicit operator LSPAny(bool value) => new LSPAny(value);
+    public static implicit operator LSPAny(string value)
+    {
+        return new LSPAny(value);
+    }
+
+    public static implicit operator LSPAny(int value)
+    {
+        return new LSPAny(value);
+    }
+
+    public static implicit operator LSPAny(bool value)
+    {
+        return new LSPAny(value);
+    }
 }
 
 // ReSharper disable once InconsistentNaming
@@ -19,20 +30,11 @@ public class LSPAnyJsonConverter : JsonConverter<LSPAny>
 {
     public override LSPAny Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            return new LSPAny(reader.GetString()!);
-        }
+        if (reader.TokenType == JsonTokenType.String) return new LSPAny(reader.GetString()!);
 
-        if (reader.TokenType == JsonTokenType.Number)
-        {
-            return new LSPAny(reader.GetInt32());
-        }
+        if (reader.TokenType == JsonTokenType.Number) return new LSPAny(reader.GetInt32());
 
-        if (reader.TokenType is JsonTokenType.True or JsonTokenType.False)
-        {
-            return new LSPAny(reader.GetBoolean());
-        }
+        if (reader.TokenType is JsonTokenType.True or JsonTokenType.False) return new LSPAny(reader.GetBoolean());
 
         var jsonDocument = JsonDocument.ParseValue(ref reader);
         return new LSPAny(jsonDocument);

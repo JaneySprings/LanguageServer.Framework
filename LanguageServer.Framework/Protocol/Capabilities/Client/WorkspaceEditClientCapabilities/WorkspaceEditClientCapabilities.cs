@@ -54,7 +54,7 @@ public class WorkspaceEditClientCapabilities
      */
     [JsonPropertyName("metadataSupport")]
     public bool? MetadataSupport { get; set; }
-    
+
     /**
      * Whether the client supports snippets as text edits.
      *

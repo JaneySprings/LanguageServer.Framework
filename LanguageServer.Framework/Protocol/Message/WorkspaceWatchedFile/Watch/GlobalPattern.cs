@@ -4,7 +4,6 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model;
 
 namespace EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceWatchedFile.Watch;
 
-
 [JsonConverter(typeof(GlobalPatternJsonConverter))]
 public class GlobalPattern
 {
@@ -25,11 +24,20 @@ public class GlobalPattern
     }
 
 
-    public static implicit operator GlobalPattern(Pattern pattern) => new GlobalPattern(pattern);
+    public static implicit operator GlobalPattern(Pattern pattern)
+    {
+        return new GlobalPattern(pattern);
+    }
 
-    public static implicit operator GlobalPattern(string pattern) => new GlobalPattern(pattern);
+    public static implicit operator GlobalPattern(string pattern)
+    {
+        return new GlobalPattern(pattern);
+    }
 
-    public static implicit operator GlobalPattern(RelativePattern relativePattern) => new GlobalPattern(relativePattern);
+    public static implicit operator GlobalPattern(RelativePattern relativePattern)
+    {
+        return new GlobalPattern(relativePattern);
+    }
 }
 
 public class GlobalPatternJsonConverter : JsonConverter<GlobalPattern>
@@ -42,17 +50,11 @@ public class GlobalPatternJsonConverter : JsonConverter<GlobalPattern>
     public override void Write(Utf8JsonWriter writer, GlobalPattern value, JsonSerializerOptions options)
     {
         if (value.Pattern is Pattern pattern)
-        {
             JsonSerializer.Serialize(writer, pattern, options);
-        }
         else if (value.Pattern is RelativePattern relativePattern)
-        {
             JsonSerializer.Serialize(writer, relativePattern, options);
-        }
         else
-        {
             throw new InvalidOperationException();
-        }
     }
 }
 

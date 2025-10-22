@@ -33,6 +33,4 @@ public class WindowClientCapabilities
      */
     [JsonPropertyName("showDocument")]
     public ShowDocumentClientCapabilities? ShowDocument { get; init; }
-
-
 }

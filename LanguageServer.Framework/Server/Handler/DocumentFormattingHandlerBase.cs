@@ -23,28 +23,32 @@ public abstract class DocumentFormattingHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("textDocument/formatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentFormattingParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DocumentFormattingParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("textDocument/rangeFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentRangeFormattingParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DocumentRangeFormattingParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("textDocument/rangesFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentRangesFormattingParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DocumentRangesFormattingParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("textDocument/onTypeFormatting", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<DocumentOnTypeFormattingParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<DocumentOnTypeFormattingParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

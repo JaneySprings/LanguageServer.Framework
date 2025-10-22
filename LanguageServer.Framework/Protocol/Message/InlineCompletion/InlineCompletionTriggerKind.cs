@@ -27,13 +27,14 @@ public readonly record struct InlineCompletionTriggerKind(int Value)
 
 public class InlineCompletionTriggerKindConverter : JsonConverter<InlineCompletionTriggerKind>
 {
-    public override InlineCompletionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override InlineCompletionTriggerKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         return reader.GetInt32() switch
         {
             1 => InlineCompletionTriggerKind.Invoked,
             2 => InlineCompletionTriggerKind.Automatic,
-            _ => throw new JsonException(),
+            _ => throw new JsonException()
         };
     }
 

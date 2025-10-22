@@ -25,17 +25,14 @@ public enum DiagnosticSeverity
      * Reports a hint.
      */
     Hint = 4
-
 }
 
 public class DiagnosticSeverityJsonConverter : JsonConverter<DiagnosticSeverity>
 {
-    public override DiagnosticSeverity Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override DiagnosticSeverity Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return (DiagnosticSeverity)reader.GetInt32();
     }

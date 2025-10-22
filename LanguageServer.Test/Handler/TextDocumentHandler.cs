@@ -25,17 +25,17 @@ public class TextDocumentHandler(Server.LanguageServer server) : TextDocumentHan
         Console.Error.WriteLine($"TextDocumentHandler: DidChangeTextDocument {request.TextDocument.Uri}");
         List<Diagnostic> diagnosticList =
         [
-            new Diagnostic()
+            new()
             {
                 Message = "test",
-                Range = new DocumentRange()
+                Range = new DocumentRange
                 {
-                    Start = new Position()
+                    Start = new Position
                     {
                         Line = 0,
                         Character = 1
                     },
-                    End = new Position()
+                    End = new Position
                     {
                         Line = 0,
                         Character = 10
@@ -43,11 +43,11 @@ public class TextDocumentHandler(Server.LanguageServer server) : TextDocumentHan
                 },
                 Severity = DiagnosticSeverity.Error,
                 Source = "test",
-                Code = "12313",
+                Code = "12313"
             }
         ];
-        
-        server.Client.PublishDiagnostics(new PublishDiagnosticsParams()
+
+        server.Client.PublishDiagnostics(new PublishDiagnosticsParams
         {
             Uri = request.TextDocument.Uri,
             Diagnostics = diagnosticList

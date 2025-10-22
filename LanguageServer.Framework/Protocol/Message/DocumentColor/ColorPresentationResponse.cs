@@ -12,7 +12,8 @@ public class ColorPresentationResponse(List<ColorPresentation> presentations)
 
 public class ColorPresentationResponseJsonConverter : JsonConverter<ColorPresentationResponse>
 {
-    public override ColorPresentationResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ColorPresentationResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new UnreachableException();
     }

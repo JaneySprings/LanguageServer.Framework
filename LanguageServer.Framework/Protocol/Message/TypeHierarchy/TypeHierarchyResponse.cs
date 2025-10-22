@@ -6,12 +6,13 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.TypeHierarchy;
 [JsonConverter(typeof(TypeHierarchyResponseJsonConverter))]
 public class TypeHierarchyResponse(List<TypeHierarchyItem> typeHierarchies)
 {
-     public List<TypeHierarchyItem> TypeHierarchies { get; set; } = typeHierarchies;
+    public List<TypeHierarchyItem> TypeHierarchies { get; set; } = typeHierarchies;
 }
 
 public class TypeHierarchyResponseJsonConverter : JsonConverter<TypeHierarchyResponse>
 {
-    public override TypeHierarchyResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TypeHierarchyResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

@@ -4,15 +4,15 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Client;
 
 public class MarkdownClientCapabilities
 {
- /**
-     * The name of the parser.
-     */
+    /**
+        * The name of the parser.
+        */
     [JsonPropertyName("parser")]
     public string Parser { get; set; } = null!;
 
- /**
-     * The version of the parser.
-     */
+    /**
+        * The version of the parser.
+        */
     [JsonPropertyName("version")]
     public string? Version { get; set; }
 

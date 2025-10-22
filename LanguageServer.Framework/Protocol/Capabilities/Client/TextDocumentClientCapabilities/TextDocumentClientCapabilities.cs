@@ -211,7 +211,7 @@ public class TextDocumentClientCapabilities
      * @since 3.17.0
      */
     [JsonPropertyName("diagnostic")]
-    public  DiagnosticClientCapabilities? Diagnostic { get; init; }
+    public DiagnosticClientCapabilities? Diagnostic { get; init; }
 
     /**
      * Capabilities specific to the `textDocument/inlineCompletion` request.

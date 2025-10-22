@@ -25,7 +25,8 @@ public class WorkspaceEditDocumentChanges
 
 public class WorkspaceEditDocumentChangesConverter : JsonConverter<WorkspaceEditDocumentChanges>
 {
-    public override WorkspaceEditDocumentChanges Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override WorkspaceEditDocumentChanges Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.StartArray)
         {
@@ -40,12 +41,8 @@ public class WorkspaceEditDocumentChangesConverter : JsonConverter<WorkspaceEdit
     public override void Write(Utf8JsonWriter writer, WorkspaceEditDocumentChanges value, JsonSerializerOptions options)
     {
         if (value.TextDocumentEditList != null)
-        {
             JsonSerializer.Serialize(writer, value.TextDocumentEditList, options);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.EditFileList, options);
-        }
     }
 }

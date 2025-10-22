@@ -7,8 +7,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentColor;
 
 public class ColorPresentationParams : IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }
