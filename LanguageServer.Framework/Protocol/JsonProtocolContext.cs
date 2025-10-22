@@ -6,9 +6,11 @@ using EmmyLua.LanguageServer.Framework.Protocol.JsonRpc;
 using EmmyLua.LanguageServer.Framework.Protocol.Message;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.CallHierarchy;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.ApplyWorkspaceEdit;
+using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.LogMessage;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.PublishDiagnostics;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.Registration;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.ShowMessage;
+using EmmyLua.LanguageServer.Framework.Protocol.Message.Client.Telemetry;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.CodeAction;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.CodeLens;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Completion;
@@ -31,6 +33,7 @@ using EmmyLua.LanguageServer.Framework.Protocol.Message.InlineCompletion;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.InlineValue;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.LinkedEditingRange;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.NotebookDocument;
+using EmmyLua.LanguageServer.Framework.Protocol.Message.Progress;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Reference;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.Rename;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.SelectionRange;
@@ -225,7 +228,15 @@ namespace EmmyLua.LanguageServer.Framework.Protocol;
 [JsonSerializable(typeof(ApplyWorkspaceEditParams))]
 [JsonSerializable(typeof(ApplyWorkspaceEditResult))]
 [JsonSerializable(typeof(ShowMessageParams))]
+[JsonSerializable(typeof(ShowMessageRequestParams))]
+[JsonSerializable(typeof(MessageActionItem))]
+[JsonSerializable(typeof(List<MessageActionItem>))]
+[JsonSerializable(typeof(LogMessageParams))]
+[JsonSerializable(typeof(TelemetryEventParams))]
 [JsonSerializable(typeof(MessageType))]
+[JsonSerializable(typeof(ProgressParams))]
+[JsonSerializable(typeof(WorkDoneProgressCreateParams))]
+[JsonSerializable(typeof(WorkDoneProgressCancelParams))]
 [JsonSerializable(typeof(SelectionRangeParams))]
 [JsonSerializable(typeof(SelectionRangeResponse))]
 [JsonSerializable(typeof(SelectionRange))]
