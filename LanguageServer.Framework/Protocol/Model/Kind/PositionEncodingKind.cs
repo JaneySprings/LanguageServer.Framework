@@ -33,7 +33,8 @@ public readonly record struct PositionEncodingKind(string EncodingKind)
 
 public class PositionEncodingKindConverter : JsonConverter<PositionEncodingKind>
 {
-    public override PositionEncodingKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override PositionEncodingKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var value = reader.GetString();
         return new PositionEncodingKind(value!);

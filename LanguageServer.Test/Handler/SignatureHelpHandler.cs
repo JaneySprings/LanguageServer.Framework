@@ -11,30 +11,31 @@ public class SignatureHelpHandler : SignatureHelpHandlerBase
     protected override Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token)
     {
         Console.Error.WriteLine("SignatureHelp");
-        var signatureHelpInfo = new SignatureInformation()
+        var signatureHelpInfo = new SignatureInformation
         {
             Label = "hi hi hi",
             Documentation = "hello world",
             ActiveParameter = 0,
             Parameters =
             [
-                new ParameterInformation()
+                new ParameterInformation
                 {
                     Label = "hi",
                     Documentation = "param1 documentation"
                 }
             ]
         };
-        
-        return Task.FromResult(new SignatureHelp()
+
+        return Task.FromResult(new SignatureHelp
         {
             Signatures = [signatureHelpInfo],
             ActiveSignature = 0,
-            ActiveParameter = 0,
+            ActiveParameter = 0
         });
     }
 
-    public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+    public override void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities)
     {
         serverCapabilities.SignatureHelpProvider = new SignatureHelpOptions
         {

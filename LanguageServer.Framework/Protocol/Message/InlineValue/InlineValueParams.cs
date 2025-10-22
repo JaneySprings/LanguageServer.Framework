@@ -12,8 +12,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.InlineValue;
  */
 public class InlineValueParams : IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The text document.

@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 
-
 [JsonConverter(typeof(InsertTextModeJsonConverter))]
 public enum InsertTextMode
 {
@@ -26,17 +25,13 @@ public enum InsertTextMode
     * following lines inserted will be indented using 2 tabs as well.
     */
     AdjustIndentation = 2
-
 }
 
 public class InsertTextModeJsonConverter : JsonConverter<InsertTextMode>
 {
     public override InsertTextMode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number)
-        {
-            throw new JsonException();
-        }
+        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
 
         return (InsertTextMode)reader.GetInt32();
     }

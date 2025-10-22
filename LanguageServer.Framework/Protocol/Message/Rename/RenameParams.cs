@@ -6,8 +6,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.Rename;
 
 public class RenameParams : TextDocumentPositionParams, IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     /**
      * The new name of the symbol. If the given name is not valid, the

@@ -13,7 +13,7 @@ public class CompletionHandler : CompletionHandlerBase
     {
         Console.Error.WriteLine("CompletionHandler.Handle");
         return Task.FromResult(new CompletionResponse([
-            new CompletionItem()
+            new CompletionItem
             {
                 Label = "Hello",
                 Kind = CompletionItemKind.Text,
@@ -22,7 +22,7 @@ public class CompletionHandler : CompletionHandlerBase
                 InsertText = "Hello World",
                 InsertTextFormat = InsertTextFormat.PlainText,
                 SortText = "Hello",
-                FilterText = "Hello",
+                FilterText = "Hello"
             }
         ]))!;
     }
@@ -36,7 +36,7 @@ public class CompletionHandler : CompletionHandlerBase
     public override void RegisterCapability(ServerCapabilities serverCapabilities,
         ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.CompletionProvider = new CompletionOptions()
+        serverCapabilities.CompletionProvider = new CompletionOptions
         {
             TriggerCharacters = [".", "("],
             ResolveProvider = true

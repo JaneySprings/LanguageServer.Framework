@@ -20,21 +20,24 @@ public abstract class CallHierarchyHandlerBase : IJsonHandler
     {
         lspCommunication.AddRequestHandler("textDocument/prepareCallHierarchy", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CallHierarchyPrepareParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<CallHierarchyPrepareParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await CallHierarchyPrepare(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("callHierarchy/incomingCalls", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CallHierarchyIncomingCallsParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<CallHierarchyIncomingCallsParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await CallHierarchyIncomingCalls(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("callHierarchy/outgoingCalls", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<CallHierarchyOutgoingCallsParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<CallHierarchyOutgoingCallsParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await CallHierarchyOutgoingCalls(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

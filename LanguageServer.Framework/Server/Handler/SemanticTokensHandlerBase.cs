@@ -27,14 +27,16 @@ public abstract class SemanticTokensHandlerBase : IJsonHandler
 
         lspCommunication.AddRequestHandler("textDocument/semanticTokens/full/delta", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensDeltaParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<SemanticTokensDeltaParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });
 
         lspCommunication.AddRequestHandler("textDocument/semanticTokens/range", async (message, token) =>
         {
-            var request = message.Params!.Deserialize<SemanticTokensRangeParams>(lspCommunication.JsonSerializerOptions)!;
+            var request =
+                message.Params!.Deserialize<SemanticTokensRangeParams>(lspCommunication.JsonSerializerOptions)!;
             var r = await Handle(request, token);
             return JsonSerializer.SerializeToDocument(r, lspCommunication.JsonSerializerOptions);
         });

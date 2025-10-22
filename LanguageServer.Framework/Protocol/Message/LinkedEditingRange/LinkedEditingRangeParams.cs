@@ -6,6 +6,5 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.LinkedEditingRange;
 
 public class LinkedEditingRangeParams : TextDocumentPositionParams, IWorkDoneProgressParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 }

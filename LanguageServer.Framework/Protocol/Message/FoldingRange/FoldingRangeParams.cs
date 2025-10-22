@@ -6,12 +6,10 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.FoldingRange;
 
 public class FoldingRangeParams : IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }
 
-    [JsonPropertyName("textDocument")]
-    public TextDocumentIdentifier TextDocument { get; set; } = null!;
+    [JsonPropertyName("textDocument")] public TextDocumentIdentifier TextDocument { get; set; } = null!;
 }

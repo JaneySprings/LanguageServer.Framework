@@ -3,7 +3,6 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model;
 
 namespace EmmyLua.LanguageServer.Framework.Protocol.Message.LinkedEditingRange;
 
-
 public class LinkedEditingRanges
 {
     /**

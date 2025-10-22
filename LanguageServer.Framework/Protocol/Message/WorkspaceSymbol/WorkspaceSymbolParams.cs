@@ -8,8 +8,7 @@ namespace EmmyLua.LanguageServer.Framework.Protocol.Message.WorkspaceSymbol;
  */
 public class WorkspaceSymbolParams : IWorkDoneProgressParams, IPartialResultParams
 {
-    [JsonPropertyName("workDoneToken")]
-    public string? WorkDoneToken { get; set; }
+    [JsonPropertyName("workDoneToken")] public string? WorkDoneToken { get; set; }
 
     [JsonPropertyName("partialResultToken")]
     public string? PartialResultToken { get; set; }

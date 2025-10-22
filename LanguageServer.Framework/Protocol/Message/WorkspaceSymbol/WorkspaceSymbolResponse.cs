@@ -13,7 +13,8 @@ public class WorkspaceSymbolResponse(List<WorkspaceSymbol> symbols)
 
 public class WorkspaceSymbolResponseJsonConverter : JsonConverter<WorkspaceSymbolResponse>
 {
-    public override WorkspaceSymbolResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override WorkspaceSymbolResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }

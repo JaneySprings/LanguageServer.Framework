@@ -27,7 +27,8 @@ public record InlayHint
      *
      * *Note* that neither the string nor the label part can be empty.
      */
-    [JsonPropertyName("label"), JsonConverter(typeof(StringOrJsonConverter<List<InlayHintLabelPart>>))]
+    [JsonPropertyName("label")]
+    [JsonConverter(typeof(StringOrJsonConverter<List<InlayHintLabelPart>>))]
     public StringOr<List<InlayHintLabelPart>> Label { get; set; } = null!;
 
     /**
