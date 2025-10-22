@@ -8,12 +8,13 @@ using EmmyLua.LanguageServer.Framework.Protocol.Message.Initialize;
 using EmmyLua.LanguageServer.Framework.Server;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 using EmmyLua.LanguageServer.Framework.Server.JsonProtocol;
+using EmmyLua.LanguageServer.Framework.Server.Metrics;
 using EmmyLua.LanguageServer.Framework.Server.RequestManager;
 using EmmyLua.LanguageServer.Framework.Server.Scheduler;
 
 namespace EmmyLua.LanguageServer.Framework;
 
-public abstract class LSPCommunicationBase
+public abstract class LSPCommunicationBase : IDisposable
 {
     public JsonSerializerOptions JsonSerializerOptions { get; } = new()
     {
@@ -42,6 +43,25 @@ public abstract class LSPCommunicationBase
         new();
 
     public ClientCapabilities ClientCapabilities { get; set; } = null!;
+
+    /// <summary>
+    /// 性能指标收集器
+    /// </summary>
+    public IPerformanceMetricsCollector? MetricsCollector
+    {
+        get => _metricsCollector;
+        set
+        {
+            _metricsCollector = value;
+            // 同步到Writer
+            Writer.MetricsCollector = value;
+        }
+    }
+    private IPerformanceMetricsCollector? _metricsCollector;
+
+    protected CancellationTokenSource? ExitTokenSource { get; private set; }
+    private readonly SemaphoreSlim _exitTokenLock = new(1, 1);
+    private bool _disposed;
 
     protected LSPCommunicationBase(Stream input, Stream output)
     {
@@ -76,6 +96,14 @@ public abstract class LSPCommunicationBase
         return this;
     }
 
+    /// <summary>
+    /// 获取当前的性能指标快照
+    /// </summary>
+    public PerformanceMetrics? GetMetrics()
+    {
+        return MetricsCollector?.GetMetrics();
+    }
+
     public Task SendNotification(NotificationMessage notification)
     {
         Writer.WriteNotification(notification);
@@ -104,6 +132,10 @@ public abstract class LSPCommunicationBase
             {
                 if (RequestHandlers.TryGetValue(request.Method, out var handler))
                 {
+                    MetricsCollector?.RecordRequestStart(request.Method);
+                    var startTime = DateTime.UtcNow;
+                    var success = false;
+
                     try
                     {
                         var token = ClientRequestTokenManager.Create(request.Id);
@@ -111,6 +143,7 @@ public abstract class LSPCommunicationBase
                         if (!token.IsCancellationRequested)
                         {
                             Writer.WriteResponse(request.Id, result);
+                            success = true;
                         }
                         else
                         {
@@ -146,6 +179,8 @@ public abstract class LSPCommunicationBase
                     finally
                     {
                         ClientRequestTokenManager.ClearToken(request.Id);
+                        var duration = DateTime.UtcNow - startTime;
+                        MetricsCollector?.RecordRequestComplete(request.Method, duration, success);
                     }
                 }
                 else
@@ -163,7 +198,23 @@ public abstract class LSPCommunicationBase
             {
                 if (NotificationHandlers.TryGetValue(notification.Method, out var handler))
                 {
-                    await handler(notification, CancellationToken.None);
+                    MetricsCollector?.RecordNotification(notification.Method);
+
+                    try
+                    {
+                        // 创建取消令牌以支持通知处理的取消
+                        using var cts = CancellationTokenSource.CreateLinkedTokenSource(
+                            ExitTokenSource?.Token ?? CancellationToken.None);
+                        await handler(notification, cts.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Notification 被取消，忽略
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Error.WriteLine($"[Notification Handler] Error handling '{notification.Method}': {e}");
+                    }
                 }
 
                 break;
@@ -183,52 +234,106 @@ public abstract class LSPCommunicationBase
 
     public Task Run()
     {
-        _mutexForExitTokenSource.WaitOne();
-        if (ExitTokenSource is not null)
-            throw new InvalidOperationException("Already running.");
-        ExitTokenSource = new CancellationTokenSource();
-        var task = Task.Run(async () =>
+        _exitTokenLock.Wait();
+        try
         {
-            try
+            if (ExitTokenSource is not null)
+                throw new InvalidOperationException("Already running.");
+
+            ExitTokenSource = new CancellationTokenSource();
+
+            var task = Task.Run(async () =>
             {
-                while (ExitTokenSource.IsCancellationRequested is false)
+                try
                 {
-                    var message = await Reader.ReadAsync(ExitTokenSource.Token);
-                    if (BaseHandle(message))
+                    while (!ExitTokenSource.IsCancellationRequested)
                     {
-                        continue;
+                        var message = await Reader.ReadAsync(ExitTokenSource.Token);
+                        MetricsCollector?.RecordMessageReceived();
+
+                        if (BaseHandle(message))
+                        {
+                            continue;
+                        }
+
+                        Scheduler.Schedule(OnDispatch, message);
                     }
-
-                    Scheduler.Schedule(OnDispatch, message);
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                await Console.Error.WriteLineAsync("LSPCommunication exited");
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e);
-            }
-            finally
-            {
-                ExitTokenSource.Dispose();
-                ExitTokenSource = null;
-            }
-        });
-        _mutexForExitTokenSource.ReleaseMutex();
-        return task;
-    }
+                catch (OperationCanceledException)
+                {
+                    await Console.Error.WriteLineAsync("LSPCommunication exited");
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine(e);
+                }
+                finally
+                {
+                    ExitTokenSource?.Dispose();
+                    ExitTokenSource = null;
+                }
+            });
 
-    protected CancellationTokenSource? ExitTokenSource { get; private set; }
-    private readonly Mutex _mutexForExitTokenSource = new();
+            return task;
+        }
+        finally
+        {
+            _exitTokenLock.Release();
+        }
+    }
 
     public void Exit()
     {
-        _mutexForExitTokenSource.WaitOne();
-        if (ExitTokenSource is null)
-            throw new InvalidOperationException("Run() must be called before exit");
-        ExitTokenSource!.Cancel();
-        _mutexForExitTokenSource.ReleaseMutex();
+        _exitTokenLock.Wait();
+        try
+        {
+            if (ExitTokenSource is null)
+                throw new InvalidOperationException("Run() must be called before exit");
+            ExitTokenSource.Cancel();
+        }
+        finally
+        {
+            _exitTokenLock.Release();
+        }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed) return;
+
+        if (disposing)
+        {
+            // 取消运行
+            try
+            {
+                Exit();
+            }
+            catch
+            {
+                // Ignore if not running
+            }
+
+            // 释放资源
+            ExitTokenSource?.Dispose();
+            _exitTokenLock.Dispose();
+
+            if (Scheduler is IDisposable disposableScheduler)
+            {
+                disposableScheduler.Dispose();
+            }
+
+            if (Writer is IDisposable disposableWriter)
+            {
+                disposableWriter.Dispose();
+            }
+        }
+
+        _disposed = true;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

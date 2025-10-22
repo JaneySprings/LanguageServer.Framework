@@ -21,7 +21,13 @@ public class LanguageServer : LSPCommunicationBase
         Exit
     }
 
-    private RunningState State { get; set; }
+    private int _state = (int)RunningState.Running;
+
+    private RunningState State
+    {
+        get => (RunningState)Interlocked.CompareExchange(ref _state, 0, 0);
+        set => Interlocked.Exchange(ref _state, (int)value);
+    }
 
     public ClientProxy Client { get; }
 
