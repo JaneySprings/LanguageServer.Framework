@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![NuGet](https://img.shields.io/nuget/v/EmmyLua.LanguageServer.Framework.svg)](https://www.nuget.org/packages/EmmyLua.LanguageServer.Framework/)
+[![CI](https://github.com/CppCXY/LanguageServer.Framework/actions/workflows/ci.yml/badge.svg)](https://github.com/CppCXY/LanguageServer.Framework/actions/workflows/ci.yml)
+[![Code Quality](https://github.com/CppCXY/LanguageServer.Framework/actions/workflows/code-quality.yml/badge.svg)](https://github.com/CppCXY/LanguageServer.Framework/actions/workflows/code-quality.yml)
 
 A modern, high-performance .NET framework for building [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) servers with full LSP 3.18 specification support.
 
