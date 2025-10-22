@@ -68,8 +68,8 @@ public class ImplementationHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.Result2.Should().HaveCount(2);
-        response.Result2![0].Uri.Should().Be("file:///implementation1.txt");
-        response.Result2[1].Uri.Should().Be("file:///implementation2.txt");
+        response.Result2![0].Uri.Uri.AbsoluteUri.Should().Be("file:///implementation1.txt");
+        response.Result2[1].Uri.Uri.AbsoluteUri.Should().Be("file:///implementation2.txt");
     }
 
     [Fact]

@@ -152,7 +152,7 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.Result.Should().HaveCount(1);
-        response.Result[0].From.Uri.Should().Be("file:///caller.txt");
+        response.Result[0].From.Uri.Uri.AbsoluteUri.Should().Be("file:///caller.txt");
         response.Result[0].From.Range.Start.Line.Should().Be(15);
     }
 
@@ -185,7 +185,7 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.Result.Should().HaveCount(1);
-        response.Result[0].To.Uri.Should().Be("file:///callee.txt");
+        response.Result[0].To.Uri.Uri.AbsoluteUri.Should().Be("file:///callee.txt");
         response.Result[0].To.Range.Start.Line.Should().Be(25);
     }
 

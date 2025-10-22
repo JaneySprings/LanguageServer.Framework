@@ -69,7 +69,7 @@ public class DocumentLinkHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.DocumentLinks.Should().HaveCount(1);
-        response.DocumentLinks[0].Target.Should().Be("https://example.com");
+        response.DocumentLinks[0].Target!.Value.Uri.AbsoluteUri.Should().Be("https://example.com/");
         response.DocumentLinks[0].Tooltip.Should().Be("Example link");
     }
 

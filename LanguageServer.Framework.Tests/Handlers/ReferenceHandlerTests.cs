@@ -69,8 +69,8 @@ public class ReferenceHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.Result.Should().HaveCount(2);
-        response.Result[0].Uri.Should().Be("file:///ref1.txt");
-        response.Result[1].Uri.Should().Be("file:///ref2.txt");
+        response.Result[0].Uri.Uri.AbsoluteUri.Should().Be("file:///ref1.txt");
+        response.Result[1].Uri.Uri.AbsoluteUri.Should().Be("file:///ref2.txt");
     }
 
     [Fact]

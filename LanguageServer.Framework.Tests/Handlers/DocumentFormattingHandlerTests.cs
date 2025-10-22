@@ -85,7 +85,9 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DocumentFormattingParams), typeof(CancellationToken)], null)!;
 
         var task = method.Invoke(handler, [request, CancellationToken.None]);
 

@@ -106,7 +106,7 @@ public class InlayHintHandlerTests : TestHandlerBase
 
         // Assert
         resolved.Should().NotBeNull();
-        resolved.Tooltip.Should().Be("Resolved tooltip");
+        resolved.Tooltip!.StringValue.Should().Be("Resolved tooltip");
     }
 
     [Fact]

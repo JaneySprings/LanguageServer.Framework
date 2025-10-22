@@ -110,7 +110,7 @@ public class CompletionHandlerTests : TestHandlerBase
 
         // Assert
         resolved.Should().NotBeNull();
-        resolved.Documentation.Should().Be("Resolved documentation");
+        resolved.Documentation?.StringValue.Should().Be("Resolved documentation");
     }
 
     [Fact]

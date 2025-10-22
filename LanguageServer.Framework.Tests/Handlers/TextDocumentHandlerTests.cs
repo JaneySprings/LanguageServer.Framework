@@ -64,7 +64,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
             };
         }
 
-        public string? GetDocumentContent(string uri)
+        public string? GetDocumentContent(DocumentUri uri)
         {
             return _documents.GetValueOrDefault(uri);
         }
@@ -118,7 +118,9 @@ public class TextDocumentHandlerTests : TestHandlerBase
         };
 
         await (handler.GetType()
-            .GetMethod("DidOpen", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DidOpenTextDocumentParams), typeof(CancellationToken)], null)!
             .Invoke(handler, [openRequest, CancellationToken.None]) as Task)!;
 
         // Now change it
@@ -166,7 +168,9 @@ public class TextDocumentHandlerTests : TestHandlerBase
         };
 
         await (handler.GetType()
-            .GetMethod("DidOpen", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DidOpenTextDocumentParams), typeof(CancellationToken)], null)!
             .Invoke(handler, [openRequest, CancellationToken.None]) as Task)!;
 
         // Now close it

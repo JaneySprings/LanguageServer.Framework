@@ -60,7 +60,7 @@ public class TypeDefinitionHandlerTests : TestHandlerBase
         // Assert
         response.Should().NotBeNull();
         response!.Result2.Should().HaveCount(1);
-        response.Result2![0].Uri.Should().Be("file:///types.txt");
+        response.Result2![0].Uri.Uri.AbsoluteUri.Should().Be("file:///types.txt");
     }
 
     [Fact]

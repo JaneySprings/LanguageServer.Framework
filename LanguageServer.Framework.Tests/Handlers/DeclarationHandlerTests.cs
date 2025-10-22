@@ -59,9 +59,10 @@ public class DeclarationHandlerTests : TestHandlerBase
 
         // Assert
         response.Should().NotBeNull();
-        response!.Result1.Should().NotBeNull();
-        response.Result1!.Value.Uri.Should().Be("file:///declarations.txt");
-        response.Result1!.Value.Range.Start.Line.Should().Be(2);
+        response!.Result2.Should().NotBeNull();
+        response.Result2.Should().HaveCount(1);
+        response.Result2![0].Uri.Uri.AbsoluteUri.Should().Be("file:///declarations.txt");
+        response.Result2[0].Range.Start.Line.Should().Be(2);
     }
 
     [Fact]

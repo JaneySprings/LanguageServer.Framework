@@ -59,7 +59,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
 
         // Assert
         response.Should().NotBeNull();
-        response!.Result.Should().Be("Command 1 executed");
+        response!.Result!.Value.Should().Be("Command 1 executed");
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
 
         // Assert
         response.Should().NotBeNull();
-        response!.Result.Should().Be("Unknown command");
+        response!.Result!.Value.Should().Be("Unknown command");
     }
 
     [Fact]
