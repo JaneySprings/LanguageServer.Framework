@@ -4,7 +4,7 @@ using LanguageServerType = EmmyLua.LanguageServer.Framework.Server.LanguageServe
 namespace EmmyLua.LanguageServer.Framework.Tests.TestBase;
 
 /// <summary>
-/// 用于测试的模拟语言服务器
+/// Mock language server for testing
 /// </summary>
 public class MockLanguageServer : LanguageServerType
 {
@@ -18,7 +18,7 @@ public class MockLanguageServer : LanguageServerType
     }
 
     /// <summary>
-    /// 获取输出流内容
+    /// Get output stream content
     /// </summary>
     public string GetOutput()
     {

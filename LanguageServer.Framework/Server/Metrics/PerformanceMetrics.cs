@@ -1,62 +1,62 @@
 namespace EmmyLua.LanguageServer.Framework.Server.Metrics;
 
 /// <summary>
-/// Language Server 性能指标
+/// Language Server performance metrics
 /// </summary>
 public class PerformanceMetrics
 {
     /// <summary>
-    /// 已处理的请求总数
+    /// Total number of requests handled
     /// </summary>
     public long TotalRequestsHandled { get; set; }
 
     /// <summary>
-    /// 已处理的通知总数
+    /// Total number of notifications handled
     /// </summary>
     public long TotalNotificationsHandled { get; set; }
 
     /// <summary>
-    /// 请求处理失败总数
+    /// Total number of failed requests
     /// </summary>
     public long TotalRequestsFailed { get; set; }
 
     /// <summary>
-    /// 平均请求处理时间（毫秒）
+    /// Average request processing time (in milliseconds)
     /// </summary>
     public double AverageRequestDurationMs { get; set; }
 
     /// <summary>
-    /// 最大请求处理时间（毫秒）
+    /// Maximum request processing time (in milliseconds)
     /// </summary>
     public double MaxRequestDurationMs { get; set; }
 
     /// <summary>
-    /// 当前待处理的请求数
+    /// Current number of pending requests
     /// </summary>
     public int PendingRequestsCount { get; set; }
 
     /// <summary>
-    /// 已发送的消息总数
+    /// Total number of messages sent
     /// </summary>
     public long TotalMessagesSent { get; set; }
 
     /// <summary>
-    /// 已接收的消息总数
+    /// Total number of messages received
     /// </summary>
     public long TotalMessagesReceived { get; set; }
 
     /// <summary>
-    /// 服务器启动时间
+    /// Server start time
     /// </summary>
     public DateTime ServerStartTime { get; set; }
 
     /// <summary>
-    /// 服务器运行时间
+    /// Server uptime
     /// </summary>
     public TimeSpan Uptime => DateTime.UtcNow - ServerStartTime;
 
     /// <summary>
-    /// 重置所有指标
+    /// Reset all metrics
     /// </summary>
     public void Reset()
     {
@@ -73,50 +73,50 @@ public class PerformanceMetrics
 }
 
 /// <summary>
-/// 性能指标收集器接口
+/// Performance metrics collector interface
 /// </summary>
 public interface IPerformanceMetricsCollector
 {
     /// <summary>
-    /// 获取当前性能指标
+    /// Get current performance metrics
     /// </summary>
     PerformanceMetrics GetMetrics();
 
     /// <summary>
-    /// 记录请求开始
+    /// Record request start
     /// </summary>
     void RecordRequestStart(string method);
 
     /// <summary>
-    /// 记录请求完成
+    /// Record request completion
     /// </summary>
     void RecordRequestComplete(string method, TimeSpan duration, bool success);
 
     /// <summary>
-    /// 记录通知处理
+    /// Record notification handling
     /// </summary>
     void RecordNotification(string method);
 
     /// <summary>
-    /// 记录消息发送
+    /// Record message sent
     /// </summary>
     void RecordMessageSent();
 
     /// <summary>
-    /// 记录消息接收
+    /// Record message received
     /// </summary>
     void RecordMessageReceived();
 }
 
 /// <summary>
-/// 默认性能指标收集器实现
+/// Default performance metrics collector implementation
 /// </summary>
 public class DefaultPerformanceMetricsCollector : IPerformanceMetricsCollector
 {
     private readonly DateTime _serverStartTime = DateTime.UtcNow;
     private readonly object _lock = new();
 
-    // 使用独立字段以支持Interlocked操作
+    // Use separate fields to support Interlocked operations
     private long _totalRequestsHandled = 0;
     private long _totalNotificationsHandled = 0;
     private long _totalRequestsFailed = 0;
@@ -164,7 +164,7 @@ public class DefaultPerformanceMetricsCollector : IPerformanceMetricsCollector
             var durationMs = (long)duration.TotalMilliseconds;
             Interlocked.Add(ref _totalDurationMs, durationMs);
 
-            // MaxRequestDurationMs 需要锁保护
+            // MaxRequestDurationMs needs lock protection
             lock (_lock)
             {
                 if (duration.TotalMilliseconds > _maxRequestDurationMs)

@@ -3,7 +3,7 @@ using EmmyLua.LanguageServer.Framework.Server.Handler;
 namespace EmmyLua.LanguageServer.Framework.Tests.TestBase;
 
 /// <summary>
-/// Handler 测试基类
+/// Base class for handler tests
 /// </summary>
 public abstract class TestHandlerBase
 {
@@ -15,7 +15,7 @@ public abstract class TestHandlerBase
     }
 
     /// <summary>
-    /// 添加 Handler 到服务器
+    /// Add handler to server
     /// </summary>
     protected void AddHandler(IJsonHandler handler)
     {

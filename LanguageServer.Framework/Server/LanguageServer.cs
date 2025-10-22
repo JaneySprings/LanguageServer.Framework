@@ -31,14 +31,36 @@ public class LanguageServer : LSPCommunicationBase
 
     public ClientProxy Client { get; }
 
+    public LanguageServerOptions Options { get; }
 
-    public LanguageServer(Stream input, Stream output) : base(input, output)
+    private Timer? _metricsTimer;
+
+    public LanguageServer(Stream input, Stream output, LanguageServerOptions? options = null) : base(input, output)
     {
+        Options = options ?? LanguageServerOptions.Default;
         Client = new ClientProxy(this);
         AddHandler(new InitializeHandler(this));
+
+        // Initialize performance metrics collector based on options
+        if (Options.EnablePerformanceTracing)
+        {
+            MetricsCollector = new Metrics.DefaultPerformanceMetricsCollector();
+
+            // Start timer if periodic print interval is set
+            if (Options.PerformanceMetricsPrintInterval.HasValue)
+            {
+                _metricsTimer = new Timer(
+                    _ => PrintMetrics(),
+                    null,
+                    Options.PerformanceMetricsPrintInterval.Value,
+                    Options.PerformanceMetricsPrintInterval.Value
+                );
+            }
+        }
     }
 
-    public static LanguageServer From(Stream input, Stream output) => new(input, output);
+    public static LanguageServer From(Stream input, Stream output, LanguageServerOptions? options = null)
+        => new(input, output, options);
 
     public delegate Task InitializeEvent(InitializeParams request, ServerInfo serverInfo);
 
@@ -67,15 +89,6 @@ public class LanguageServer : LSPCommunicationBase
         ShutdownEventDelegate += handler;
     }
 
-    // public delegate void StartEvent();
-    //
-    // internal StartEvent? StartEventDelegate;
-    //
-    // public void OnStart(StartEvent handler)
-    // {
-    //     StartEventDelegate += handler;
-    // }
-
     protected override bool BaseHandle(Message message)
     {
         if (message is RequestMessage requestMessage)
@@ -83,6 +96,14 @@ public class LanguageServer : LSPCommunicationBase
             if (requestMessage.Method == "shutdown")
             {
                 State = RunningState.Shutdown;
+
+                // Print final performance metrics on shutdown
+                if (Options.EnablePerformanceTracing)
+                {
+                    Console.Error.WriteLine("\n=== Final Performance Metrics (on shutdown) ===");
+                    PrintMetrics();
+                }
+
                 ShutdownEventDelegate?.Invoke();
                 Writer.WriteResponse(requestMessage.Id, null);
                 return true;
@@ -113,5 +134,14 @@ public class LanguageServer : LSPCommunicationBase
         }
 
         return false;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _metricsTimer?.Dispose();
+        }
+        base.Dispose(disposing);
     }
 }

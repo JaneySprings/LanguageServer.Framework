@@ -23,7 +23,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
 
         try
         {
-            // 对于小消息使用 SmallBuffer 避免 ArrayPool 的开销
+            // Use SmallBuffer for small messages to avoid ArrayPool overhead
             if (totalLength + contentStart <= SmallBuffer.Length)
             {
                 return await ReadSmallJsonRpcMessageAsync(totalLength, contentStart, readContentLength, token);
@@ -35,7 +35,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         }
         finally
         {
-            // 使用 totalLength 而不是 readContentLength，因为消息可能已经完全读取
+            // Use totalLength instead of readContentLength as the message may be fully read
             if (contentStart + totalLength < _currentValidLength)
             {
                 var remaining = _currentValidLength - (contentStart + totalLength);
@@ -70,19 +70,19 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
                 var headerEnd = i;
                 if (headerEnd > 0)
                 {
-                    // 使用 Span 避免字符串分配
+                    // Use Span to avoid string allocation
                     var headerSpan = buffer[..headerEnd];
 
-                    // 直接在 byte span 上查找 "Content-Length:"
+                    // Find "Content-Length:" directly on byte span
                     ReadOnlySpan<byte> contentLengthPrefix = "Content-Length:"u8;
 
                     if (headerSpan.Length >= contentLengthPrefix.Length &&
                         headerSpan[..contentLengthPrefix.Length].SequenceEqual(contentLengthPrefix))
                     {
-                        // 解析数字部分
+                        // Parse number part
                         var numberSpan = headerSpan[contentLengthPrefix.Length..];
 
-                        // 跳过空格
+                        // Skip spaces
                         int numberStart = 0;
                         while (numberStart < numberSpan.Length && numberSpan[numberStart] == ' ')
                         {
@@ -91,10 +91,10 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
 
                         if (numberStart < numberSpan.Length)
                         {
-                            // 使用 Utf8Parser 高效解析数字
+                            // Use Utf8Parser to efficiently parse numbers
                             if (TryParseInt32(numberSpan[numberStart..], out contentLength))
                             {
-                                // 找到了 Content-Length
+                                // Found Content-Length
                             }
                             else
                             {
@@ -118,7 +118,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         return false;
     }
 
-    // 快速 UTF8 整数解析
+    // Fast UTF8 integer parsing
     private static bool TryParseInt32(ReadOnlySpan<byte> utf8Bytes, out int value)
     {
         value = 0;
@@ -128,7 +128,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         {
             if (b < '0' || b > '9')
             {
-                return value > 0; // 如果已经解析了一些数字，返回 true
+                return value > 0; // Return true if some digits have been parsed
             }
             value = value * 10 + (b - '0');
         }
@@ -158,7 +158,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
     {
         try
         {
-            // 继续读取剩余的消息内容
+            // Continue reading remaining message content
             while (readContentLength < totalContentLength)
             {
                 var bytesToRead = totalContentLength - readContentLength;
@@ -173,7 +173,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
                 if (read == 0) throw new InvalidOperationException("Stream closed before all data could be read.");
                 readContentLength += read;
 
-                // 更新 _currentValidLength 以反映实际读取的数据
+                // Update _currentValidLength to reflect actually read data
                 var newValidLength = contentStart + readContentLength;
                 if (newValidLength > _currentValidLength)
                 {
@@ -194,7 +194,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         int readContentLength, CancellationToken token = default)
     {
         var buffer = ArrayPool<byte>.Shared.Rent(totalContentLength);
-        // 将smallbuffer中的数据拷贝到buffer中
+        // Copy data from smallbuffer to buffer
         SmallBuffer.AsSpan(contentStart, readContentLength).CopyTo(buffer);
         try
         {

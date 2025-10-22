@@ -1,42 +1,51 @@
 namespace EmmyLua.LanguageServer.Framework.Server;
 
 /// <summary>
-/// Language Server 配置选项
+/// Language Server configuration options
 /// </summary>
 public class LanguageServerOptions
 {
     /// <summary>
-    /// 请求默认超时时间（默认：30秒）
+    /// Default request timeout (default: 30 seconds)
     /// </summary>
     public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(30);
 
     /// <summary>
-    /// JSON 协议读取缓冲区大小（默认：1024字节）
+    /// JSON protocol read buffer size (default: 1024 bytes)
     /// </summary>
     public int ReadBufferSize { get; set; } = 1024;
 
     /// <summary>
-    /// 是否在异常时输出详细堆栈跟踪（默认：true）
+    /// Whether to output detailed stack traces on exceptions (default: true)
     /// </summary>
     public bool EnableDetailedErrors { get; set; } = true;
 
     /// <summary>
-    /// Scheduler 关闭时等待任务完成的超时时间（默认：5秒）
+    /// Timeout for waiting for tasks to complete when shutting down the scheduler (default: 5 seconds)
     /// </summary>
     public TimeSpan SchedulerShutdownTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
     /// <summary>
-    /// 是否启用性能追踪（默认：false）
+    /// Whether to enable performance tracing (default: false)
+    /// When enabled, a DefaultPerformanceMetricsCollector will be automatically created to collect performance metrics.
+    /// You can retrieve the current performance metrics via languageServer.GetMetrics().
     /// </summary>
     public bool EnablePerformanceTracing { get; set; } = false;
 
     /// <summary>
-    /// 最大并发请求数量（0表示无限制，默认：0）
+    /// Performance metrics print interval (null means no automatic printing, default: null)
+    /// When set, performance metrics will be printed to stderr periodically
+    /// For example: TimeSpan.FromMinutes(5) prints every 5 minutes
+    /// </summary>
+    public TimeSpan? PerformanceMetricsPrintInterval { get; set; } = null;
+
+    /// <summary>
+    /// Maximum number of concurrent requests (0 means unlimited, default: 0)
     /// </summary>
     public int MaxConcurrentRequests { get; set; } = 0;
 
     /// <summary>
-    /// 创建默认配置
+    /// Create default configuration
     /// </summary>
     public static LanguageServerOptions Default => new();
 }

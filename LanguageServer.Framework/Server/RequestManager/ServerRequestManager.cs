@@ -12,7 +12,7 @@ public class ServerRequestManager
     private int _idCount = 0;
 
     /// <summary>
-    /// 默认请求超时时间（30秒）
+    /// Default request timeout (30 seconds)
     /// </summary>
     public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
@@ -36,7 +36,7 @@ public class ServerRequestManager
     }
 
     /// <summary>
-    /// 等待响应，使用默认超时时间
+    /// Wait for response with default timeout
     /// </summary>
     public Task<JsonDocument?> WaitResponse(StringOrInt id, CancellationToken token)
     {
@@ -44,7 +44,7 @@ public class ServerRequestManager
     }
 
     /// <summary>
-    /// 等待响应，指定超时时间
+    /// Wait for response with specified timeout
     /// </summary>
     public async Task<JsonDocument?> WaitResponse(StringOrInt id, TimeSpan timeout, CancellationToken token)
     {
@@ -53,7 +53,7 @@ public class ServerRequestManager
             var intId = id.IntValue;
             if (_intRequestTokens.TryGetValue(intId, out var tcs))
             {
-                // 创建组合超时令牌
+                // Create combined timeout token
                 using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(token);
                 timeoutCts.CancelAfter(timeout);
 
@@ -75,7 +75,7 @@ public class ServerRequestManager
                     {
                         _intRequestTokens.TryRemove(intId, out _);
 
-                        // 区分是超时还是主动取消
+                        // Distinguish between timeout and active cancellation
                         if (token.IsCancellationRequested)
                         {
                             throw;
@@ -93,7 +93,7 @@ public class ServerRequestManager
     }
 
     /// <summary>
-    /// 清理挂起的请求
+    /// Clean up pending requests
     /// </summary>
     public void CancelPendingRequests()
     {

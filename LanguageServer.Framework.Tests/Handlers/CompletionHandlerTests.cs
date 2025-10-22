@@ -42,7 +42,7 @@ public class CompletionHandlerTests : TestHandlerBase
 
         protected override Task<CompletionItem> Resolve(CompletionItem item, CancellationToken token)
         {
-            // 为 resolve 添加额外信息
+            // Add additional information for resolve
             item.Documentation = item.Documentation ?? "Resolved documentation";
             return Task.FromResult(item);
         }

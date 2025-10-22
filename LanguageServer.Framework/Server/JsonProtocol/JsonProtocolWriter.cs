@@ -16,7 +16,7 @@ public class JsonProtocolWriter : IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// 性能指标收集器
+    /// Performance metrics collector
     /// </summary>
     public IPerformanceMetricsCollector? MetricsCollector { get; set; }
 
@@ -46,35 +46,35 @@ public class JsonProtocolWriter : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        // 使用线程安全的写入
+        // Use thread-safe writing
         _writeLock.Wait();
         try
         {
-            // 序列化到内存
+            // Serialize to memory
             var json = JsonSerializer.Serialize(message, _jsonSerializerOptions);
             var contentLength = Encoding.UTF8.GetByteCount(json);
 
-            // 计算header大小
+            // Calculate header size
             var headerText = $"Content-Length: {contentLength}\r\n\r\n";
             var headerBytes = Encoding.UTF8.GetByteCount(headerText);
 
-            // 使用ArrayPool减少分配
+            // Use ArrayPool to reduce allocations
             var totalLength = headerBytes + contentLength;
             var buffer = ArrayPool<byte>.Shared.Rent(totalLength);
 
             try
             {
-                // 写入header
+                // Write header
                 var written = Encoding.UTF8.GetBytes(headerText, buffer);
 
-                // 写入content
+                // Write content
                 written += Encoding.UTF8.GetBytes(json, buffer.AsSpan(written));
 
-                // 一次性写入到流
+                // Write to stream at once
                 _output.Write(buffer, 0, written);
                 _output.Flush();
 
-                // 记录消息发送
+                // Record message sent
                 MetricsCollector?.RecordMessageSent();
             }
             finally

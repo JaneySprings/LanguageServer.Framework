@@ -14,6 +14,7 @@ using EmmyLua.LanguageServer.Framework.Server.Scheduler;
 
 namespace EmmyLua.LanguageServer.Framework;
 
+// ReSharper disable once InconsistentNaming
 public abstract class LSPCommunicationBase : IDisposable
 {
     public JsonSerializerOptions JsonSerializerOptions { get; } = new()
@@ -45,7 +46,7 @@ public abstract class LSPCommunicationBase : IDisposable
     public ClientCapabilities ClientCapabilities { get; set; } = null!;
 
     /// <summary>
-    /// 性能指标收集器
+    /// Performance metrics collector
     /// </summary>
     public IPerformanceMetricsCollector? MetricsCollector
     {
@@ -53,7 +54,7 @@ public abstract class LSPCommunicationBase : IDisposable
         set
         {
             _metricsCollector = value;
-            // 同步到Writer
+            // Synchronize to Writer
             Writer.MetricsCollector = value;
         }
     }
@@ -97,11 +98,36 @@ public abstract class LSPCommunicationBase : IDisposable
     }
 
     /// <summary>
-    /// 获取当前的性能指标快照
+    /// Get current performance metrics snapshot
     /// </summary>
     public PerformanceMetrics? GetMetrics()
     {
         return MetricsCollector?.GetMetrics();
+    }
+
+    /// <summary>
+    /// Print performance metrics summary to console error output
+    /// </summary>
+    public void PrintMetrics()
+    {
+        var metrics = GetMetrics();
+        if (metrics == null)
+        {
+            Console.Error.WriteLine("Performance metrics not enabled.");
+            return;
+        }
+
+        Console.Error.WriteLine("=== Performance Metrics ===");
+        Console.Error.WriteLine($"Uptime: {metrics.Uptime}");
+        Console.Error.WriteLine($"Total Requests Handled: {metrics.TotalRequestsHandled}");
+        Console.Error.WriteLine($"Total Notifications Handled: {metrics.TotalNotificationsHandled}");
+        Console.Error.WriteLine($"Total Requests Failed: {metrics.TotalRequestsFailed}");
+        Console.Error.WriteLine($"Average Request Duration: {metrics.AverageRequestDurationMs:F2}ms");
+        Console.Error.WriteLine($"Max Request Duration: {metrics.MaxRequestDurationMs:F2}ms");
+        Console.Error.WriteLine($"Pending Requests: {metrics.PendingRequestsCount}");
+        Console.Error.WriteLine($"Total Messages Sent: {metrics.TotalMessagesSent}");
+        Console.Error.WriteLine($"Total Messages Received: {metrics.TotalMessagesReceived}");
+        Console.Error.WriteLine("===========================");
     }
 
     public Task SendNotification(NotificationMessage notification)
@@ -202,14 +228,14 @@ public abstract class LSPCommunicationBase : IDisposable
 
                     try
                     {
-                        // 创建取消令牌以支持通知处理的取消
+                        // Create cancellation token to support notification handling cancellation
                         using var cts = CancellationTokenSource.CreateLinkedTokenSource(
                             ExitTokenSource?.Token ?? CancellationToken.None);
                         await handler(notification, cts.Token);
                     }
                     catch (OperationCanceledException)
                     {
-                        // Notification 被取消，忽略
+                        // Notification cancelled, ignore
                     }
                     catch (Exception e)
                     {
@@ -303,7 +329,7 @@ public abstract class LSPCommunicationBase : IDisposable
 
         if (disposing)
         {
-            // 取消运行
+            // Cancel running
             try
             {
                 Exit();
@@ -313,7 +339,7 @@ public abstract class LSPCommunicationBase : IDisposable
                 // Ignore if not running
             }
 
-            // 释放资源
+            // Release resources
             ExitTokenSource?.Dispose();
             _exitTokenLock.Dispose();
 
