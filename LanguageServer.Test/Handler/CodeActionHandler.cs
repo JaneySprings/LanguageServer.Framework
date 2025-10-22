@@ -25,7 +25,7 @@ public class CodeActionHandler : CodeActionHandlerBase
     protected override Task<CodeAction?> Resolve(CodeAction request, CancellationToken token)
     {
         Console.Error.WriteLine("CodeAction/Resolve");
-        return Task.FromResult(request);
+        return Task.FromResult<CodeAction?>(request);
     }
 
     public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
