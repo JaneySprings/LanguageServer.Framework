@@ -25,10 +25,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
 
         protected override Task Handle(DidChangeTextDocumentParams request, CancellationToken token)
         {
-            if (request.ContentChanges.Count > 0)
-            {
-                _documents[request.TextDocument.Uri] = request.ContentChanges[0].Text;
-            }
+            if (request.ContentChanges.Count > 0) _documents[request.TextDocument.Uri] = request.ContentChanges[0].Text;
 
             return Task.CompletedTask;
         }

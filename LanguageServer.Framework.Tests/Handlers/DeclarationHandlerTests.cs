@@ -18,7 +18,7 @@ public class DeclarationHandlerTests : TestHandlerBase
         {
             var locations = new List<Location>
             {
-                new Location
+                new()
                 {
                     Uri = "file:///declarations.txt",
                     Range = new DocumentRange(

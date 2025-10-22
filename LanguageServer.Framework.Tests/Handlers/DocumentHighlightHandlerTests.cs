@@ -19,7 +19,7 @@ public class DocumentHighlightHandlerTests : TestHandlerBase
         {
             var highlights = new List<DocumentHighlight>
             {
-                new DocumentHighlight
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 5, Character = 10 },
@@ -27,7 +27,7 @@ public class DocumentHighlightHandlerTests : TestHandlerBase
                     ),
                     Kind = DocumentHighlightKind.Write
                 },
-                new DocumentHighlight
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 10, Character = 5 },

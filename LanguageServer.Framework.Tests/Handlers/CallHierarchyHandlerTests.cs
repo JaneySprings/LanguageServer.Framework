@@ -20,7 +20,7 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         {
             var items = new List<CallHierarchyItem>
             {
-                new CallHierarchyItem
+                new()
                 {
                     Name = "testFunction",
                     Kind = SymbolKind.Function,
@@ -44,7 +44,7 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         {
             var calls = new List<CallHierarchyIncomingCall>
             {
-                new CallHierarchyIncomingCall
+                new()
                 {
                     From = new Location
                     {
@@ -69,7 +69,7 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         {
             var calls = new List<CallHierarchyOutgoingCall>
             {
-                new CallHierarchyOutgoingCall
+                new()
                 {
                     To = new Location
                     {

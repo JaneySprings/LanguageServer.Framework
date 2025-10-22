@@ -18,7 +18,7 @@ public class DocumentColorHandlerTests : TestHandlerBase
         {
             var colorInfos = new List<ColorInformation>
             {
-                new ColorInformation
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 5, Character = 10 },
@@ -36,11 +36,11 @@ public class DocumentColorHandlerTests : TestHandlerBase
         {
             var presentations = new List<ColorPresentation>
             {
-                new ColorPresentation
+                new()
                 {
                     Label = $"rgb({request.Color.Red * 255}, {request.Color.Green * 255}, {request.Color.Blue * 255})"
                 },
-                new ColorPresentation
+                new()
                 {
                     Label = "#FF0000"
                 }

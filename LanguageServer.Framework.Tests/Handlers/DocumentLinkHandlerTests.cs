@@ -18,7 +18,7 @@ public class DocumentLinkHandlerTests : TestHandlerBase
         {
             var links = new List<DocumentLink>
             {
-                new DocumentLink
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 0, Character = 0 },

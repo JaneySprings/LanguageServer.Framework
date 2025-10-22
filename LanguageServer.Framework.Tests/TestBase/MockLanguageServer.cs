@@ -35,6 +35,7 @@ public class MockLanguageServer : LanguageServerType
                 return reader.ReadToEnd();
             }
         }
+
         return string.Empty;
     }
 }

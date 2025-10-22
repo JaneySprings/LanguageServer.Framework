@@ -18,7 +18,7 @@ public class DefinitionHandlerTests : TestHandlerBase
         {
             var locations = new List<Location>
             {
-                new Location
+                new()
                 {
                     Uri = "file:///source.txt",
                     Range = new DocumentRange(

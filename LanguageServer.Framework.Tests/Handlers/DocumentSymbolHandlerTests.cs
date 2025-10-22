@@ -18,7 +18,7 @@ public class DocumentSymbolHandlerTests : TestHandlerBase
         {
             var symbols = new List<DocumentSymbol>
             {
-                new DocumentSymbol
+                new()
                 {
                     Name = "TestClass",
                     Kind = SymbolKind.Class,

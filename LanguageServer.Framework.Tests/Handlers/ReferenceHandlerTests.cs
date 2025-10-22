@@ -18,7 +18,7 @@ public class ReferenceHandlerTests : TestHandlerBase
         {
             var locations = new List<Location>
             {
-                new Location
+                new()
                 {
                     Uri = "file:///ref1.txt",
                     Range = new DocumentRange(
@@ -26,7 +26,7 @@ public class ReferenceHandlerTests : TestHandlerBase
                         new Position { Line = 5, Character = 20 }
                     )
                 },
-                new Location
+                new()
                 {
                     Uri = "file:///ref2.txt",
                     Range = new DocumentRange(

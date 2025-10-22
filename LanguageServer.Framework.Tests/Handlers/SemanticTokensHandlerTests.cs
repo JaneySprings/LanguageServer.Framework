@@ -133,7 +133,7 @@ public class SemanticTokensHandlerTests : TestHandlerBase
 
         // Assert
         serverCapabilities.SemanticTokensProvider.Should().NotBeNull();
-        var options = serverCapabilities.SemanticTokensProvider ;
+        var options = serverCapabilities.SemanticTokensProvider;
         options.Should().NotBeNull();
         options!.Legend.TokenTypes.Should().Contain("class");
         options.Full!.BoolValue.Should().BeTrue();

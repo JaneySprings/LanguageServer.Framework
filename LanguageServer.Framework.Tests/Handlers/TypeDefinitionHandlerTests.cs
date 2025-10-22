@@ -18,7 +18,7 @@ public class TypeDefinitionHandlerTests : TestHandlerBase
         {
             var locations = new List<Location>
             {
-                new Location
+                new()
                 {
                     Uri = "file:///types.txt",
                     Range = new DocumentRange(

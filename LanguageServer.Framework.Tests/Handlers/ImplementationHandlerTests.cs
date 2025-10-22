@@ -18,7 +18,7 @@ public class ImplementationHandlerTests : TestHandlerBase
         {
             var locations = new List<Location>
             {
-                new Location
+                new()
                 {
                     Uri = "file:///implementation1.txt",
                     Range = new DocumentRange(
@@ -26,7 +26,7 @@ public class ImplementationHandlerTests : TestHandlerBase
                         new Position { Line = 20, Character = 0 }
                     )
                 },
-                new Location
+                new()
                 {
                     Uri = "file:///implementation2.txt",
                     Range = new DocumentRange(

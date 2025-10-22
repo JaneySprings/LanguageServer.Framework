@@ -19,7 +19,7 @@ public class InlayHintHandlerTests : TestHandlerBase
         {
             var hints = new List<InlayHint>
             {
-                new InlayHint
+                new()
                 {
                     Position = new Position { Line = 5, Character = 20 },
                     Label = ": string",
@@ -27,7 +27,7 @@ public class InlayHintHandlerTests : TestHandlerBase
                     PaddingLeft = false,
                     PaddingRight = false
                 },
-                new InlayHint
+                new()
                 {
                     Position = new Position { Line = 10, Character = 15 },
                     Label = "value:",
@@ -45,7 +45,8 @@ public class InlayHintHandlerTests : TestHandlerBase
             return Task.FromResult(inlayHint);
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.InlayHintProvider = new InlayHintsOptions
             {
@@ -70,7 +71,6 @@ public class InlayHintHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [request, CancellationToken.None]);
@@ -97,7 +97,6 @@ public class InlayHintHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [hint, CancellationToken.None]);

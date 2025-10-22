@@ -19,7 +19,7 @@ public class CompletionHandlerTests : TestHandlerBase
         {
             var items = new List<CompletionItem>
             {
-                new CompletionItem
+                new()
                 {
                     Label = "testMethod",
                     Kind = CompletionItemKind.Method,
@@ -28,7 +28,7 @@ public class CompletionHandlerTests : TestHandlerBase
                     InsertText = "testMethod()",
                     InsertTextFormat = InsertTextFormat.PlainText
                 },
-                new CompletionItem
+                new()
                 {
                     Label = "testVariable",
                     Kind = CompletionItemKind.Variable,
@@ -47,7 +47,8 @@ public class CompletionHandlerTests : TestHandlerBase
             return Task.FromResult(item);
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.CompletionProvider = new Protocol.Capabilities.Server.Options.CompletionOptions
             {
@@ -72,7 +73,6 @@ public class CompletionHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [request, CancellationToken.None]);
@@ -101,7 +101,6 @@ public class CompletionHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [item, CancellationToken.None]);

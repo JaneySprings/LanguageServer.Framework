@@ -18,12 +18,12 @@ public class CodeLensHandlerTests : TestHandlerBase
         {
             var lenses = new List<CodeLens>
             {
-                new CodeLens
+                new()
                 {
                     Range = new DocumentRange(
-                new Position { Line = 0, Character = 0 },
-                new Position { Line = 0, Character = 10 }
-            ),
+                        new Position { Line = 0, Character = 0 },
+                        new Position { Line = 0, Character = 10 }
+                    ),
                     Command = new Command
                     {
                         Title = "5 references",
@@ -45,7 +45,8 @@ public class CodeLensHandlerTests : TestHandlerBase
             return Task.FromResult(codeLens);
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.CodeLensProvider = new Protocol.Capabilities.Server.Options.CodeLensOptions
             {
@@ -66,7 +67,6 @@ public class CodeLensHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [request, CancellationToken.None]);
@@ -95,7 +95,6 @@ public class CodeLensHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [lens, CancellationToken.None]);

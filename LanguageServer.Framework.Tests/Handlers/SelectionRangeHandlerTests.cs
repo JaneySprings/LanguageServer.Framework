@@ -18,7 +18,7 @@ public class SelectionRangeHandlerTests : TestHandlerBase
         {
             var ranges = new List<SelectionRange>
             {
-                new SelectionRange
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 5, Character = 10 },

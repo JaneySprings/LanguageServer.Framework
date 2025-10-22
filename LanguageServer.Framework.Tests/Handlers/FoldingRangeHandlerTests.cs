@@ -17,13 +17,13 @@ public class FoldingRangeHandlerTests : TestHandlerBase
         {
             var ranges = new List<FoldingRange>
             {
-                new FoldingRange
+                new()
                 {
                     StartLine = 0,
                     EndLine = 10,
                     Kind = FoldingRangeKind.Region
                 },
-                new FoldingRange
+                new()
                 {
                     StartLine = 5,
                     EndLine = 8,
@@ -36,7 +36,8 @@ public class FoldingRangeHandlerTests : TestHandlerBase
             return Task.FromResult(new FoldingRangeResponse(ranges));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.FoldingRangeProvider = true;
         }
@@ -54,7 +55,6 @@ public class FoldingRangeHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
         var task = method.Invoke(handler, [request, CancellationToken.None]);

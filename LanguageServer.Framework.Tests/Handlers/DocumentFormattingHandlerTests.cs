@@ -20,7 +20,7 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         {
             var edits = new List<TextEdit>
             {
-                new TextEdit
+                new()
                 {
                     Range = new DocumentRange(
                         new Position { Line = 0, Character = 0 },
@@ -50,7 +50,7 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         {
             var edits = new List<TextEdit>
             {
-                new TextEdit
+                new()
                 {
                     Range = request.Range,
                     NewText = "formatted range"

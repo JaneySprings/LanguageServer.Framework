@@ -19,7 +19,7 @@ public class CodeActionHandlerTests : TestHandlerBase
         {
             var actions = new List<CodeAction>
             {
-                new CodeAction
+                new()
                 {
                     Title = "Fix spelling",
                     Kind = CodeActionKind.QuickFix,
@@ -41,7 +41,7 @@ public class CodeActionHandlerTests : TestHandlerBase
                         }
                     }
                 },
-                new CodeAction
+                new()
                 {
                     Title = "Refactor method",
                     Kind = CodeActionKind.Refactor
