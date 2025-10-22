@@ -5,13 +5,15 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
-using EmmyLua.LanguageServer.Framework.Tests.TestBase;
 using FluentAssertions;
 using Xunit;
 
-namespace EmmyLua.LanguageServer.Framework.Tests.Handlers;
+namespace EmmyLua.LanguageServer.Framework.Tests.Handlers.Working;
 
-public class CompletionHandlerTests : TestHandlerBase
+/// <summary>
+/// 可工作的 CompletionHandler 测试示例
+/// </summary>
+public class WorkingCompletionHandlerTests
 {
     private class TestCompletionHandler : CompletionHandlerBase
     {
@@ -62,7 +64,6 @@ public class CompletionHandlerTests : TestHandlerBase
     {
         // Arrange
         var handler = new TestCompletionHandler();
-        AddHandler(handler);
 
         var request = new CompletionParams
         {
@@ -72,17 +73,15 @@ public class CompletionHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-
         var task = method.Invoke(handler, [request, CancellationToken.None]);
-
         var response = await (task as Task<CompletionResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.Items.Should().HaveCount(2);
-        response.Items[0].Label.Should().Be("testMethod");
+        response!.Items.Should().NotBeNull();
+        response.Items.Should().HaveCount(2);
+        response.Items![0].Label.Should().Be("testMethod");
         response.Items[0].Kind.Should().Be(CompletionItemKind.Method);
         response.Items[1].Label.Should().Be("testVariable");
         response.Items[1].Kind.Should().Be(CompletionItemKind.Variable);
@@ -101,11 +100,8 @@ public class CompletionHandlerTests : TestHandlerBase
 
         // Act
         var method = handler.GetType()
-
             .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-
         var task = method.Invoke(handler, [item, CancellationToken.None]);
-
         var resolved = await (task as Task<CompletionItem>)!;
 
         // Assert

@@ -1,4 +1,3 @@
-using EmmyLua.LanguageServer.Framework.Server;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 
 namespace EmmyLua.LanguageServer.Framework.Tests.TestBase;

@@ -2,7 +2,6 @@ using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Client.ClientCapabi
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.CodeAction;
 using EmmyLua.LanguageServer.Framework.Protocol.Model;
-using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextEdit;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
@@ -16,7 +15,7 @@ public class CodeActionHandlerTests : TestHandlerBase
 {
     private class TestCodeActionHandler : CodeActionHandlerBase
     {
-        protected override Task<CodeActionResponse?> Handle(CodeActionParams request, CancellationToken token)
+        protected override Task<CodeActionResponse> Handle(CodeActionParams request, CancellationToken token)
         {
             var actions = new List<CodeAction>
             {
@@ -26,20 +25,19 @@ public class CodeActionHandlerTests : TestHandlerBase
                     Kind = CodeActionKind.QuickFix,
                     Edit = new WorkspaceEdit
                     {
-                        Changes = new Dictionary<string, List<TextEdit>>
+                        Changes = new Dictionary<DocumentUri, List<TextEdit>>
                         {
-                            ["file:///test.txt"] = new List<TextEdit>
-                            {
+                            [new DocumentUri(new Uri("file:///test.txt"))] =
+                            [
                                 new TextEdit
                                 {
-                                    Range = new LocationRange
-                                    {
-                                        Start = new Position { Line = 0, Character = 0 },
-                                        End = new Position { Line = 0, Character = 5 }
-                                    },
+                                    Range = new DocumentRange(
+                                        new Position { Line = 0, Character = 0 },
+                                        new Position { Line = 0, Character = 5 }
+                                    ),
                                     NewText = "Fixed"
                                 }
-                            }
+                            ]
                         }
                     }
                 },
@@ -50,7 +48,7 @@ public class CodeActionHandlerTests : TestHandlerBase
                 }
             };
 
-            return Task.FromResult<CodeActionResponse?>(new CodeActionResponse(actions));
+            return Task.FromResult(new CodeActionResponse(actions));
         }
 
         protected override Task<CodeAction?> Resolve(CodeAction codeAction, CancellationToken token)
@@ -59,12 +57,13 @@ public class CodeActionHandlerTests : TestHandlerBase
             codeAction.Command = new Command
             {
                 Title = codeAction.Title,
-                CommandIdentifier = "refactor.execute"
+                Name = "refactor.execute"
             };
-            return Task.FromResult<CodeAction?>(codeAction);
+            return Task.FromResult(codeAction)!;
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.CodeActionProvider = new Protocol.Capabilities.Server.Options.CodeActionOptions
             {
@@ -85,12 +84,11 @@ public class CodeActionHandlerTests : TestHandlerBase
         var handler = new TestCodeActionHandler();
         var request = new CodeActionParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 5, Character = 0 },
-                End = new Position { Line = 5, Character = 10 }
-            },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
+            Range = new DocumentRange(
+                new Position { Line = 5, Character = 0 },
+                new Position { Line = 5, Character = 10 }
+            ),
             Context = new CodeActionContext
             {
                 Diagnostics = []
@@ -98,18 +96,20 @@ public class CodeActionHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<CodeActionResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<CodeActionResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.CodeActions.Should().HaveCount(2);
-        response.CodeActions[0].Title.Should().Be("Fix spelling");
-        response.CodeActions[0].Kind.Should().Be(CodeActionKind.QuickFix);
-        response.CodeActions[1].Title.Should().Be("Refactor method");
+        response!.CommandOrCodeActions.Should().HaveCount(2);
+
+        response.CommandOrCodeActions[0].Command?.Title.Should().Be("Fix spelling");
+        response.CommandOrCodeActions[0].CodeAction?.Kind.Should().Be(CodeActionKind.QuickFix);
+        response.CommandOrCodeActions[1].Command?.Title.Should().Be("Refactor method");
     }
 
     [Fact]
@@ -124,16 +124,17 @@ public class CodeActionHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { action, CancellationToken.None }) as Task<CodeAction?>;
+        var method = handler.GetType()
+            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var resolved = await result!;
+        var task = method.Invoke(handler, [action, CancellationToken.None]);
+
+        var resolved = await (task as Task<CodeAction?>)!;
 
         // Assert
         resolved.Should().NotBeNull();
         resolved!.Command.Should().NotBeNull();
-        resolved.Command!.CommandIdentifier.Should().Be("refactor.execute");
+        resolved.Command!.Name.Should().Be("refactor.execute");
     }
 
     [Fact]
@@ -149,9 +150,9 @@ public class CodeActionHandlerTests : TestHandlerBase
 
         // Assert
         serverCapabilities.CodeActionProvider.Should().NotBeNull();
-        var options = serverCapabilities.CodeActionProvider as Protocol.Capabilities.Server.Options.CodeActionOptions;
+        var options = serverCapabilities.CodeActionProvider;
         options.Should().NotBeNull();
-        options!.ResolveProvider.Should().BeTrue();
-        options.CodeActionKinds.Should().Contain(CodeActionKind.QuickFix);
+        options!.Value!.ResolveProvider.Should().BeTrue();
+        options.Value.CodeActionKinds.Should().Contain(CodeActionKind.QuickFix);
     }
 }

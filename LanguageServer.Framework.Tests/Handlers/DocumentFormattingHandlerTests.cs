@@ -15,17 +15,17 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
 {
     private class TestDocumentFormattingHandler : DocumentFormattingHandlerBase
     {
-        protected override Task<DocumentFormattingResponse?> Handle(DocumentFormattingParams request, CancellationToken token)
+        protected override Task<DocumentFormattingResponse?> Handle(DocumentFormattingParams request,
+            CancellationToken token)
         {
             var edits = new List<TextEdit>
             {
                 new TextEdit
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 0, Character = 0 },
-                        End = new Position { Line = 0, Character = 10 }
-                    },
+                    Range = new DocumentRange(
+                        new Position { Line = 0, Character = 0 },
+                        new Position { Line = 0, Character = 10 }
+                    ),
                     NewText = "formatted text"
                 }
             };
@@ -33,17 +33,20 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
             return Task.FromResult<DocumentFormattingResponse?>(new DocumentFormattingResponse(edits));
         }
 
-        protected override Task<DocumentFormattingResponse?> Handle(DocumentRangesFormattingParams request, CancellationToken token)
+        protected override Task<DocumentFormattingResponse?> Handle(DocumentRangesFormattingParams request,
+            CancellationToken token)
         {
             return Task.FromResult<DocumentFormattingResponse?>(null);
         }
 
-        protected override Task<DocumentFormattingResponse?> Handle(DocumentOnTypeFormattingParams request, CancellationToken token)
+        protected override Task<DocumentFormattingResponse?> Handle(DocumentOnTypeFormattingParams request,
+            CancellationToken token)
         {
             return Task.FromResult<DocumentFormattingResponse?>(null);
         }
 
-        protected override Task<DocumentFormattingResponse?> Handle(DocumentRangeFormattingParams request, CancellationToken token)
+        protected override Task<DocumentFormattingResponse?> Handle(DocumentRangeFormattingParams request,
+            CancellationToken token)
         {
             var edits = new List<TextEdit>
             {
@@ -57,7 +60,8 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
             return Task.FromResult<DocumentFormattingResponse?>(new DocumentFormattingResponse(edits));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.DocumentFormattingProvider = true;
             serverCapabilities.DocumentRangeFormattingProvider = true;
@@ -71,7 +75,7 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         var handler = new TestDocumentFormattingHandler();
         var request = new DocumentFormattingParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Options = new FormattingOptions
             {
                 TabSize = 4,
@@ -80,11 +84,12 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DocumentFormattingResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<DocumentFormattingResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
@@ -99,12 +104,11 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         var handler = new TestDocumentFormattingHandler();
         var request = new DocumentRangeFormattingParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 5, Character = 0 },
-                End = new Position { Line = 10, Character = 0 }
-            },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
+            Range = new DocumentRange(
+                new Position { Line = 5, Character = 0 },
+                new Position { Line = 10, Character = 0 }
+            ),
             Options = new FormattingOptions
             {
                 TabSize = 2,
@@ -113,9 +117,11 @@ public class DocumentFormattingHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(DocumentRangeFormattingParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DocumentFormattingResponse?>;
+        var result = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DocumentRangeFormattingParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task<DocumentFormattingResponse?>;
 
         var response = await result!;
 

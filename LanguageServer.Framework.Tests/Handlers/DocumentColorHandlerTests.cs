@@ -1,4 +1,3 @@
-using System.Drawing;
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Client.ClientCapabilities;
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentColor;
@@ -15,31 +14,25 @@ public class DocumentColorHandlerTests : TestHandlerBase
 {
     private class TestDocumentColorHandler : DocumentColorHandlerBase
     {
-        protected override Task<DocumentColorResponse?> Handle(DocumentColorParams request, CancellationToken token)
+        protected override Task<DocumentColorResponse> Handle(DocumentColorParams request, CancellationToken token)
         {
             var colorInfos = new List<ColorInformation>
             {
                 new ColorInformation
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 10 },
-                        End = new Position { Line = 5, Character = 17 }
-                    },
-                    Color = new Color
-                    {
-                        Red = 1.0,
-                        Green = 0.0,
-                        Blue = 0.0,
-                        Alpha = 1.0
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 5, Character = 10 },
+                        new Position { Line = 5, Character = 17 }
+                    ),
+                    Color = new DocumentColor(1.0, 0.0, 0.0)
                 }
             };
 
             return Task.FromResult<DocumentColorResponse?>(new DocumentColorResponse(colorInfos))!;
         }
 
-        protected override Task<ColorPresentationResponse> Resolve(ColorPresentationParams request, CancellationToken token)
+        protected override Task<ColorPresentationResponse> Resolve(ColorPresentationParams request,
+            CancellationToken token)
         {
             var presentations = new List<ColorPresentation>
             {
@@ -56,7 +49,8 @@ public class DocumentColorHandlerTests : TestHandlerBase
             return Task.FromResult<ColorPresentationResponse?>(new ColorPresentationResponse(presentations))!;
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.ColorProvider = true;
         }
@@ -69,21 +63,22 @@ public class DocumentColorHandlerTests : TestHandlerBase
         var handler = new TestDocumentColorHandler();
         var request = new DocumentColorParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DocumentColorResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<DocumentColorResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.ColorInfos.Should().HaveCount(1);
-        response.ColorInfos[0].Color.Red.Should().Be(1.0);
-        response.ColorInfos[0].Color.Green.Should().Be(0.0);
+        response!.ColorInformationList.Should().HaveCount(1);
+        response.ColorInformationList[0].Color.Red.Should().Be(1.0);
+        response.ColorInformationList[0].Color.Green.Should().Be(0.0);
     }
 
     [Fact]
@@ -93,32 +88,26 @@ public class DocumentColorHandlerTests : TestHandlerBase
         var handler = new TestDocumentColorHandler();
         var request = new ColorPresentationParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
-            Color = new Color
-            {
-                Red = 1.0,
-                Green = 0.0,
-                Blue = 0.0,
-                Alpha = 1.0
-            },
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 5, Character = 10 },
-                End = new Position { Line = 5, Character = 17 }
-            }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
+            Color = new DocumentColor(1.0, 0.0, 0.0),
+            Range = new DocumentRange(
+                new Position { Line = 5, Character = 10 },
+                new Position { Line = 5, Character = 17 }
+            )
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<ColorPresentationResponse>;
+        var method = handler.GetType()
+            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<ColorPresentationResponse>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.ColorPresentations.Should().HaveCount(2);
-        response.ColorPresentations[1].Label.Should().Be("#FF0000");
+        response.Presentations.Should().HaveCount(2);
+        response.Presentations[1].Label.Should().Be("#FF0000");
     }
 
     [Fact]

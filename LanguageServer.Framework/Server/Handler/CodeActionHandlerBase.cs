@@ -9,7 +9,7 @@ public abstract class CodeActionHandlerBase : IJsonHandler
 {
     protected abstract Task<CodeActionResponse> Handle(CodeActionParams request, CancellationToken token);
 
-    protected abstract Task<CodeAction> Resolve(CodeAction request, CancellationToken token);
+    protected abstract Task<CodeAction?> Resolve(CodeAction request, CancellationToken token);
 
     public void RegisterHandler(LSPCommunicationBase lspCommunication)
     {

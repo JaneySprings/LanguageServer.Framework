@@ -19,32 +19,30 @@ public class RenameHandlerTests : TestHandlerBase
         {
             var workspaceEdit = new WorkspaceEdit
             {
-                Changes = new Dictionary<string, List<TextEdit>>
+                Changes = new Dictionary<DocumentUri, List<TextEdit>>
                 {
-                    ["file:///test.txt"] = new List<TextEdit>
-                    {
+                    [new DocumentUri(new Uri("file:///test.txt"))] =
+                    [
                         new TextEdit
                         {
-                            Range = new LocationRange
-                            {
-                                Start = new Position { Line = 5, Character = 10 },
-                                End = new Position { Line = 5, Character = 20 }
-                            },
+                            Range = new DocumentRange(
+                                new Position { Line = 5, Character = 10 },
+                                new Position { Line = 5, Character = 20 }
+                            ),
                             NewText = request.NewName
                         }
-                    },
-                    ["file:///test2.txt"] = new List<TextEdit>
-                    {
+                    ],
+                    [new DocumentUri(new Uri("file:///test2.txt"))] =
+                    [
                         new TextEdit
                         {
-                            Range = new LocationRange
-                            {
-                                Start = new Position { Line = 10, Character = 5 },
-                                End = new Position { Line = 10, Character = 15 }
-                            },
+                            Range = new DocumentRange(
+                                new Position { Line = 10, Character = 5 },
+                                new Position { Line = 10, Character = 15 }
+                            ),
                             NewText = request.NewName
                         }
-                    }
+                    ]
                 }
             };
 
@@ -53,18 +51,18 @@ public class RenameHandlerTests : TestHandlerBase
 
         protected override Task<PrepareRenameResponse> Handle(PrepareRenameParams request, CancellationToken token)
         {
-            return Task.FromResult<PrepareRenameResponse?>(new PrepareRenameResponse
-            {
-                Range = new LocationRange
-                {
-                    Start = new Position { Line = 5, Character = 10 },
-                    End = new Position { Line = 5, Character = 20 }
-                },
-                Placeholder = "oldName"
-            });
+            return Task.FromResult(new PrepareRenameResponse
+            (
+                new DocumentRange(
+                    new Position { Line = 5, Character = 10 },
+                    new Position { Line = 5, Character = 20 }
+                ),
+                "oldName"
+            ));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.RenameProvider = new Protocol.Capabilities.Server.Options.RenameOptions
             {
@@ -80,22 +78,24 @@ public class RenameHandlerTests : TestHandlerBase
         var handler = new TestRenameHandler();
         var request = new RenameParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 15 },
             NewName = "newName"
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(RenameParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<WorkspaceEdit?>;
+        var result = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(RenameParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task<WorkspaceEdit?>;
 
         var response = await result!;
 
         // Assert
         response.Should().NotBeNull();
         response!.Changes.Should().HaveCount(2);
-        response.Changes!["file:///test.txt"][0].NewText.Should().Be("newName");
+        response.Changes![new DocumentUri(new Uri("file:///test.txt"))][0].NewText.Should().Be("newName");
     }
 
     [Fact]
@@ -105,14 +105,16 @@ public class RenameHandlerTests : TestHandlerBase
         var handler = new TestRenameHandler();
         var request = new PrepareRenameParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 15 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(PrepareRenameParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<PrepareRenameResponse>;
+        var result = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(PrepareRenameParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task<PrepareRenameResponse>;
 
         var response = await result!;
 
@@ -135,7 +137,7 @@ public class RenameHandlerTests : TestHandlerBase
 
         // Assert
         serverCapabilities.RenameProvider.Should().NotBeNull();
-        var options = serverCapabilities.RenameProvider as Protocol.Capabilities.Server.Options.RenameOptions;
+        var options = serverCapabilities.RenameProvider!.Value;
         options.Should().NotBeNull();
         options!.PrepareProvider.Should().BeTrue();
     }

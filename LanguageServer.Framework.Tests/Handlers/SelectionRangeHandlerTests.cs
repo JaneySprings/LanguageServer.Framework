@@ -20,18 +20,16 @@ public class SelectionRangeHandlerTests : TestHandlerBase
             {
                 new SelectionRange
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 10 },
-                        End = new Position { Line = 5, Character = 20 }
-                    },
+                    Range = new DocumentRange(
+                        new Position { Line = 5, Character = 10 },
+                        new Position { Line = 5, Character = 20 }
+                    ),
                     Parent = new SelectionRange
                     {
-                        Range = new LocationRange
-                        {
-                            Start = new Position { Line = 5, Character = 5 },
-                            End = new Position { Line = 5, Character = 25 }
-                        }
+                        Range = new DocumentRange(
+                            new Position { Line = 5, Character = 5 },
+                            new Position { Line = 5, Character = 25 }
+                        )
                     }
                 }
             };
@@ -39,7 +37,8 @@ public class SelectionRangeHandlerTests : TestHandlerBase
             return Task.FromResult<SelectionRangeResponse?>(new SelectionRangeResponse(ranges));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.SelectionRangeProvider = true;
         }
@@ -52,25 +51,23 @@ public class SelectionRangeHandlerTests : TestHandlerBase
         var handler = new TestSelectionRangeHandler();
         var request = new SelectionRangeParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
-            Positions = new List<Position>
-            {
-                new Position { Line = 5, Character = 15 }
-            }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
+            Positions = [new Position { Line = 5, Character = 15 }]
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<SelectionRangeResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<SelectionRangeResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.SelectionRanges.Should().HaveCount(1);
-        response.SelectionRanges[0].Range.Should().NotBeNull();
-        response.SelectionRanges[0].Parent.Should().NotBeNull();
+        response!.Ranges.Should().HaveCount(1);
+        response.Ranges[0].Range.Should().NotBeNull();
+        response.Ranges[0].Parent.Should().NotBeNull();
     }
 
     [Fact]

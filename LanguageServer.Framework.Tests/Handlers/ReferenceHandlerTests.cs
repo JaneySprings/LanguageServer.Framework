@@ -21,27 +21,26 @@ public class ReferenceHandlerTests : TestHandlerBase
                 new Location
                 {
                     Uri = "file:///ref1.txt",
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 10 },
-                        End = new Position { Line = 5, Character = 20 }
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 5, Character = 10 },
+                        new Position { Line = 5, Character = 20 }
+                    )
                 },
                 new Location
                 {
                     Uri = "file:///ref2.txt",
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 15, Character = 5 },
-                        End = new Position { Line = 15, Character = 15 }
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 15, Character = 5 },
+                        new Position { Line = 15, Character = 15 }
+                    )
                 }
             };
 
             return Task.FromResult<ReferenceResponse?>(new ReferenceResponse(locations));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.ReferencesProvider = true;
         }
@@ -54,23 +53,24 @@ public class ReferenceHandlerTests : TestHandlerBase
         var handler = new TestReferenceHandler();
         var request = new ReferenceParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 10, Character = 15 },
             Context = new ReferenceContext { IncludeDeclaration = true }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<ReferenceResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<ReferenceResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.Locations.Should().HaveCount(2);
-        response.Locations[0].Uri.Should().Be("file:///ref1.txt");
-        response.Locations[1].Uri.Should().Be("file:///ref2.txt");
+        response!.Result.Should().HaveCount(2);
+        response.Result[0].Uri.Should().Be("file:///ref1.txt");
+        response.Result[1].Uri.Should().Be("file:///ref2.txt");
     }
 
     [Fact]

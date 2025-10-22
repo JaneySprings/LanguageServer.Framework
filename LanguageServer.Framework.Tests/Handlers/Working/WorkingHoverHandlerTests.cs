@@ -5,13 +5,15 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.Markup;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
-using EmmyLua.LanguageServer.Framework.Tests.TestBase;
 using FluentAssertions;
 using Xunit;
 
-namespace EmmyLua.LanguageServer.Framework.Tests.Handlers;
+namespace EmmyLua.LanguageServer.Framework.Tests.Handlers.Working;
 
-public class HoverHandlerTests : TestHandlerBase
+/// <summary>
+/// 可工作的 HoverHandler 测试示例
+/// </summary>
+public class WorkingHoverHandlerTests
 {
     private class TestHoverHandler : HoverHandlerBase
     {
@@ -31,8 +33,7 @@ public class HoverHandlerTests : TestHandlerBase
             });
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities,
-            ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
         {
             serverCapabilities.HoverProvider = true;
         }
@@ -52,9 +53,7 @@ public class HoverHandlerTests : TestHandlerBase
         // Act
         var method = handler.GetType()
             .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-
         var task = method.Invoke(handler, [request, CancellationToken.None]);
-
         var response = await (task as Task<HoverResponse?>)!;
 
         // Assert

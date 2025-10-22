@@ -21,18 +21,18 @@ public class TypeDefinitionHandlerTests : TestHandlerBase
                 new Location
                 {
                     Uri = "file:///types.txt",
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 0, Character = 0 },
-                        End = new Position { Line = 10, Character = 0 }
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 0, Character = 0 },
+                        new Position { Line = 10, Character = 0 }
+                    )
                 }
             };
 
             return Task.FromResult<TypeDefinitionResponse?>(new TypeDefinitionResponse(locations));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.TypeDefinitionProvider = true;
         }
@@ -45,21 +45,22 @@ public class TypeDefinitionHandlerTests : TestHandlerBase
         var handler = new TestTypeDefinitionHandler();
         var request = new TypeDefinitionParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 10 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<TypeDefinitionResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<TypeDefinitionResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.Locations.Should().HaveCount(1);
-        response.Locations[0].Uri.Should().Be("file:///types.txt");
+        response!.Result2.Should().HaveCount(1);
+        response.Result2![0].Uri.Should().Be("file:///types.txt");
     }
 
     [Fact]

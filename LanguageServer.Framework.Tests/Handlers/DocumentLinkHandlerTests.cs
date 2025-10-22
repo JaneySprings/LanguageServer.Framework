@@ -14,32 +14,32 @@ public class DocumentLinkHandlerTests : TestHandlerBase
 {
     private class TestDocumentLinkHandler : DocumentLinkHandlerBase
     {
-        protected override Task<DocumentLinkResponse?> Handle(DocumentLinkParams request, CancellationToken token)
+        protected override Task<DocumentLinkResponse> Handle(DocumentLinkParams request, CancellationToken token)
         {
             var links = new List<DocumentLink>
             {
                 new DocumentLink
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 0, Character = 0 },
-                        End = new Position { Line = 0, Character = 20 }
-                    },
+                    Range = new DocumentRange(
+                        new Position { Line = 0, Character = 0 },
+                        new Position { Line = 0, Character = 20 }
+                    ),
                     Target = "https://example.com",
                     Tooltip = "Example link"
                 }
             };
 
-            return Task.FromResult<DocumentLinkResponse?>(new DocumentLinkResponse(links));
+            return Task.FromResult(new DocumentLinkResponse(links));
         }
 
         protected override Task<DocumentLink> Resolve(DocumentLink documentLink, CancellationToken token)
         {
-            documentLink.Tooltip = documentLink.Tooltip + " (resolved)";
+            documentLink.Tooltip += " (resolved)";
             return Task.FromResult(documentLink);
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.DocumentLinkProvider = new Protocol.Capabilities.Server.Options.DocumentLinkOptions
             {
@@ -55,15 +55,16 @@ public class DocumentLinkHandlerTests : TestHandlerBase
         var handler = new TestDocumentLinkHandler();
         var request = new DocumentLinkParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DocumentLinkResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<DocumentLinkResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
@@ -79,20 +80,20 @@ public class DocumentLinkHandlerTests : TestHandlerBase
         var handler = new TestDocumentLinkHandler();
         var link = new DocumentLink
         {
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 0, Character = 0 },
-                End = new Position { Line = 0, Character = 10 }
-            },
+            Range = new DocumentRange(
+                new Position { Line = 0, Character = 0 },
+                new Position { Line = 0, Character = 10 }
+            ),
             Tooltip = "Test link"
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { link, CancellationToken.None }) as Task<DocumentLink>;
+        var method = handler.GetType()
+            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var resolved = await result!;
+        var task = method.Invoke(handler, [link, CancellationToken.None]);
+
+        var resolved = await (task as Task<DocumentLink>)!;
 
         // Assert
         resolved.Should().NotBeNull();

@@ -5,7 +5,6 @@ using EmmyLua.LanguageServer.Framework.Server.Handler;
 using EmmyLua.LanguageServer.Framework.Tests.TestBase;
 using FluentAssertions;
 using Xunit;
-using LanguageServerType = EmmyLua.LanguageServer.Framework.Server.LanguageServer;
 
 namespace EmmyLua.LanguageServer.Framework.Tests.Handlers;
 
@@ -13,11 +12,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
 {
     private class TestExecuteCommandHandler : ExecuteCommandHandlerBase
     {
-        public TestExecuteCommandHandler(LanguageServerType server) : base(server)
-        {
-        }
-
-        protected override Task<ExecuteCommandResponse?> Handle(ExecuteCommandParams request, CancellationToken token)
+        protected override Task<ExecuteCommandResponse> Handle(ExecuteCommandParams request, CancellationToken token)
         {
             var result = request.Command switch
             {
@@ -26,21 +21,19 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
                 _ => "Unknown command"
             };
 
-            return Task.FromResult<ExecuteCommandResponse?>(new ExecuteCommandResponse
-            {
-                Result = result
-            });
+            return Task.FromResult(new ExecuteCommandResponse(result));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.ExecuteCommandProvider = new Protocol.Capabilities.Server.Options.ExecuteCommandOptions
             {
-                Commands = new List<string>
-                {
+                Commands =
+                [
                     "test.command1",
                     "test.command2"
-                }
+                ]
             };
         }
     }
@@ -49,7 +42,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
     public async Task Handle_ShouldExecuteCommand()
     {
         // Arrange
-        var handler = new TestExecuteCommandHandler(Server);
+        var handler = new TestExecuteCommandHandler();
         var request = new ExecuteCommandParams
         {
             Command = "test.command1",
@@ -57,11 +50,12 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<ExecuteCommandResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<ExecuteCommandResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
@@ -72,7 +66,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
     public async Task Handle_WithUnknownCommand_ShouldReturnUnknownMessage()
     {
         // Arrange
-        var handler = new TestExecuteCommandHandler(Server);
+        var handler = new TestExecuteCommandHandler();
         var request = new ExecuteCommandParams
         {
             Command = "unknown.command",
@@ -80,11 +74,12 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<ExecuteCommandResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<ExecuteCommandResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
@@ -95,7 +90,7 @@ public class ExecuteCommandHandlerTests : TestHandlerBase
     public void RegisterCapability_ShouldSetExecuteCommandProvider()
     {
         // Arrange
-        var handler = new TestExecuteCommandHandler(Server);
+        var handler = new TestExecuteCommandHandler();
         var serverCapabilities = new ServerCapabilities();
         var clientCapabilities = new ClientCapabilities();
 

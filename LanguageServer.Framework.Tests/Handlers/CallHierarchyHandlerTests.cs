@@ -3,7 +3,6 @@ using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.CallHierarchy;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentSymbol;
 using EmmyLua.LanguageServer.Framework.Protocol.Model;
-using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 using EmmyLua.LanguageServer.Framework.Tests.TestBase;
@@ -16,7 +15,8 @@ public class CallHierarchyHandlerTests : TestHandlerBase
 {
     private class TestCallHierarchyHandler : CallHierarchyHandlerBase
     {
-        protected override Task<CallHierarchyPrepareResponse?> CallHierarchyPrepare(CallHierarchyPrepareParams request, CancellationToken token)
+        protected override Task<CallHierarchyPrepareResponse?> CallHierarchyPrepare(CallHierarchyPrepareParams request,
+            CancellationToken token)
         {
             var items = new List<CallHierarchyItem>
             {
@@ -25,95 +25,72 @@ public class CallHierarchyHandlerTests : TestHandlerBase
                     Name = "testFunction",
                     Kind = SymbolKind.Function,
                     Uri = "file:///test.txt",
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 0 },
-                        End = new Position { Line = 10, Character = 0 }
-                    },
-                    SelectionRange = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 9 },
-                        End = new Position { Line = 5, Character = 21 }
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 5, Character = 0 },
+                        new Position { Line = 10, Character = 0 }
+                    ),
+                    SelectionRange = new DocumentRange(
+                        new Position { Line = 5, Character = 9 },
+                        new Position { Line = 5, Character = 21 }
+                    )
                 }
             };
 
             return Task.FromResult<CallHierarchyPrepareResponse?>(new CallHierarchyPrepareResponse(items));
         }
 
-        protected override Task<CallHierarchyIncomingCallsResponse> CallHierarchyIncomingCalls(CallHierarchyIncomingCallsParams request, CancellationToken token)
+        protected override Task<CallHierarchyIncomingCallsResponse> CallHierarchyIncomingCalls(
+            CallHierarchyIncomingCallsParams request, CancellationToken token)
         {
             var calls = new List<CallHierarchyIncomingCall>
             {
                 new CallHierarchyIncomingCall
                 {
-                    From = new CallHierarchyItem
+                    From = new Location
                     {
-                        Name = "caller",
-                        Kind = SymbolKind.Function,
                         Uri = "file:///caller.txt",
-                        Range = new LocationRange
-                        {
-                            Start = new Position { Line = 15, Character = 0 },
-                            End = new Position { Line = 20, Character = 0 }
-                        },
-                        SelectionRange = new LocationRange
-                        {
-                            Start = new Position { Line = 15, Character = 9 },
-                            End = new Position { Line = 15, Character = 15 }
-                        }
+                        Range = new DocumentRange(
+                            new Position { Line = 15, Character = 0 },
+                            new Position { Line = 20, Character = 0 }
+                        )
                     },
-                    FromRanges = new List<LocationRange>
-                    {
-                        new LocationRange
-                        {
-                            Start = new Position { Line = 17, Character = 4 },
-                            End = new Position { Line = 17, Character = 16 }
-                        }
-                    }
+                    FromRanges = new DocumentRange(
+                        new Position { Line = 17, Character = 4 },
+                        new Position { Line = 17, Character = 16 }
+                    )
                 }
             };
 
-            return Task.FromResult<CallHierarchyIncomingCallsResponse?>(new CallHierarchyIncomingCallsResponse(calls));
+            return Task.FromResult(new CallHierarchyIncomingCallsResponse(calls));
         }
 
-        protected override Task<CallHierarchyOutgoingCallsResponse> CallHierarchyOutgoingCalls(CallHierarchyOutgoingCallsParams request, CancellationToken token)
+        protected override Task<CallHierarchyOutgoingCallsResponse> CallHierarchyOutgoingCalls(
+            CallHierarchyOutgoingCallsParams request, CancellationToken token)
         {
             var calls = new List<CallHierarchyOutgoingCall>
             {
                 new CallHierarchyOutgoingCall
                 {
-                    To = new CallHierarchyItem
+                    To = new Location
                     {
-                        Name = "callee",
-                        Kind = SymbolKind.Function,
                         Uri = "file:///callee.txt",
-                        Range = new LocationRange
-                        {
-                            Start = new Position { Line = 25, Character = 0 },
-                            End = new Position { Line = 30, Character = 0 }
-                        },
-                        SelectionRange = new LocationRange
-                        {
-                            Start = new Position { Line = 25, Character = 9 },
-                            End = new Position { Line = 25, Character = 15 }
-                        }
+                        Range = new DocumentRange(
+                            new Position { Line = 25, Character = 0 },
+                            new Position { Line = 30, Character = 0 }
+                        )
                     },
-                    FromRanges = new List<LocationRange>
-                    {
-                        new LocationRange
-                        {
-                            Start = new Position { Line = 7, Character = 4 },
-                            End = new Position { Line = 7, Character = 10 }
-                        }
-                    }
+                    FromRanges = new DocumentRange(
+                        new Position { Line = 7, Character = 4 },
+                        new Position { Line = 7, Character = 10 }
+                    )
                 }
             };
 
-            return Task.FromResult<CallHierarchyOutgoingCallsResponse?>(new CallHierarchyOutgoingCallsResponse(calls));
+            return Task.FromResult(new CallHierarchyOutgoingCallsResponse(calls));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.CallHierarchyProvider = true;
         }
@@ -126,22 +103,24 @@ public class CallHierarchyHandlerTests : TestHandlerBase
         var handler = new TestCallHierarchyHandler();
         var request = new CallHierarchyPrepareParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 15 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("CallHierarchyPrepare", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<CallHierarchyPrepareResponse?>;
+        var method = handler.GetType()
+            .GetMethod("CallHierarchyPrepare",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<CallHierarchyPrepareResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.CallHierarchyItems.Should().HaveCount(1);
-        response.CallHierarchyItems[0].Name.Should().Be("testFunction");
-        response.CallHierarchyItems[0].Kind.Should().Be(SymbolKind.Function);
+        response!.Result.Should().HaveCount(1);
+        response.Result![0].Name.Should().Be("testFunction");
+        response.Result[0].Kind.Should().Be(SymbolKind.Function);
     }
 
     [Fact]
@@ -156,22 +135,25 @@ public class CallHierarchyHandlerTests : TestHandlerBase
                 Name = "testFunction",
                 Kind = SymbolKind.Function,
                 Uri = "file:///test.txt",
-                Range = new LocationRange { Start = new Position(), End = new Position() },
-                SelectionRange = new LocationRange { Start = new Position(), End = new Position() }
+                Range = new DocumentRange(new Position(), new Position()),
+                SelectionRange = new DocumentRange(new Position(), new Position())
             }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("CallHierarchyIncomingCalls", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<CallHierarchyIncomingCallsResponse>;
+        var method = handler.GetType()
+            .GetMethod("CallHierarchyIncomingCalls",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<CallHierarchyIncomingCallsResponse>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.IncomingCalls.Should().HaveCount(1);
-        response.IncomingCalls[0].From.Name.Should().Be("caller");
+        response!.Result.Should().HaveCount(1);
+        response.Result[0].From.Uri.Should().Be("file:///caller.txt");
+        response.Result[0].From.Range.Start.Line.Should().Be(15);
     }
 
     [Fact]
@@ -186,22 +168,25 @@ public class CallHierarchyHandlerTests : TestHandlerBase
                 Name = "testFunction",
                 Kind = SymbolKind.Function,
                 Uri = "file:///test.txt",
-                Range = new LocationRange { Start = new Position(), End = new Position() },
-                SelectionRange = new LocationRange { Start = new Position(), End = new Position() }
+                Range = new DocumentRange(new Position(), new Position()),
+                SelectionRange = new DocumentRange(new Position(), new Position())
             }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("CallHierarchyOutgoingCalls", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<CallHierarchyOutgoingCallsResponse>;
+        var method = handler.GetType()
+            .GetMethod("CallHierarchyOutgoingCalls",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<CallHierarchyOutgoingCallsResponse>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.OutgoingCalls.Should().HaveCount(1);
-        response.OutgoingCalls[0].To.Name.Should().Be("callee");
+        response!.Result.Should().HaveCount(1);
+        response.Result[0].To.Uri.Should().Be("file:///callee.txt");
+        response.Result[0].To.Range.Start.Line.Should().Be(25);
     }
 
     [Fact]

@@ -21,18 +21,18 @@ public class DeclarationHandlerTests : TestHandlerBase
                 new Location
                 {
                     Uri = "file:///declarations.txt",
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 2, Character = 0 },
-                        End = new Position { Line = 2, Character = 25 }
-                    }
+                    Range = new DocumentRange(
+                        new Position { Line = 2, Character = 0 },
+                        new Position { Line = 2, Character = 25 }
+                    )
                 }
             };
 
             return Task.FromResult<DeclarationResponse?>(new DeclarationResponse(locations));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.DeclarationProvider = true;
         }
@@ -45,22 +45,23 @@ public class DeclarationHandlerTests : TestHandlerBase
         var handler = new TestDeclarationHandler();
         var request = new DeclarationParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 10, Character = 15 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DeclarationResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<DeclarationResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
-        response!.Locations.Should().HaveCount(1);
-        response.Locations[0].Uri.Should().Be("file:///declarations.txt");
-        response.Locations[0].Range.Start.Line.Should().Be(2);
+        response!.Result1.Should().NotBeNull();
+        response.Result1!.Value.Uri.Should().Be("file:///declarations.txt");
+        response.Result1!.Value.Range.Start.Line.Should().Be(2);
     }
 
     [Fact]

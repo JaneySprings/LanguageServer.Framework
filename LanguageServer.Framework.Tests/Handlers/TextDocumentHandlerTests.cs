@@ -8,7 +8,6 @@ using EmmyLua.LanguageServer.Framework.Tests.TestBase;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextEdit;
 using FluentAssertions;
 using Xunit;
-using LanguageServerType = EmmyLua.LanguageServer.Framework.Server.LanguageServer;
 
 namespace EmmyLua.LanguageServer.Framework.Tests.Handlers;
 
@@ -16,11 +15,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
 {
     private class TestTextDocumentHandler : TextDocumentHandlerBase
     {
-        private readonly Dictionary<string, string> _documents = new();
-
-        public TestTextDocumentHandler(LanguageServerType server) : base(server)
-        {
-        }
+        private readonly Dictionary<DocumentUri, string> _documents = new();
 
         protected override Task Handle(DidOpenTextDocumentParams request, CancellationToken token)
         {
@@ -34,6 +29,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
             {
                 _documents[request.TextDocument.Uri] = request.ContentChanges[0].Text;
             }
+
             return Task.CompletedTask;
         }
 
@@ -48,17 +44,19 @@ public class TextDocumentHandlerTests : TestHandlerBase
             return Task.CompletedTask;
         }
 
-        protected override Task<List<TextEdit>?> HandleRequest(WillSaveTextDocumentParams request, CancellationToken token)
+        protected override Task<List<TextEdit>?> HandleRequest(WillSaveTextDocumentParams request,
+            CancellationToken token)
         {
             return Task.FromResult<List<TextEdit>?>(null);
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.TextDocumentSync = new Protocol.Capabilities.Server.Options.TextDocumentSyncOptions
             {
                 OpenClose = true,
-                Change = Protocol.Model.TextDocumentSyncKind.Incremental,
+                Change = TextDocumentSyncKind.Incremental,
                 Save = new Protocol.Capabilities.Server.Options.SaveOptions
                 {
                     IncludeText = true
@@ -68,7 +66,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
 
         public string? GetDocumentContent(string uri)
         {
-            return _documents.TryGetValue(uri, out var content) ? content : null;
+            return _documents.GetValueOrDefault(uri);
         }
     }
 
@@ -76,7 +74,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
     public async Task DidOpen_ShouldStoreDocument()
     {
         // Arrange
-        var handler = new TestTextDocumentHandler(Server);
+        var handler = new TestTextDocumentHandler();
         var request = new DidOpenTextDocumentParams
         {
             TextDocument = new TextDocumentItem
@@ -90,8 +88,10 @@ public class TextDocumentHandlerTests : TestHandlerBase
 
         // Act
         var result = handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(DidOpenTextDocumentParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DidOpenTextDocumentParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task;
 
         await result!;
 
@@ -103,8 +103,8 @@ public class TextDocumentHandlerTests : TestHandlerBase
     public async Task DidChange_ShouldUpdateDocument()
     {
         // Arrange
-        var handler = new TestTextDocumentHandler(Server);
-        
+        var handler = new TestTextDocumentHandler();
+
         // First open the document
         var openRequest = new DidOpenTextDocumentParams
         {
@@ -116,32 +116,30 @@ public class TextDocumentHandlerTests : TestHandlerBase
                 Text = "Original text"
             }
         };
-        
+
         await (handler.GetType()
             .GetMethod("DidOpen", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { openRequest, CancellationToken.None }) as Task)!;
+            .Invoke(handler, [openRequest, CancellationToken.None]) as Task)!;
 
         // Now change it
         var changeRequest = new DidChangeTextDocumentParams
         {
-            TextDocument = new VersionedTextDocumentIdentifier
-            {
-                Uri = "file:///test.txt",
-                Version = 2
-            },
-            ContentChanges = new List<TextDocumentContentChangeEvent>
-            {
+            TextDocument = new VersionedTextDocumentIdentifier("file:///test.txt", 2),
+            ContentChanges =
+            [
                 new TextDocumentContentChangeEvent
                 {
                     Text = "Updated text"
                 }
-            }
+            ]
         };
 
         // Act
         var result = handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(DidChangeTextDocumentParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { changeRequest, CancellationToken.None }) as Task;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DidChangeTextDocumentParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [changeRequest, CancellationToken.None]) as Task;
 
         await result!;
 
@@ -153,8 +151,8 @@ public class TextDocumentHandlerTests : TestHandlerBase
     public async Task DidClose_ShouldRemoveDocument()
     {
         // Arrange
-        var handler = new TestTextDocumentHandler(Server);
-        
+        var handler = new TestTextDocumentHandler();
+
         // First open the document
         var openRequest = new DidOpenTextDocumentParams
         {
@@ -166,24 +164,23 @@ public class TextDocumentHandlerTests : TestHandlerBase
                 Text = "Test content"
             }
         };
-        
+
         await (handler.GetType()
             .GetMethod("DidOpen", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { openRequest, CancellationToken.None }) as Task)!;
+            .Invoke(handler, [openRequest, CancellationToken.None]) as Task)!;
 
         // Now close it
         var closeRequest = new DidCloseTextDocumentParams
         {
-            TextDocument = new TextDocumentIdentifier
-            {
-                Uri = "file:///test.txt"
-            }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
         var result = handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(DidCloseTextDocumentParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { closeRequest, CancellationToken.None }) as Task;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(DidCloseTextDocumentParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [closeRequest, CancellationToken.None]) as Task;
 
         await result!;
 
@@ -195,7 +192,7 @@ public class TextDocumentHandlerTests : TestHandlerBase
     public void RegisterCapability_ShouldSetTextDocumentSync()
     {
         // Arrange
-        var handler = new TestTextDocumentHandler(Server);
+        var handler = new TestTextDocumentHandler();
         var serverCapabilities = new ServerCapabilities();
         var clientCapabilities = new ClientCapabilities();
 
@@ -204,9 +201,9 @@ public class TextDocumentHandlerTests : TestHandlerBase
 
         // Assert
         serverCapabilities.TextDocumentSync.Should().NotBeNull();
-        var options = serverCapabilities.TextDocumentSync as Protocol.Capabilities.Server.Options.TextDocumentSyncOptions;
+        var options = serverCapabilities.TextDocumentSync;
         options.Should().NotBeNull();
-        options!.OpenClose.Should().BeTrue();
-        options.Change.Should().Be(Protocol.Model.TextDocumentSyncKind.Incremental);
+        options!.Value!.OpenClose.Should().BeTrue();
+        options.Value.Change.Should().Be(TextDocumentSyncKind.Incremental);
     }
 }

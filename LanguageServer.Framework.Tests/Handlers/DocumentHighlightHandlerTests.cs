@@ -2,7 +2,6 @@ using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Client.ClientCapabi
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.DocumentHighlight;
 using EmmyLua.LanguageServer.Framework.Protocol.Model;
-using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 using EmmyLua.LanguageServer.Framework.Tests.TestBase;
@@ -15,34 +14,34 @@ public class DocumentHighlightHandlerTests : TestHandlerBase
 {
     private class TestDocumentHighlightHandler : DocumentHighlightHandlerBase
     {
-        protected override Task<DocumentHighlightResponse?> Handle(DocumentHighlightParams request, CancellationToken token)
+        protected override Task<DocumentHighlightResponse> Handle(DocumentHighlightParams request,
+            CancellationToken token)
         {
             var highlights = new List<DocumentHighlight>
             {
                 new DocumentHighlight
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 5, Character = 10 },
-                        End = new Position { Line = 5, Character = 20 }
-                    },
+                    Range = new DocumentRange(
+                        new Position { Line = 5, Character = 10 },
+                        new Position { Line = 5, Character = 20 }
+                    ),
                     Kind = DocumentHighlightKind.Write
                 },
                 new DocumentHighlight
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 10, Character = 5 },
-                        End = new Position { Line = 10, Character = 15 }
-                    },
+                    Range = new DocumentRange(
+                        new Position { Line = 10, Character = 5 },
+                        new Position { Line = 10, Character = 15 }
+                    ),
                     Kind = DocumentHighlightKind.Read
                 }
             };
 
-            return Task.FromResult<DocumentHighlightResponse?>(new DocumentHighlightResponse(highlights));
+            return Task.FromResult(new DocumentHighlightResponse(highlights));
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.DocumentHighlightProvider = true;
         }
@@ -55,16 +54,17 @@ public class DocumentHighlightHandlerTests : TestHandlerBase
         var handler = new TestDocumentHighlightHandler();
         var request = new DocumentHighlightParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 15 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<DocumentHighlightResponse?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<DocumentHighlightResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();

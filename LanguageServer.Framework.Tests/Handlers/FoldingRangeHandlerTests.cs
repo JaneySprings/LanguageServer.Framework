@@ -1,8 +1,6 @@
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Client.ClientCapabilities;
 using EmmyLua.LanguageServer.Framework.Protocol.Capabilities.Server;
 using EmmyLua.LanguageServer.Framework.Protocol.Message.FoldingRange;
-using EmmyLua.LanguageServer.Framework.Protocol.Model;
-using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextDocument;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
 using EmmyLua.LanguageServer.Framework.Tests.TestBase;
@@ -15,7 +13,7 @@ public class FoldingRangeHandlerTests : TestHandlerBase
 {
     private class TestFoldingRangeHandler : FoldingRangeHandlerBase
     {
-        protected override Task<FoldingRangeResponse?> Handle(FoldingRangeParams request, CancellationToken token)
+        protected override Task<FoldingRangeResponse> Handle(FoldingRangeParams request, CancellationToken token)
         {
             var ranges = new List<FoldingRange>
             {
@@ -35,7 +33,7 @@ public class FoldingRangeHandlerTests : TestHandlerBase
                 }
             };
 
-            return Task.FromResult<FoldingRangeResponse?>(new FoldingRangeResponse(ranges));
+            return Task.FromResult(new FoldingRangeResponse(ranges));
         }
 
         public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
@@ -51,15 +49,17 @@ public class FoldingRangeHandlerTests : TestHandlerBase
         var handler = new TestFoldingRangeHandler();
         var request = new FoldingRangeParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<FoldingRangeResponse?>;
+        var method = handler.GetType()
 
-        var response = await result!;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<FoldingRangeResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();

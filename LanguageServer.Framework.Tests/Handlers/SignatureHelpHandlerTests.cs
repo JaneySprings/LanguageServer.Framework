@@ -15,9 +15,9 @@ public class SignatureHelpHandlerTests : TestHandlerBase
 {
     private class TestSignatureHelpHandler : SignatureHelpHandlerBase
     {
-        protected override Task<SignatureHelp?> Handle(SignatureHelpParams request, CancellationToken token)
+        protected override Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token)
         {
-            return Task.FromResult<SignatureHelpResponse?>(new SignatureHelpResponse
+            return Task.FromResult<SignatureHelp?>(new SignatureHelp
             {
                 Signatures =
                 [
@@ -57,7 +57,8 @@ public class SignatureHelpHandlerTests : TestHandlerBase
             })!;
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.SignatureHelpProvider = new Protocol.Capabilities.Server.Options.SignatureHelpOptions
             {
@@ -73,16 +74,17 @@ public class SignatureHelpHandlerTests : TestHandlerBase
         var handler = new TestSignatureHelpHandler();
         var request = new SignatureHelpParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
             Position = new Position { Line = 5, Character = 15 }
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<SignatureHelp?>;
+        var method = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
 
-        var response = await result!;
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<SignatureHelp?>)!;
 
         // Assert
         response.Should().NotBeNull();

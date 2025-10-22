@@ -18,11 +18,11 @@ public class SemanticTokensHandlerTests : TestHandlerBase
         protected override Task<SemanticTokens?> Handle(SemanticTokensParams request, CancellationToken token)
         {
             // Semantic tokens format: [deltaLine, deltaStart, length, tokenType, tokenModifiers]
-            var data = new List<int>
+            var data = new List<uint>
             {
-                0, 0, 5, 0, 0,  // Token 1
+                0, 0, 5, 0, 0, // Token 1
                 0, 6, 10, 1, 0, // Token 2
-                1, 0, 8, 2, 1   // Token 3
+                1, 0, 8, 2, 1 // Token 3
             };
 
             return Task.FromResult<SemanticTokens?>(new SemanticTokens
@@ -31,14 +31,15 @@ public class SemanticTokensHandlerTests : TestHandlerBase
             });
         }
 
-        protected override Task<SemanticTokensDeltaResponse?> Handle(SemanticTokensDeltaParams request, CancellationToken token)
+        protected override Task<SemanticTokensDeltaResponse?> Handle(SemanticTokensDeltaParams request,
+            CancellationToken token)
         {
-            return Task.FromResult<SemanticTokensDeltaResponse?>(new SemanticTokensDeltaResponse());
+            return Task.FromResult<SemanticTokensDeltaResponse?>(new SemanticTokensDeltaResponse(new SemanticTokens()));
         }
 
         protected override Task<SemanticTokens?> Handle(SemanticTokensRangeParams request, CancellationToken token)
         {
-            var data = new List<int>
+            var data = new List<uint>
             {
                 0, 0, 5, 0, 0
             };
@@ -49,14 +50,15 @@ public class SemanticTokensHandlerTests : TestHandlerBase
             });
         }
 
-        public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+        public override void RegisterCapability(ServerCapabilities serverCapabilities,
+            ClientCapabilities clientCapabilities)
         {
             serverCapabilities.SemanticTokensProvider = new Protocol.Capabilities.Server.Options.SemanticTokensOptions
             {
                 Legend = new SemanticTokensLegend
                 {
-                    TokenTypes = new List<string> { "class", "function", "variable" },
-                    TokenModifiers = new List<string> { "declaration", "readonly" }
+                    TokenTypes = ["class", "function", "variable"],
+                    TokenModifiers = ["declaration", "readonly"]
                 },
                 Full = true,
                 Range = true
@@ -71,13 +73,15 @@ public class SemanticTokensHandlerTests : TestHandlerBase
         var handler = new TestSemanticTokensHandler();
         var request = new SemanticTokensParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(SemanticTokensParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<SemanticTokens?>;
+        var result = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(SemanticTokensParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task<SemanticTokens?>;
 
         var response = await result!;
 
@@ -94,18 +98,19 @@ public class SemanticTokensHandlerTests : TestHandlerBase
         var handler = new TestSemanticTokensHandler();
         var request = new SemanticTokensRangeParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" },
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 0, Character = 0 },
-                End = new Position { Line = 5, Character = 0 }
-            }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt"),
+            Range = new DocumentRange(
+                new Position { Line = 0, Character = 0 },
+                new Position { Line = 5, Character = 0 }
+            )
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(SemanticTokensRangeParams), typeof(CancellationToken) }, null)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<SemanticTokens?>;
+        var result = handler.GetType()
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+                null,
+                [typeof(SemanticTokensRangeParams), typeof(CancellationToken)], null)!
+            .Invoke(handler, [request, CancellationToken.None]) as Task<SemanticTokens?>;
 
         var response = await result!;
 
@@ -128,10 +133,10 @@ public class SemanticTokensHandlerTests : TestHandlerBase
 
         // Assert
         serverCapabilities.SemanticTokensProvider.Should().NotBeNull();
-        var options = serverCapabilities.SemanticTokensProvider as Protocol.Capabilities.Server.Options.SemanticTokensOptions;
+        var options = serverCapabilities.SemanticTokensProvider ;
         options.Should().NotBeNull();
         options!.Legend.TokenTypes.Should().Contain("class");
-        options.Full.Should().BeTrue();
+        options.Full!.BoolValue.Should().BeTrue();
         options.Range.Should().BeTrue();
     }
 }

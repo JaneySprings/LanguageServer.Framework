@@ -22,7 +22,7 @@ public class CodeActionHandler : CodeActionHandlerBase
         ]));
     }
 
-    protected override Task<CodeAction> Resolve(CodeAction request, CancellationToken token)
+    protected override Task<CodeAction?> Resolve(CodeAction request, CancellationToken token)
     {
         Console.Error.WriteLine("CodeAction/Resolve");
         return Task.FromResult(request);

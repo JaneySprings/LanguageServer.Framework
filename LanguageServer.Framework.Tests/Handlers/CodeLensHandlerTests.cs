@@ -14,26 +14,25 @@ public class CodeLensHandlerTests : TestHandlerBase
 {
     private class TestCodeLensHandler : CodeLensHandlerBase
     {
-        protected override Task<CodeLensResponse?> Handle(CodeLensParams request, CancellationToken token)
+        protected override Task<CodeLensResponse> Handle(CodeLensParams request, CancellationToken token)
         {
             var lenses = new List<CodeLens>
             {
                 new CodeLens
                 {
-                    Range = new LocationRange
-                    {
-                        Start = new Position { Line = 0, Character = 0 },
-                        End = new Position { Line = 0, Character = 10 }
-                    },
+                    Range = new DocumentRange(
+                new Position { Line = 0, Character = 0 },
+                new Position { Line = 0, Character = 10 }
+            ),
                     Command = new Command
                     {
                         Title = "5 references",
-                        CommandIdentifier = "editor.action.showReferences"
+                        Name = "editor.action.showReferences"
                     }
                 }
             };
 
-            return Task.FromResult<CodeLensResponse?>(new CodeLensResponse(lenses));
+            return Task.FromResult(new CodeLensResponse(lenses));
         }
 
         protected override Task<CodeLens> Resolve(CodeLens codeLens, CancellationToken token)
@@ -41,7 +40,7 @@ public class CodeLensHandlerTests : TestHandlerBase
             codeLens.Command = new Command
             {
                 Title = "10 references (resolved)",
-                CommandIdentifier = "editor.action.showReferences"
+                Name = "editor.action.showReferences"
             };
             return Task.FromResult(codeLens);
         }
@@ -62,15 +61,17 @@ public class CodeLensHandlerTests : TestHandlerBase
         var handler = new TestCodeLensHandler();
         var request = new CodeLensParams
         {
-            TextDocument = new TextDocumentIdentifier { Uri = "file:///test.txt" }
+            TextDocument = new TextDocumentIdentifier("file:///test.txt")
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { request, CancellationToken.None }) as Task<CodeLensResponse?>;
+        var method = handler.GetType()
 
-        var response = await result!;
+            .GetMethod("Handle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        var task = method.Invoke(handler, [request, CancellationToken.None]);
+
+        var response = await (task as Task<CodeLensResponse?>)!;
 
         // Assert
         response.Should().NotBeNull();
@@ -86,19 +87,20 @@ public class CodeLensHandlerTests : TestHandlerBase
         var handler = new TestCodeLensHandler();
         var lens = new CodeLens
         {
-            Range = new LocationRange
-            {
-                Start = new Position { Line = 5, Character = 0 },
-                End = new Position { Line = 5, Character = 10 }
-            }
+            Range = new DocumentRange(
+                new Position { Line = 5, Character = 0 },
+                new Position { Line = 5, Character = 10 }
+            )
         };
 
         // Act
-        var result = await handler.GetType()
-            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .Invoke(handler, new object[] { lens, CancellationToken.None }) as Task<CodeLens>;
+        var method = handler.GetType()
 
-        var resolved = await result!;
+            .GetMethod("Resolve", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+
+        var task = method.Invoke(handler, [lens, CancellationToken.None]);
+
+        var resolved = await (task as Task<CodeLens>)!;
 
         // Assert
         resolved.Should().NotBeNull();
