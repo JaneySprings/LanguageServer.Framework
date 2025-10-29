@@ -6,24 +6,48 @@
         <Nullable>enable</Nullable>
         <RootNamespace>EmmyLua.LanguageServer.Framework</RootNamespace>
         <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+
+        <!-- Package Information -->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>EmmyLua.LanguageServer.Framework</PackageId>
         <Version>0.9.0</Version>
-        <Title>EmmyLua.LanguageServer.Framework</Title>
+        <Title>Language Server Framework</Title>
         <Authors>CppCXY</Authors>
-        <Description>language server framework, support lsp3.18 and dotnet aot compilation</Description>
-        <Copyright>CppCXY</Copyright>
+        <Description>A modern, high-performance .NET framework for building Language Server Protocol (LSP) servers with full LSP 3.18 specification support. Features zero dependencies, AOT compilation support, and built-in performance metrics.</Description>
+        <Copyright>Copyright (c) CppCXY</Copyright>
         <PackageProjectUrl>https://github.com/CppCXY/LanguageServer.Framework</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <!-- <PackageIcon>icon.png</PackageIcon> -->
         <RepositoryUrl>https://github.com/CppCXY/LanguageServer.Framework</RepositoryUrl>
-        <PackageTags>lsp,aot</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>lsp;language-server-protocol;aot;dotnet;csharp;language-server;compiler;editor</PackageTags>
+        <PackageReleaseNotes>See https://github.com/CppCXY/LanguageServer.Framework/releases</PackageReleaseNotes>
+
+        <!-- Documentation -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <NoWarn>$(NoWarn);1570</NoWarn>
+
+        <!-- Source Link - Enable debugging into the package -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Include README in package -->
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <!-- Include icon if exists (uncomment when you add icon.png) -->
+        <!-- <None Include="..\icon.png" Pack="true" PackagePath="\"/> -->
+        <!-- Include XML documentation -->
         <None Include="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\$(TargetFramework)"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Source Link for debugging -->
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 </Project>
