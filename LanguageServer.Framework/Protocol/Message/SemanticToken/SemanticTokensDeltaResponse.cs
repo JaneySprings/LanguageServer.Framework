@@ -33,7 +33,8 @@ public class SemanticTokensDeltaResponse
 
 public class SemanticTokensDeltaResponseJsonConverter : JsonConverter<SemanticTokensDeltaResponse>
 {
-    public override SemanticTokensDeltaResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override SemanticTokensDeltaResponse Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
@@ -41,12 +42,8 @@ public class SemanticTokensDeltaResponseJsonConverter : JsonConverter<SemanticTo
     public override void Write(Utf8JsonWriter writer, SemanticTokensDeltaResponse value, JsonSerializerOptions options)
     {
         if (value.SemanticTokens != null)
-        {
             JsonSerializer.Serialize(writer, value.SemanticTokens, options);
-        }
         else if (value.SemanticTokensDelta != null)
-        {
             JsonSerializer.Serialize(writer, value.SemanticTokensDelta, options);
-        }
     }
 }

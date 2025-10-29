@@ -13,7 +13,7 @@ public class CodeActionHandler : CodeActionHandlerBase
     {
         Console.Error.WriteLine("CodeAction");
         return Task.FromResult(new CodeActionResponse([
-            new Command()
+            new Command
             {
                 Title = "CodeAction",
                 Name = "CodeAction",
@@ -28,9 +28,10 @@ public class CodeActionHandler : CodeActionHandlerBase
         return Task.FromResult<CodeAction?>(request);
     }
 
-    public override void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities)
+    public override void RegisterCapability(ServerCapabilities serverCapabilities,
+        ClientCapabilities clientCapabilities)
     {
-        serverCapabilities.CodeActionProvider = new CodeActionOptions()
+        serverCapabilities.CodeActionProvider = new CodeActionOptions
         {
             CodeActionKinds = [CodeActionKind.QuickFix]
         };

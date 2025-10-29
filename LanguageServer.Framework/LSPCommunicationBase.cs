@@ -58,6 +58,7 @@ public abstract class LSPCommunicationBase : IDisposable
             Writer.MetricsCollector = value;
         }
     }
+
     private IPerformanceMetricsCollector? _metricsCollector;
 
     protected CancellationTokenSource? ExitTokenSource { get; private set; }
@@ -277,10 +278,7 @@ public abstract class LSPCommunicationBase : IDisposable
                         var message = await Reader.ReadAsync(ExitTokenSource.Token);
                         MetricsCollector?.RecordMessageReceived();
 
-                        if (BaseHandle(message))
-                        {
-                            continue;
-                        }
+                        if (BaseHandle(message)) continue;
 
                         Scheduler.Schedule(OnDispatch, message);
                     }
@@ -343,15 +341,9 @@ public abstract class LSPCommunicationBase : IDisposable
             ExitTokenSource?.Dispose();
             _exitTokenLock.Dispose();
 
-            if (Scheduler is IDisposable disposableScheduler)
-            {
-                disposableScheduler.Dispose();
-            }
+            if (Scheduler is IDisposable disposableScheduler) disposableScheduler.Dispose();
 
-            if (Writer is IDisposable disposableWriter)
-            {
-                disposableWriter.Dispose();
-            }
+            if (Writer is IDisposable disposableWriter) disposableWriter.Dispose();
         }
 
         _disposed = true;

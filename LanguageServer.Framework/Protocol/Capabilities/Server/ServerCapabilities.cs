@@ -52,7 +52,8 @@ public class ServerCapabilities
     /**
      * The server provides hover support.
      */
-    [JsonPropertyName("hoverProvider"), JsonConverter(typeof(BooleanOrConverter<HoverOptions>))]
+    [JsonPropertyName("hoverProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<HoverOptions>))]
     public BooleanOr<HoverOptions>? HoverProvider { get; set; }
 
     /**
@@ -66,13 +67,15 @@ public class ServerCapabilities
      *
      * @since 3.14.0
      */
-    [JsonPropertyName("declarationProvider"), JsonConverter(typeof(BooleanOrConverter<DeclarationOptions>))]
+    [JsonPropertyName("declarationProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DeclarationOptions>))]
     public BooleanOr<DeclarationOptions>? DeclarationProvider { get; set; }
 
     /**
      * The server provides goto definition support.
      */
-    [JsonPropertyName("definitionProvider"), JsonConverter(typeof(BooleanOrConverter<DefinitionOptions>))]
+    [JsonPropertyName("definitionProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DefinitionOptions>))]
     public BooleanOr<DefinitionOptions>? DefinitionProvider { get; set; }
 
     /**
@@ -80,7 +83,8 @@ public class ServerCapabilities
      *
      * @since 3.6.0
      */
-    [JsonPropertyName("typeDefinitionProvider"), JsonConverter(typeof(BooleanOrConverter<TypeDefinitionOptions>))]
+    [JsonPropertyName("typeDefinitionProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<TypeDefinitionOptions>))]
     public BooleanOr<TypeDefinitionOptions>? TypeDefinitionProvider { get; set; }
 
     /**
@@ -88,25 +92,29 @@ public class ServerCapabilities
      *
      * @since 3.6.0
      */
-    [JsonPropertyName("implementationProvider"), JsonConverter(typeof(BooleanOrConverter<ImplementationOptions>))]
+    [JsonPropertyName("implementationProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<ImplementationOptions>))]
     public BooleanOr<ImplementationOptions>? ImplementationProvider { get; set; }
 
     /**
      * The server provides find references support.
      */
-    [JsonPropertyName("referencesProvider"), JsonConverter(typeof(BooleanOrConverter<ReferencesOptions>))]
+    [JsonPropertyName("referencesProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<ReferencesOptions>))]
     public BooleanOr<ReferencesOptions>? ReferencesProvider { get; set; }
 
     /**
      * The server provides document highlight support.
      */
-    [JsonPropertyName("documentHighlightProvider"), JsonConverter(typeof(BooleanOrConverter<DocumentHighlightOptions>))]
+    [JsonPropertyName("documentHighlightProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DocumentHighlightOptions>))]
     public BooleanOr<DocumentHighlightOptions>? DocumentHighlightProvider { get; set; }
 
     /**
      * The server provides document symbol support.
      */
-    [JsonPropertyName("documentSymbolProvider"), JsonConverter(typeof(BooleanOrConverter<DocumentSymbolOptions>))]
+    [JsonPropertyName("documentSymbolProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DocumentSymbolOptions>))]
     public BooleanOr<DocumentSymbolOptions>? DocumentSymbolProvider { get; set; }
 
     /**
@@ -114,7 +122,8 @@ public class ServerCapabilities
      * only valid if the client signals code action literal support via the
      * property `textDocument.codeAction.codeActionLiteralSupport`.
      */
-    [JsonPropertyName("codeActionProvider"), JsonConverter(typeof(BooleanOrConverter<CodeActionOptions>))]
+    [JsonPropertyName("codeActionProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<CodeActionOptions>))]
     public BooleanOr<CodeActionOptions>? CodeActionProvider { get; set; }
 
     /**
@@ -134,21 +143,22 @@ public class ServerCapabilities
      *
      * @since 3.6.0
      */
-    [JsonPropertyName("colorProvider"), JsonConverter(typeof(BooleanOrConverter<DocumentColorOptions>))]
+    [JsonPropertyName("colorProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DocumentColorOptions>))]
     public BooleanOr<DocumentColorOptions>? ColorProvider { get; set; }
 
     /**
      * The server provides document formatting.
      */
-    [JsonPropertyName("documentFormattingProvider"),
-     JsonConverter(typeof(BooleanOrConverter<DocumentFormattingOptions>))]
+    [JsonPropertyName("documentFormattingProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DocumentFormattingOptions>))]
     public BooleanOr<DocumentFormattingOptions>? DocumentFormattingProvider { get; set; }
 
     /**
      * The server provides document range formatting.
      */
-    [JsonPropertyName("documentRangeFormattingProvider"),
-     JsonConverter(typeof(BooleanOrConverter<DocumentRangeFormattingOptions>))]
+    [JsonPropertyName("documentRangeFormattingProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<DocumentRangeFormattingOptions>))]
     public BooleanOr<DocumentRangeFormattingOptions>? DocumentRangeFormattingProvider { get; set; }
 
     /**
@@ -162,7 +172,8 @@ public class ServerCapabilities
      * specified if the client states that it supports
      * `prepareSupport` in its initial `initialize` request.
      */
-    [JsonPropertyName("renameProvider"), JsonConverter(typeof(BooleanOrConverter<RenameOptions>))]
+    [JsonPropertyName("renameProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<RenameOptions>))]
     public BooleanOr<RenameOptions>? RenameProvider { get; set; }
 
 
@@ -171,7 +182,8 @@ public class ServerCapabilities
      *
      * @since 3.10.0
      */
-    [JsonPropertyName("foldingRangeProvider"), JsonConverter(typeof(BooleanOrConverter<FoldingRangeOptions>))]
+    [JsonPropertyName("foldingRangeProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<FoldingRangeOptions>))]
     public BooleanOr<FoldingRangeOptions>? FoldingRangeProvider { get; set; }
 
     /**
@@ -185,7 +197,8 @@ public class ServerCapabilities
      *
      * @since 3.15.0
      */
-    [JsonPropertyName("selectionRangeProvider"), JsonConverter(typeof(BooleanOrConverter<SelectionRangeOptions>))]
+    [JsonPropertyName("selectionRangeProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<SelectionRangeOptions>))]
     public BooleanOr<SelectionRangeOptions>? SelectionRangeProvider { get; set; }
 
     /**
@@ -193,7 +206,8 @@ public class ServerCapabilities
      *
      * @since 3.16.0
      */
-    [JsonPropertyName("linkedEditingRangeProvider"), JsonConverter(typeof(BooleanOrConverter<LinkedEditingRangeOptions>))]
+    [JsonPropertyName("linkedEditingRangeProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<LinkedEditingRangeOptions>))]
     public BooleanOr<LinkedEditingRangeOptions>? LinkedEditingRangeProvider { get; set; }
 
     /**
@@ -201,7 +215,8 @@ public class ServerCapabilities
      *
      * @since 3.16.0
      */
-    [JsonPropertyName("callHierarchyProvider"), JsonConverter(typeof(BooleanOrConverter<CallHierarchyOptions>))]
+    [JsonPropertyName("callHierarchyProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<CallHierarchyOptions>))]
     public BooleanOr<CallHierarchyOptions>? CallHierarchyProvider { get; set; }
 
     /**
@@ -217,7 +232,8 @@ public class ServerCapabilities
      *
      * @since 3.16.0
      */
-    [JsonPropertyName("monikerProvider"), JsonConverter(typeof(BooleanOrConverter<MonikerOptions>))]
+    [JsonPropertyName("monikerProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<MonikerOptions>))]
     public BooleanOr<MonikerOptions>? MonikerProvider { get; set; }
 
     /**
@@ -225,7 +241,8 @@ public class ServerCapabilities
      *
      * @since 3.17.0
      */
-    [JsonPropertyName("typeHierarchyProvider"), JsonConverter(typeof(BooleanOrConverter<TypeHierarchyOptions>))]
+    [JsonPropertyName("typeHierarchyProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<TypeHierarchyOptions>))]
     public BooleanOr<TypeHierarchyOptions>? TypeHierarchyProvider { get; set; }
 
     /**
@@ -233,7 +250,8 @@ public class ServerCapabilities
      *
      * @since 3.17.0
      */
-    [JsonPropertyName("inlineValueProvider"), JsonConverter(typeof(BooleanOrConverter<InlineValuesOptions>))]
+    [JsonPropertyName("inlineValueProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<InlineValuesOptions>))]
     public BooleanOr<InlineValuesOptions>? InlineValueProvider { get; set; }
 
     /**
@@ -241,7 +259,8 @@ public class ServerCapabilities
      *
      * @since 3.17.0
      */
-    [JsonPropertyName("inlayHintProvider"), JsonConverter(typeof(BooleanOrConverter<InlayHintsOptions>))]
+    [JsonPropertyName("inlayHintProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<InlayHintsOptions>))]
     public BooleanOr<InlayHintsOptions>? InlayHintProvider { get; set; }
 
     /**
@@ -255,7 +274,8 @@ public class ServerCapabilities
     /**
      * The server provides workspace symbol support.
      */
-    [JsonPropertyName("workspaceSymbolProvider"), JsonConverter(typeof(BooleanOrConverter<WorkspaceSymbolOptions>))]
+    [JsonPropertyName("workspaceSymbolProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<WorkspaceSymbolOptions>))]
     public BooleanOr<WorkspaceSymbolOptions>? WorkspaceSymbolProvider { get; set; }
 
     /**
@@ -263,7 +283,8 @@ public class ServerCapabilities
      *
      * @since 3.18.0
      */
-    [JsonPropertyName("inlineCompletionProvider"), JsonConverter(typeof(BooleanOrConverter<InlineCompletionsOptions>))]
+    [JsonPropertyName("inlineCompletionProvider")]
+    [JsonConverter(typeof(BooleanOrConverter<InlineCompletionsOptions>))]
     public BooleanOr<InlineCompletionsOptions>? InlineCompletionProvider { get; set; }
 
     /**

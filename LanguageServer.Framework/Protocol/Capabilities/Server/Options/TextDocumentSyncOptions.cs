@@ -41,7 +41,8 @@ public class TextDocumentSyncOptions
      * If present save notifications are sent to the server. If omitted
      * the notification should not be sent.
      */
-    [JsonPropertyName("save"), JsonConverter(typeof(BooleanOrConverter<SaveOptions>))]
+    [JsonPropertyName("save")]
+    [JsonConverter(typeof(BooleanOrConverter<SaveOptions>))]
     public BooleanOr<SaveOptions>? Save { get; set; }
 }
 

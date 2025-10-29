@@ -16,12 +16,12 @@ public readonly record struct MarkupKind(string Value)
     /**
      * Plain text is supported as a content format
      */
-    public static MarkupKind PlainText { get; } = new MarkupKind("plaintext");
+    public static MarkupKind PlainText { get; } = new("plaintext");
 
     /**
      * Markdown is supported as a content format
      */
-    public static MarkupKind Markdown { get; } = new MarkupKind("markdown");
+    public static MarkupKind Markdown { get; } = new("markdown");
 
     public string Value { get; } = Value;
 }

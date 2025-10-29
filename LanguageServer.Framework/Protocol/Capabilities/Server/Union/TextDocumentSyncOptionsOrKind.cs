@@ -23,34 +23,36 @@ public class TextDocumentSyncOptionsOrKind
         KindValue = value;
     }
 
-    public static implicit operator TextDocumentSyncOptionsOrKind(TextDocumentSyncOptions value) => new(value);
+    public static implicit operator TextDocumentSyncOptionsOrKind(TextDocumentSyncOptions value)
+    {
+        return new TextDocumentSyncOptionsOrKind(value);
+    }
 
-    public static implicit operator TextDocumentSyncOptionsOrKind(TextDocumentSyncKind value) => new(value);
+    public static implicit operator TextDocumentSyncOptionsOrKind(TextDocumentSyncKind value)
+    {
+        return new TextDocumentSyncOptionsOrKind(value);
+    }
 }
 
 public class TextDocumentSyncOptionsOrKindConverter : JsonConverter<TextDocumentSyncOptionsOrKind>
 {
-    public override TextDocumentSyncOptionsOrKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TextDocumentSyncOptionsOrKind Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.StartObject)
-        {
-            return new TextDocumentSyncOptionsOrKind(JsonSerializer.Deserialize<TextDocumentSyncOptions>(ref reader, options)!);
-        }
+            return new TextDocumentSyncOptionsOrKind(
+                JsonSerializer.Deserialize<TextDocumentSyncOptions>(ref reader, options)!);
         else
-        {
-            return new TextDocumentSyncOptionsOrKind(JsonSerializer.Deserialize<TextDocumentSyncKind>(ref reader, options)!);
-        }
+            return new TextDocumentSyncOptionsOrKind(
+                JsonSerializer.Deserialize<TextDocumentSyncKind>(ref reader, options)!);
     }
 
-    public override void Write(Utf8JsonWriter writer, TextDocumentSyncOptionsOrKind value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, TextDocumentSyncOptionsOrKind value,
+        JsonSerializerOptions options)
     {
         if (value.Value != null)
-        {
             JsonSerializer.Serialize(writer, value.Value, options);
-        }
         else
-        {
             JsonSerializer.Serialize(writer, value.KindValue, options);
-        }
     }
 }

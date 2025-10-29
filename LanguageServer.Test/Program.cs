@@ -39,17 +39,17 @@ ls.OnInitialize((c, s) =>
 ls.OnInitialized(async (c) =>
 {
     Console.Error.WriteLine("initialized");
-    var r = await ls.Client.GetConfiguration(new ConfigurationParams()
+    var r = await ls.Client.GetConfiguration(new ConfigurationParams
     {
         Items =
         [
-            new ConfigurationItem()
+            new ConfigurationItem
             {
                 Section = "files"
             }
         ]
     }, CancellationToken.None);
-    
+
     Console.Error.WriteLine(r);
 });
 ls.AddHandler(new TextDocumentHandler(ls));
