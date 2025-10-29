@@ -70,10 +70,16 @@ public class TextOrAnnotatedOrSnippetEditListConverter : JsonConverter<TextOrAnn
         JsonSerializerOptions options)
     {
         if (value.TextEditList != null)
+        {
             JsonSerializer.Serialize(writer, value.TextEditList, options);
+        }
         else if (value.AnnotatedTextEditList != null)
+        {
             JsonSerializer.Serialize(writer, value.AnnotatedTextEditList, options);
+        }
         else
+        {
             JsonSerializer.Serialize(writer, value.SnippetTextEditList, options);
+        }
     }
 }

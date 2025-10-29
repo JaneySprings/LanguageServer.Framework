@@ -6,5 +6,5 @@ public interface IPartialResultParams
      * An optional token that a server can use to report partial results (e.g.
      * streaming) to the client.
      */
-    public string? PartialResultToken { get; set; }
+    string? PartialResultToken { get; set; }
 }

@@ -18,7 +18,11 @@ public record struct DocumentUri(Uri Uri)
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform
                     .Windows))
             {
-                if (filePath.StartsWith('/')) filePath = filePath.TrimStart('/');
+                if (filePath.StartsWith('/'))
+                {
+                    filePath = filePath.TrimStart('/');
+                }
+
                 filePath = filePath.Replace('/', '\\');
             }
 

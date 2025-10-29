@@ -33,10 +33,16 @@ public class CompletionResponseJsonConverter : JsonConverter<CompletionResponse>
     public override void Write(Utf8JsonWriter writer, CompletionResponse value, JsonSerializerOptions options)
     {
         if (value.Items != null)
+        {
             JsonSerializer.Serialize(writer, value.Items, options);
+        }
         else if (value.List != null)
+        {
             JsonSerializer.Serialize(writer, value.List, options);
+        }
         else
+        {
             writer.WriteNullValue();
+        }
     }
 }

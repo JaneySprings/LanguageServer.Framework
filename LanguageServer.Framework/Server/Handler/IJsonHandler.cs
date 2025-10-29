@@ -5,9 +5,9 @@ namespace EmmyLua.LanguageServer.Framework.Server.Handler;
 
 public interface IJsonHandler
 {
-    public void RegisterHandler(LSPCommunicationBase lspCommunication);
+    void RegisterHandler(LSPCommunicationBase lspCommunication);
 
-    public void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities);
+    void RegisterCapability(ServerCapabilities serverCapabilities, ClientCapabilities clientCapabilities);
 
-    public void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities);
+    void RegisterDynamicCapability(LanguageServer server, ClientCapabilities clientCapabilities);
 }

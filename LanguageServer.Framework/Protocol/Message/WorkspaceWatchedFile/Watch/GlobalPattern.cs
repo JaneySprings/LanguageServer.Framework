@@ -50,11 +50,17 @@ public class GlobalPatternJsonConverter : JsonConverter<GlobalPattern>
     public override void Write(Utf8JsonWriter writer, GlobalPattern value, JsonSerializerOptions options)
     {
         if (value.Pattern is Pattern pattern)
+        {
             JsonSerializer.Serialize(writer, pattern, options);
+        }
         else if (value.Pattern is RelativePattern relativePattern)
+        {
             JsonSerializer.Serialize(writer, relativePattern, options);
+        }
         else
+        {
             throw new InvalidOperationException();
+        }
     }
 }
 

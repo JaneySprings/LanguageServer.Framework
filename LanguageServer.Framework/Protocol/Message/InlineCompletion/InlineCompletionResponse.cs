@@ -40,7 +40,12 @@ public class InlineCompletionResponseJsonConverter : JsonConverter<InlineComplet
     public override void Write(Utf8JsonWriter writer, InlineCompletionResponse value, JsonSerializerOptions options)
     {
         if (value.Items is InlineCompletionList list)
+        {
             JsonSerializer.Serialize(writer, list, options);
-        else if (value.Items is List<InlineCompletionItem> items) JsonSerializer.Serialize(writer, items, options);
+        }
+        else if (value.Items is List<InlineCompletionItem> items)
+        {
+            JsonSerializer.Serialize(writer, items, options);
+        }
     }
 }

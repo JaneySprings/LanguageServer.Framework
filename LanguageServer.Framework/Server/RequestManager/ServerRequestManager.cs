@@ -28,7 +28,10 @@ public class ServerRequestManager
         if (id.StringValue is null)
         {
             var intId = id.IntValue;
-            if (_intRequestTokens.TryRemove(intId, out var tcs)) tcs.TrySetResult(response);
+            if (_intRequestTokens.TryRemove(intId, out var tcs))
+            {
+                tcs.TrySetResult(response);
+            }
         }
     }
 
@@ -56,7 +59,10 @@ public class ServerRequestManager
 
                 await using (timeoutCts.Token.Register(() =>
                              {
-                                 if (tcs.TrySetCanceled()) _intRequestTokens.TryRemove(intId, out _);
+                                 if (tcs.TrySetCanceled())
+                                 {
+                                     _intRequestTokens.TryRemove(intId, out _);
+                                 }
                              }).ConfigureAwait(false))
                 {
                     try
@@ -71,10 +77,14 @@ public class ServerRequestManager
 
                         // Distinguish between timeout and active cancellation
                         if (token.IsCancellationRequested)
+                        {
                             throw;
+                        }
                         else
+                        {
                             throw new TimeoutException(
                                 $"Request {intId} timed out after {timeout.TotalSeconds} seconds");
+                        }
                     }
                 }
             }
@@ -89,7 +99,11 @@ public class ServerRequestManager
     public void CancelPendingRequests()
     {
         foreach (var kvp in _intRequestTokens)
+        {
             if (_intRequestTokens.TryRemove(kvp.Key, out var tcs))
+            {
                 tcs.TrySetCanceled();
+            }
+        }
     }
 }

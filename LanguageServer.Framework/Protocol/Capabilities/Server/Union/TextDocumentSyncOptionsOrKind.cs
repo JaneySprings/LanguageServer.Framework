@@ -40,19 +40,27 @@ public class TextDocumentSyncOptionsOrKindConverter : JsonConverter<TextDocument
         JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.StartObject)
+        {
             return new TextDocumentSyncOptionsOrKind(
                 JsonSerializer.Deserialize<TextDocumentSyncOptions>(ref reader, options)!);
+        }
         else
+        {
             return new TextDocumentSyncOptionsOrKind(
                 JsonSerializer.Deserialize<TextDocumentSyncKind>(ref reader, options)!);
+        }
     }
 
     public override void Write(Utf8JsonWriter writer, TextDocumentSyncOptionsOrKind value,
         JsonSerializerOptions options)
     {
         if (value.Value != null)
+        {
             JsonSerializer.Serialize(writer, value.Value, options);
+        }
         else
+        {
             JsonSerializer.Serialize(writer, value.KindValue, options);
+        }
     }
 }

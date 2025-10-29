@@ -69,8 +69,12 @@ public class CommandOrCodeActionJsonConverter : JsonConverter<CommandOrCodeActio
     public override void Write(Utf8JsonWriter writer, CommandOrCodeAction value, JsonSerializerOptions options)
     {
         if (value.Command != null)
+        {
             JsonSerializer.Serialize(writer, value.Command, options);
+        }
         else
+        {
             JsonSerializer.Serialize(writer, value.CodeAction, options);
+        }
     }
 }

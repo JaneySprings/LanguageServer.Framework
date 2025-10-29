@@ -41,12 +41,20 @@ public class TypeDefinitionResponseJsonConverter : JsonConverter<TypeDefinitionR
     public override void Write(Utf8JsonWriter writer, TypeDefinitionResponse value, JsonSerializerOptions options)
     {
         if (value.Result1.HasValue)
+        {
             JsonSerializer.Serialize(writer, value.Result1.Value, options);
+        }
         else if (value.Result2 != null)
+        {
             JsonSerializer.Serialize(writer, value.Result2, options);
+        }
         else if (value.Result3 != null)
+        {
             JsonSerializer.Serialize(writer, value.Result3, options);
+        }
         else
+        {
             writer.WriteNullValue();
+        }
     }
 }

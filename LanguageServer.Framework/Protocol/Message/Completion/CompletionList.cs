@@ -116,11 +116,17 @@ public class CompletionListItemDefaultEditRangeJsonConverter : JsonConverter<Com
         JsonSerializerOptions options)
     {
         if (value.Result1.HasValue)
+        {
             JsonSerializer.Serialize(writer, value.Result1.Value, options);
+        }
         else if (value.Result2 != null)
+        {
             JsonSerializer.Serialize(writer, value.Result2, options);
+        }
         else
+        {
             throw new JsonException();
+        }
     }
 }
 

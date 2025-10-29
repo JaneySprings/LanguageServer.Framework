@@ -106,6 +106,8 @@ LanguageServer.Framework/
 
 ### Code Style
 
+**This project uses JetBrains Rider for code formatting.** See [CODE_FORMATTING.md](CODE_FORMATTING.md) for detailed formatting guidelines.
+
 ```csharp
 // ✅ Good
 /// <summary>
@@ -126,6 +128,8 @@ public class hoverhandler { // Bad naming, no docs
     }
 }
 ```
+
+**Note**: CI format checking is disabled to allow Rider formatting. Format your code with Rider (`Ctrl+Alt+L`) before committing.
 
 ### Naming Conventions
 
@@ -213,11 +217,18 @@ public async Task HoverHandler_ShouldReturnHoverInformation()
    - Follow the coding standards
    - Add tests for new functionality
    - Update documentation as needed
+   - **Format code with Rider** (`Ctrl+Alt+L` / `Cmd+Option+L`)
 
 4. **Test your changes:**
    ```bash
-   dotnet build
-   dotnet test
+   # Build the project
+   dotnet build --configuration Release
+   
+   # Run all tests
+   dotnet test --configuration Release
+   
+   # Optional: Check formatting (may differ from Rider)
+   dotnet format --verify-no-changes
    ```
 
 5. **Commit your changes:**

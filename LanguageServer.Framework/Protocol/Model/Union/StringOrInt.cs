@@ -35,7 +35,10 @@ public class StringOrIntConverter : JsonConverter<StringOrInt>
 {
     public override StringOrInt Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonTokenType.Number) return new StringOrInt(reader.GetInt32());
+        if (reader.TokenType == JsonTokenType.Number)
+        {
+            return new StringOrInt(reader.GetInt32());
+        }
 
         return new StringOrInt(reader.GetString()!);
     }
@@ -43,8 +46,12 @@ public class StringOrIntConverter : JsonConverter<StringOrInt>
     public override void Write(Utf8JsonWriter writer, StringOrInt value, JsonSerializerOptions options)
     {
         if (value.StringValue != null)
+        {
             writer.WriteStringValue(value.StringValue);
+        }
         else
+        {
             writer.WriteNumberValue(value.IntValue);
+        }
     }
 }

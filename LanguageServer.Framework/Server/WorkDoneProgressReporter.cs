@@ -26,16 +26,16 @@ public class WorkDoneProgressReporter : IDisposable
     public async Task Begin(string title, bool cancellable = false, string? message = null, uint? percentage = null)
     {
         if (_started)
+        {
             throw new InvalidOperationException("Progress already started");
+        }
 
         _started = true;
-        await _client.ReportProgress(_token, new WorkDoneProgressBegin
-        {
-            Title = title,
-            Cancellable = cancellable,
-            Message = message,
-            Percentage = percentage
-        });
+        await _client.ReportProgress(_token,
+            new WorkDoneProgressBegin
+            {
+                Title = title, Cancellable = cancellable, Message = message, Percentage = percentage
+            });
     }
 
     /// <summary>
@@ -44,14 +44,12 @@ public class WorkDoneProgressReporter : IDisposable
     public async Task Report(string? message = null, uint? percentage = null, bool? cancellable = null)
     {
         if (!_started)
-            throw new InvalidOperationException("Progress not started. Call Begin() first.");
-
-        await _client.ReportProgress(_token, new WorkDoneProgressReport
         {
-            Message = message,
-            Percentage = percentage,
-            Cancellable = cancellable
-        });
+            throw new InvalidOperationException("Progress not started. Call Begin() first.");
+        }
+
+        await _client.ReportProgress(_token,
+            new WorkDoneProgressReport { Message = message, Percentage = percentage, Cancellable = cancellable });
     }
 
     /// <summary>
@@ -60,15 +58,16 @@ public class WorkDoneProgressReporter : IDisposable
     public async Task End(string? message = null)
     {
         if (!_started)
+        {
             return;
+        }
 
         if (_disposed)
-            return;
-
-        await _client.ReportProgress(_token, new WorkDoneProgressEnd
         {
-            Message = message
-        });
+            return;
+        }
+
+        await _client.ReportProgress(_token, new WorkDoneProgressEnd { Message = message });
 
         _disposed = true;
     }
@@ -77,7 +76,9 @@ public class WorkDoneProgressReporter : IDisposable
     {
         if (!_disposed && _started)
             // Fire and forget
+        {
             _ = End();
+        }
     }
 
     /// <summary>

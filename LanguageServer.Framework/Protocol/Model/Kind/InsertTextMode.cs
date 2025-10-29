@@ -31,7 +31,10 @@ public class InsertTextModeJsonConverter : JsonConverter<InsertTextMode>
 {
     public override InsertTextMode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
+        if (reader.TokenType != JsonTokenType.Number)
+        {
+            throw new JsonException();
+        }
 
         return (InsertTextMode)reader.GetInt32();
     }

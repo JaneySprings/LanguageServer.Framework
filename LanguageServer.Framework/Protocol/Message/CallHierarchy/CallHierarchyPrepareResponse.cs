@@ -21,8 +21,12 @@ public class CallHierarchyPrepareResponseJsonConverter : JsonConverter<CallHiera
     public override void Write(Utf8JsonWriter writer, CallHierarchyPrepareResponse value, JsonSerializerOptions options)
     {
         if (value.Result != null)
+        {
             JsonSerializer.Serialize(writer, value.Result, options);
+        }
         else
+        {
             writer.WriteNullValue();
+        }
     }
 }

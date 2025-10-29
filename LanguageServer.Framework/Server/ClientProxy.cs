@@ -150,11 +150,7 @@ public class ClientProxy(LanguageServer server)
     /// </summary>
     public Task ReportProgress(StringOrInt token, WorkDoneProgressBegin value)
     {
-        var @params = new ProgressParams
-        {
-            Token = token.StringValue ?? token.IntValue.ToString(),
-            Value = value
-        };
+        var @params = new ProgressParams { Token = token.StringValue ?? token.IntValue.ToString(), Value = value };
         var document = JsonSerializer.SerializeToDocument(@params, server.JsonSerializerOptions);
         var notification = new NotificationMessage("$/progress", document);
         return server.SendNotification(notification);
@@ -165,11 +161,7 @@ public class ClientProxy(LanguageServer server)
     /// </summary>
     public Task ReportProgress(StringOrInt token, WorkDoneProgressReport value)
     {
-        var @params = new ProgressParams
-        {
-            Token = token.StringValue ?? token.IntValue.ToString(),
-            Value = value
-        };
+        var @params = new ProgressParams { Token = token.StringValue ?? token.IntValue.ToString(), Value = value };
         var document = JsonSerializer.SerializeToDocument(@params, server.JsonSerializerOptions);
         var notification = new NotificationMessage("$/progress", document);
         return server.SendNotification(notification);
@@ -180,11 +172,7 @@ public class ClientProxy(LanguageServer server)
     /// </summary>
     public Task ReportProgress(StringOrInt token, WorkDoneProgressEnd value)
     {
-        var @params = new ProgressParams
-        {
-            Token = token.StringValue ?? token.IntValue.ToString(),
-            Value = value
-        };
+        var @params = new ProgressParams { Token = token.StringValue ?? token.IntValue.ToString(), Value = value };
         var document = JsonSerializer.SerializeToDocument(@params, server.JsonSerializerOptions);
         var notification = new NotificationMessage("$/progress", document);
         return server.SendNotification(notification);

@@ -41,8 +41,12 @@ public class WorkspaceEditDocumentChangesConverter : JsonConverter<WorkspaceEdit
     public override void Write(Utf8JsonWriter writer, WorkspaceEditDocumentChanges value, JsonSerializerOptions options)
     {
         if (value.TextDocumentEditList != null)
+        {
             JsonSerializer.Serialize(writer, value.TextDocumentEditList, options);
+        }
         else
+        {
             JsonSerializer.Serialize(writer, value.EditFileList, options);
+        }
     }
 }

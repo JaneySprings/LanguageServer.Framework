@@ -48,12 +48,14 @@ public class LanguageServer : LSPCommunicationBase
 
             // Start timer if periodic print interval is set
             if (Options.PerformanceMetricsPrintInterval.HasValue)
+            {
                 _metricsTimer = new Timer(
                     _ => PrintMetrics(),
                     null,
                     Options.PerformanceMetricsPrintInterval.Value,
                     Options.PerformanceMetricsPrintInterval.Value
                 );
+            }
         }
     }
 
@@ -119,20 +121,30 @@ public class LanguageServer : LSPCommunicationBase
             else if (notification.Method == "$/cancelRequest")
             {
                 var cancelParams = notification.Params?.Deserialize<CancelParams>(JsonSerializerOptions);
-                if (cancelParams != null) ClientRequestTokenManager.CancelToken(cancelParams.Id);
+                if (cancelParams != null)
+                {
+                    ClientRequestTokenManager.CancelToken(cancelParams.Id);
+                }
 
                 return true;
             }
         }
 
-        if (State != RunningState.Running) return true;
+        if (State != RunningState.Running)
+        {
+            return true;
+        }
 
         return false;
     }
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _metricsTimer?.Dispose();
+        if (disposing)
+        {
+            _metricsTimer?.Dispose();
+        }
+
         base.Dispose(disposing);
     }
 }

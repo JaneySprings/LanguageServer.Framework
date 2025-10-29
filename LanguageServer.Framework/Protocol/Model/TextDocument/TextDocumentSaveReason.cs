@@ -30,7 +30,10 @@ public class TextDocumentSaveReasonConverter : JsonConverter<TextDocumentSaveRea
     public override TextDocumentSaveReason Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
+        if (reader.TokenType != JsonTokenType.Number)
+        {
+            throw new JsonException();
+        }
 
         return new TextDocumentSaveReason(reader.GetInt32());
     }

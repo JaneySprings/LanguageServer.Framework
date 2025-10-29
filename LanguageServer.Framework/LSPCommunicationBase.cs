@@ -19,8 +19,7 @@ public abstract class LSPCommunicationBase : IDisposable
 {
     public JsonSerializerOptions JsonSerializerOptions { get; } = new()
     {
-        TypeInfoResolver = JsonProtocolContext.Default,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        TypeInfoResolver = JsonProtocolContext.Default, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     protected JsonProtocolReader Reader { get; }
@@ -157,7 +156,8 @@ public abstract class LSPCommunicationBase : IDisposable
         {
             case RequestMessage request:
             {
-                if (RequestHandlers.TryGetValue(request.Method, out var handler))
+                if (RequestHandlers.TryGetValue(request.Method,
+                        out var handler))
                 {
                     MetricsCollector?.RecordRequestStart(request.Method);
                     var startTime = DateTime.UtcNow;
@@ -223,7 +223,8 @@ public abstract class LSPCommunicationBase : IDisposable
             }
             case NotificationMessage notification:
             {
-                if (NotificationHandlers.TryGetValue(notification.Method, out var handler))
+                if (NotificationHandlers.TryGetValue(notification.Method,
+                        out var handler))
                 {
                     MetricsCollector?.RecordNotification(notification.Method);
 
@@ -265,7 +266,9 @@ public abstract class LSPCommunicationBase : IDisposable
         try
         {
             if (ExitTokenSource is not null)
+            {
                 throw new InvalidOperationException("Already running.");
+            }
 
             ExitTokenSource = new CancellationTokenSource();
 
@@ -278,7 +281,10 @@ public abstract class LSPCommunicationBase : IDisposable
                         var message = await Reader.ReadAsync(ExitTokenSource.Token);
                         MetricsCollector?.RecordMessageReceived();
 
-                        if (BaseHandle(message)) continue;
+                        if (BaseHandle(message))
+                        {
+                            continue;
+                        }
 
                         Scheduler.Schedule(OnDispatch, message);
                     }
@@ -312,7 +318,10 @@ public abstract class LSPCommunicationBase : IDisposable
         try
         {
             if (ExitTokenSource is null)
+            {
                 throw new InvalidOperationException("Run() must be called before exit");
+            }
+
             ExitTokenSource.Cancel();
         }
         finally
@@ -323,7 +332,10 @@ public abstract class LSPCommunicationBase : IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (_disposed) return;
+        if (_disposed)
+        {
+            return;
+        }
 
         if (disposing)
         {
@@ -341,9 +353,15 @@ public abstract class LSPCommunicationBase : IDisposable
             ExitTokenSource?.Dispose();
             _exitTokenLock.Dispose();
 
-            if (Scheduler is IDisposable disposableScheduler) disposableScheduler.Dispose();
+            if (Scheduler is IDisposable disposableScheduler)
+            {
+                disposableScheduler.Dispose();
+            }
 
-            if (Writer is IDisposable disposableWriter) disposableWriter.Dispose();
+            if (Writer is IDisposable disposableWriter)
+            {
+                disposableWriter.Dispose();
+            }
         }
 
         _disposed = true;

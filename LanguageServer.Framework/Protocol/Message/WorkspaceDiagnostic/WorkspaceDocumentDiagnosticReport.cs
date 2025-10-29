@@ -46,10 +46,16 @@ public class WorkspaceDocumentDiagnosticReportJsonConverter : JsonConverter<Work
         JsonSerializerOptions options)
     {
         if (value.Report is WorkspaceFullDocumentDiagnosticReport fullDocumentDiagnosticReport)
+        {
             JsonSerializer.Serialize(writer, fullDocumentDiagnosticReport, options);
+        }
         else if (value.Report is WorkspaceUnchangedDocumentDiagnosticReport unchangedDocumentDiagnosticReport)
+        {
             JsonSerializer.Serialize(writer, unchangedDocumentDiagnosticReport, options);
+        }
         else
+        {
             throw new InvalidOperationException();
+        }
     }
 }

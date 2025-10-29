@@ -41,10 +41,16 @@ public class FullOrUnchangeDocumentDiagnosticReportJsonConverter : JsonConverter
         JsonSerializerOptions options)
     {
         if (value.Report is FullDocumentDiagnosticReport fullDocumentDiagnosticReport)
+        {
             JsonSerializer.Serialize(writer, fullDocumentDiagnosticReport, options);
+        }
         else if (value.Report is UnchangedDocumentDiagnosticReport unchangedDocumentDiagnosticReport)
+        {
             JsonSerializer.Serialize(writer, unchangedDocumentDiagnosticReport, options);
+        }
         else
+        {
             throw new InvalidOperationException();
+        }
     }
 }

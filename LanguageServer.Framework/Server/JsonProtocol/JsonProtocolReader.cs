@@ -16,15 +16,22 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         // Read the header part
         var (totalLength, contentStart) = await ReadOneHeaderAsync(token);
         var readContentLength = _currentValidLength - contentStart;
-        if (readContentLength > totalLength) readContentLength = totalLength;
+        if (readContentLength > totalLength)
+        {
+            readContentLength = totalLength;
+        }
 
         try
         {
             // Use SmallBuffer for small messages to avoid ArrayPool overhead
             if (totalLength + contentStart <= SmallBuffer.Length)
+            {
                 return await ReadSmallJsonRpcMessageAsync(totalLength, contentStart, readContentLength, token);
+            }
             else
+            {
                 return await ReadLargeJsonRpcMessageAsync(totalLength, contentStart, readContentLength, token);
+            }
         }
         finally
         {
@@ -45,7 +52,11 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
     private async Task ReadHeaderToBufferAsync(CancellationToken token)
     {
         var read = await inputStream.ReadAsync(SmallBuffer.AsMemory(_currentValidLength), token);
-        if (read == 0) throw new InvalidOperationException("Stream closed before all data could be read.");
+        if (read == 0)
+        {
+            throw new InvalidOperationException("Stream closed before all data could be read.");
+        }
+
         _currentValidLength += read;
     }
 
@@ -57,6 +68,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
         var buffer = SmallBuffer.AsSpan(startIndex, _currentValidLength - startIndex);
 
         for (var i = 0; i < buffer.Length; i++)
+        {
             if (buffer[i] == '\r' && i + 1 < buffer.Length && buffer[i + 1] == '\n')
             {
                 var headerEnd = i;
@@ -76,7 +88,10 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
 
                         // Skip spaces
                         var numberStart = 0;
-                        while (numberStart < numberSpan.Length && numberSpan[numberStart] == ' ') numberStart++;
+                        while (numberStart < numberSpan.Length && numberSpan[numberStart] == ' ')
+                        {
+                            numberStart++;
+                        }
 
                         if (numberStart < numberSpan.Length)
                         {
@@ -102,6 +117,7 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
                     return true;
                 }
             }
+        }
 
         return false;
     }
@@ -110,11 +126,18 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
     private static bool TryParseInt32(ReadOnlySpan<byte> utf8Bytes, out int value)
     {
         value = 0;
-        if (utf8Bytes.Length == 0) return false;
+        if (utf8Bytes.Length == 0)
+        {
+            return false;
+        }
 
         foreach (var b in utf8Bytes)
         {
-            if (b < '0' || b > '9') return value > 0; // Return true if some digits have been parsed
+            if (b < '0' || b > '9')
+            {
+                return value > 0; // Return true if some digits have been parsed
+            }
+
             value = value * 10 + (b - '0');
         }
 
@@ -128,7 +151,10 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
 
         while (true)
         {
-            if (TryGetContentLength(0, out totalLength, out contentStart)) break;
+            if (TryGetContentLength(0, out totalLength, out contentStart))
+            {
+                break;
+            }
 
             await ReadHeaderToBufferAsync(token);
         }
@@ -147,16 +173,25 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
                 var bytesToRead = totalContentLength - readContentLength;
                 var availableSpace = SmallBuffer.Length - (contentStart + readContentLength);
                 if (bytesToRead > availableSpace)
+                {
                     throw new InvalidOperationException("Buffer overflow: message too large for small buffer.");
+                }
 
                 var read = await inputStream.ReadAsync(
                     SmallBuffer.AsMemory(contentStart + readContentLength, bytesToRead), token);
-                if (read == 0) throw new InvalidOperationException("Stream closed before all data could be read.");
+                if (read == 0)
+                {
+                    throw new InvalidOperationException("Stream closed before all data could be read.");
+                }
+
                 readContentLength += read;
 
                 // Update _currentValidLength to reflect actually read data
                 var newValidLength = contentStart + readContentLength;
-                if (newValidLength > _currentValidLength) _currentValidLength = newValidLength;
+                if (newValidLength > _currentValidLength)
+                {
+                    _currentValidLength = newValidLength;
+                }
             }
 
             return JsonSerializer.Deserialize<Message>(SmallBuffer.AsSpan(contentStart, totalContentLength),
@@ -181,7 +216,11 @@ public class JsonProtocolReader(Stream inputStream, JsonSerializerOptions jsonSe
             {
                 var bufferSpan = buffer.AsMemory(bytesRead, totalContentLength - bytesRead);
                 var read = await inputStream.ReadAsync(bufferSpan, token);
-                if (read == 0) throw new InvalidOperationException("Stream closed before all data could be read.");
+                if (read == 0)
+                {
+                    throw new InvalidOperationException("Stream closed before all data could be read.");
+                }
+
                 bytesRead += read;
             }
 

@@ -50,8 +50,12 @@ public class BooleanOrConverter<T> : JsonConverter<BooleanOr<T>>
     public override void Write(Utf8JsonWriter writer, BooleanOr<T> value, JsonSerializerOptions options)
     {
         if (value.IsValue)
+        {
             JsonSerializer.Serialize(writer, value.Value, options);
+        }
         else
+        {
             writer.WriteBooleanValue(value.BoolValue);
+        }
     }
 }

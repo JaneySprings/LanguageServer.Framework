@@ -49,12 +49,20 @@ public class InlineValueJsonConverter : JsonConverter<InlineValue>
     public override void Write(Utf8JsonWriter writer, InlineValue value, JsonSerializerOptions options)
     {
         if (value.Value is InlineValueText text)
+        {
             JsonSerializer.Serialize(writer, text, options);
+        }
         else if (value.Value is InlineValueVariableLookup lookup)
+        {
             JsonSerializer.Serialize(writer, lookup, options);
+        }
         else if (value.Value is InlineValueEvaluatableExpression expression)
+        {
             JsonSerializer.Serialize(writer, expression, options);
+        }
         else
+        {
             throw new JsonException();
+        }
     }
 }

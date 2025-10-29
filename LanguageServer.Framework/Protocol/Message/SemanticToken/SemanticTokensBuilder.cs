@@ -20,9 +20,15 @@ public class SemanticTokensBuilder
 
     public SemanticTokensBuilder(List<string> tokenTypes, List<string> tokenModifiers)
     {
-        for (var i = 0; i < tokenTypes.Count; i++) TokenTypeToId[tokenTypes[i]] = i;
+        for (var i = 0; i < tokenTypes.Count; i++)
+        {
+            TokenTypeToId[tokenTypes[i]] = i;
+        }
 
-        for (var i = 0; i < tokenModifiers.Count; i++) TokenModifierToId[tokenModifiers[i]] = i;
+        for (var i = 0; i < tokenModifiers.Count; i++)
+        {
+            TokenModifierToId[tokenModifiers[i]] = i;
+        }
     }
 
     public void Push(Position startPosition, int length, string tokenType)
@@ -30,10 +36,7 @@ public class SemanticTokensBuilder
         var tokenTypeIndex = TokenTypeToId[tokenType];
         Data.Add(new SemanticTokenData
         {
-            Position = startPosition,
-            Length = length,
-            TokenType = (uint)tokenTypeIndex,
-            Modifiers = 0
+            Position = startPosition, Length = length, TokenType = (uint)tokenTypeIndex, Modifiers = 0
         });
     }
 
@@ -62,10 +65,7 @@ public class SemanticTokensBuilder
 
         Data.Add(new SemanticTokenData
         {
-            Position = startPosition,
-            Length = length,
-            TokenType = (uint)tokenTypeIndex,
-            Modifiers = tokenModifier
+            Position = startPosition, Length = length, TokenType = (uint)tokenTypeIndex, Modifiers = tokenModifier
         });
     }
 
@@ -75,7 +75,10 @@ public class SemanticTokensBuilder
         // sort
         Data.Sort((a, b) =>
         {
-            if (a.Position.Line == b.Position.Line) return a.Position.Character - b.Position.Character;
+            if (a.Position.Line == b.Position.Line)
+            {
+                return a.Position.Character - b.Position.Character;
+            }
 
             return a.Position.Line - b.Position.Line;
         });
@@ -90,7 +93,10 @@ public class SemanticTokensBuilder
             var deltaLine = line - prevLine;
 
             result.Add((uint)deltaLine);
-            if (deltaLine != 0) prevCh = 0;
+            if (deltaLine != 0)
+            {
+                prevCh = 0;
+            }
 
             var deltaCh = ch - prevCh;
             result.Add((uint)deltaCh);

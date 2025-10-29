@@ -21,6 +21,7 @@ public class SingleThreadScheduler : IScheduler, IDisposable
         _workerThread = new Thread(() =>
         {
             foreach (var task in _tasks.GetConsumingEnumerable())
+            {
                 try
                 {
                     task();
@@ -30,11 +31,8 @@ public class SingleThreadScheduler : IScheduler, IDisposable
                     // Log the exception instead of silently swallowing it
                     Console.Error.WriteLine($"[SingleThreadScheduler] Error executing task: {ex}");
                 }
-        })
-        {
-            IsBackground = true,
-            Name = "LSP-Scheduler-Thread"
-        };
+            }
+        }) { IsBackground = true, Name = "LSP-Scheduler-Thread" };
         _workerThread.Start();
     }
 
@@ -57,13 +55,19 @@ public class SingleThreadScheduler : IScheduler, IDisposable
 
     public void Dispose()
     {
-        if (_disposed) return;
+        if (_disposed)
+        {
+            return;
+        }
 
         _disposed = true;
         _tasks.CompleteAdding();
 
         // Wait for the worker thread to finish processing remaining tasks
-        if (_workerThread.IsAlive) _workerThread.Join(_shutdownTimeout);
+        if (_workerThread.IsAlive)
+        {
+            _workerThread.Join(_shutdownTimeout);
+        }
 
         _tasks.Dispose();
     }

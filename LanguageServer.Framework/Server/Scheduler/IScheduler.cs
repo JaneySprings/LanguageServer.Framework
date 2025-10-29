@@ -4,5 +4,5 @@ namespace EmmyLua.LanguageServer.Framework.Server.Scheduler;
 
 public interface IScheduler
 {
-    public void Schedule(Func<Message, Task> action, Message message);
+    void Schedule(Func<Message, Task> action, Message message);
 }

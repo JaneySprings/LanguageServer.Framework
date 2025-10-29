@@ -23,7 +23,10 @@ public class NotebookCellKindJsonConverter : JsonConverter<NotebookCellKind>
 {
     public override NotebookCellKind Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
+        if (reader.TokenType != JsonTokenType.Number)
+        {
+            throw new JsonException();
+        }
 
         return new NotebookCellKind(reader.GetInt32());
     }

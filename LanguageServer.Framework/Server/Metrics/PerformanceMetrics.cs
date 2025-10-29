@@ -168,7 +168,9 @@ public class DefaultPerformanceMetricsCollector : IPerformanceMetricsCollector
             lock (_lock)
             {
                 if (duration.TotalMilliseconds > _maxRequestDurationMs)
+                {
                     _maxRequestDurationMs = duration.TotalMilliseconds;
+                }
             }
         }
         else

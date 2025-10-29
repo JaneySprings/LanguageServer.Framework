@@ -30,7 +30,10 @@ public class DocumentHighlightKindJsonConverter : JsonConverter<DocumentHighligh
     public override DocumentHighlightKind Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
+        if (reader.TokenType != JsonTokenType.Number)
+        {
+            throw new JsonException();
+        }
 
         return (DocumentHighlightKind)reader.GetInt32();
     }

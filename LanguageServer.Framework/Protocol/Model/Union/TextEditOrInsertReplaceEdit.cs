@@ -42,8 +42,12 @@ public class TextEditOrInsertReplaceEditConverter : JsonConverter<TextEditOrInse
     public override void Write(Utf8JsonWriter writer, TextEditOrInsertReplaceEdit value, JsonSerializerOptions options)
     {
         if (value.TextEdit != null)
+        {
             JsonSerializer.Serialize(writer, value.TextEdit, options);
+        }
         else
+        {
             JsonSerializer.Serialize(writer, value.InsertReplaceEdit, options);
+        }
     }
 }
